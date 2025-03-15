@@ -11,9 +11,11 @@ include(CMakePackageConfigHelpers)
 
 # warning_as_error_enable(anyone)
 
-add_executable(anyone "")
+set(runtime "anyone_rt")
 
-set_target_properties(anyone PROPERTIES 
+add_executable(${runtime} "")
+
+set_target_properties(${runtime} PROPERTIES 
 	CXX_STANDARD 17
 	C_VISIBILITY_PRESET hidden
 	CXX_VISIBILITY_PRESET hidden
@@ -23,13 +25,13 @@ set_target_properties(anyone PROPERTIES
 
 add_subdirectory(src)
 
-target_include_directories(anyone PUBLIC
+target_include_directories(${runtime} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>  
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>  
 )
 
-target_include_directories(anyone PRIVATE src/)
+target_include_directories(${runtime} PRIVATE src/)
 
-target_link_libraries(anyone PRIVATE
+target_link_libraries(${runtime} PRIVATE
     nx
 )

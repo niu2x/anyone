@@ -1,5 +1,5 @@
 file(GLOB_RECURSE src_files "./*.cpp")
 
-target_sources(anyone PRIVATE
+target_sources(${runtime} PRIVATE
 	${src_files}
 )
