@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
 project ( Anyone VERSION "1.0.2" LANGUAGES CXX C ) 
 
 add_subdirectory(nx)
-find_package(Boost REQUIRED)
+# find_package(Boost REQUIRED)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 include(warning_as_error)
