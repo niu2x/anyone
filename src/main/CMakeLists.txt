@@ -13,3 +13,7 @@ target_include_directories(main PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(main PUBLIC nx)
 
 anyone_init_cxx_target(main)
+
+target_compile_definitions(main PUBLIC 
+	ANYONE_TARGET_LINUX
+)
