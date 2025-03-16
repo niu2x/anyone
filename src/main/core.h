@@ -36,6 +36,9 @@ private:
     lua_State* lua_;
     UniquePtr<PlatformSupport> platform_support_;
     Optional<String> project_dir_;
+
+    int load_lua();
+    static int lua_loader(lua_State* L);
 };
 
 } // namespace anyone
