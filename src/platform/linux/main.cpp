@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 // #include <SDL2/SDL_opengl.h>
 
+#include "platform_linux.h"
 #include "core.h"
 #include "glad/glad.h"
 
@@ -27,8 +28,8 @@ void handle_window_size_changed(anyone::Core& core, SDL_Window* window)
 
 int main(int ArgCount, char** Args)
 {
-
     anyone::Core core;
+    core.set_platform_support(std::make_unique<anyone::PlatformSupportLinux>());
 
     uint32_t window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
     SDL_Window* window = SDL_CreateWindow(

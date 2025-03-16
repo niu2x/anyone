@@ -18,8 +18,12 @@ void Core::render()
 
 void Core::notify_framebuffer_size_changed(int width, int height)
 {
-    printf("framebuffer_size_changed %d %d\n", width, height);
-    fflush(stdout);
+    LOG("framebuffer_size_changed %d %d\n", width, height);
+}
+
+void Core::set_platform_support(std::unique_ptr<PlatformSupport> p)
+{
+    platform_support_ = std::move(p);
 }
 
 } // namespace anyone

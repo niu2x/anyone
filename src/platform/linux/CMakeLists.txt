@@ -3,7 +3,8 @@ add_subdirectory(glad)
 add_library(platform_linux "")
 
 target_sources(platform_linux PRIVATE
-	"main.cpp"
+	main.cpp
+	platform_linux.cpp
 )
 
 target_link_libraries(platform_linux PUBLIC
