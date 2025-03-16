@@ -15,13 +15,7 @@ set(runtime "anyone_rt")
 
 add_executable(${runtime} "")
 
-set_target_properties(${runtime} PROPERTIES 
-	CXX_STANDARD 17
-	C_VISIBILITY_PRESET hidden
-	CXX_VISIBILITY_PRESET hidden
-	VISIBILITY_INLINES_HIDDEN ON
-	POSITION_INDEPENDENT_CODE ON
-)
+anyone_init_cxx_target(${runtime})
 
 add_subdirectory(src)
 

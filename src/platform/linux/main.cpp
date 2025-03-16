@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-#include "main/core.h"
+#include "core.h"
 
 // #include <boost/program_options.hpp>
 // #include <boost/variant/variant.hpp>
