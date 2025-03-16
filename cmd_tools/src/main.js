@@ -74,7 +74,7 @@ program.command("run")
   .argument('[dir]', 'project directory')
   .action(async (dir) => {
     if (dir == undefined) {
-      dir = "/."
+      dir = "./"
     }
     const worker = spawn(anyone_rt,
       ['--project', dir]);
