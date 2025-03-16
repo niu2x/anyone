@@ -3,7 +3,7 @@ build:
 	cmake --build build -j 2
 
 update_version:
-	change-version Node cmd_tools/package.json -v $(version)
+	change-version Node cmd_tools/package.json -i -v $(version)
 
 .PHONY: build
 
