@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <SDL2/SDL.h>
-// #include <SDL2/SDL_opengl.h>
 
 #include "platform_linux.h"
 #include "core.h"
 #include "glad/glad.h"
+#include "../../cxxopts.hpp"
 
 // #include <boost/program_options.hpp>
 // #include <boost/variant/variant.hpp>
@@ -26,10 +26,22 @@ void handle_window_size_changed(anyone::Core& core, SDL_Window* window)
     core.notify_framebuffer_size_changed(framebuffer_width, framebuffer_height);
 }
 
-int main(int ArgCount, char** Args)
+int main(int argc, char* argv[])
 {
+    cxxopts::Options options("anyone_rt", "anyone runtime");
+
+    // clang-format off
+    options.add_options()
+        ("project", "project dir", cxxopts::value<std::string>())
+        ;
+    // clang-format on
+
+    auto result = options.parse(argc, argv);
+    auto project_dir = result["project"].as<std::string>();
+
     anyone::Core core;
     core.set_platform_support(std::make_unique<anyone::PlatformSupportLinux>());
+    core.set_project_dir(project_dir);
 
     uint32_t window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
     SDL_Window* window = SDL_CreateWindow(
@@ -40,6 +52,8 @@ int main(int ArgCount, char** Args)
     gladLoadGL();
 
     handle_window_size_changed(core, window);
+
+    core.start_game();
 
     bool running = true;
     bool full_screen = false;

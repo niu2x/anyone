@@ -4,6 +4,8 @@
 
 namespace anyone {
 
+using namespace nx;
+
 template <class T>
 class Singleton {
 public:
@@ -30,5 +32,7 @@ private:
 
 template <class T>
 T* Singleton<T>::instance_ = nullptr;
+
+String path_join(const String&, const String&);
 
 } // namespace anyone

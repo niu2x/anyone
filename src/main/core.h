@@ -18,11 +18,14 @@ public:
     Core();
     ~Core();
 
+    void set_platform_support(UniquePtr<PlatformSupport> p);
+    void set_project_dir(const String& project_dir);
+
+    void start_game();
     void update();
     void render();
 
     void notify_framebuffer_size_changed(int width, int height);
-    void set_platform_support(std::unique_ptr<PlatformSupport> p);
 
     PlatformSupport* get_platform_support() const
     {
@@ -31,7 +34,8 @@ public:
 
 private:
     lua_State* lua_;
-    std::unique_ptr<PlatformSupport> platform_support_;
+    UniquePtr<PlatformSupport> platform_support_;
+    Optional<String> project_dir_;
 };
 
 } // namespace anyone
