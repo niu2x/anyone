@@ -4,6 +4,7 @@ build:
 
 update_version:
 	change-version Node cmd_tools/package.json -i -v $(version)
+	change-version CMake CMakeLists.txt -i -v $(version)
 
 .PHONY: build
 

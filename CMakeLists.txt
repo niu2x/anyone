@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
 
-project(Anyone VERSION 0.1.2 LANGUAGES CXX C)
+project ( Anyone VERSION "1.0.2" LANGUAGES CXX C ) 
 
 add_subdirectory(nx)
 find_package(Boost REQUIRED)
