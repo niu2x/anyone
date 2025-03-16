@@ -9,6 +9,7 @@ target_sources(platform_linux PRIVATE
 target_link_libraries(platform_linux PUBLIC
 	glad
 	main
+	dl
 )
 
 anyone_init_cxx_target(platform_linux)
