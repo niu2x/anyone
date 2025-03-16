@@ -1,3 +1,4 @@
+add_subdirectory(lua)
 add_subdirectory(main)
 add_subdirectory(platform/linux)
 

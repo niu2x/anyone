@@ -3,9 +3,9 @@
 
 namespace anyone {
 
-Core::Core() { }
+Core::Core() { lua_ = luaL_newstate(); }
 
-Core::~Core() { }
+Core::~Core() { lua_close(lua_); }
 
 void Core::update() { }
 

@@ -10,7 +10,10 @@ target_sources(main PRIVATE
 
 target_include_directories(main PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(main PUBLIC nx)
+target_link_libraries(main PUBLIC 
+	nx
+	lua
+)
 
 anyone_init_cxx_target(main)
 
