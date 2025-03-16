@@ -16,4 +16,10 @@ void Core::render()
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void Core::notify_framebuffer_size_changed(int width, int height)
+{
+    printf("framebuffer_size_changed %d %d\n", width, height);
+    fflush(stdout);
+}
+
 } // namespace anyone

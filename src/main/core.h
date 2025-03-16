@@ -16,6 +16,8 @@ public:
     void update();
     void render();
 
+    void notify_framebuffer_size_changed(int width, int height);
+
 private:
     lua_State* lua_;
 };

@@ -18,6 +18,13 @@
 //   C:\path\SDL2main.lib /SUBSYSTEM:CONSOLE /NODEFAULTLIB:libcmtd.lib
 //   opengl32.lib
 
+void handle_window_size_changed(anyone::Core& core, SDL_Window* window)
+{
+    int framebuffer_width, framebuffer_height;
+    SDL_GL_GetDrawableSize(window, &framebuffer_width, &framebuffer_height);
+    core.notify_framebuffer_size_changed(framebuffer_width, framebuffer_height);
+}
+
 int main(int ArgCount, char** Args)
 {
 
@@ -31,31 +38,50 @@ int main(int ArgCount, char** Args)
 
     gladLoadGL();
 
+    handle_window_size_changed(core, window);
+
     bool running = true;
     bool full_screen = false;
     while (running) {
-        SDL_Event Event;
-        while (SDL_PollEvent(&Event)) {
-            if (Event.type == SDL_KEYDOWN) {
-                switch (Event.key.keysym.sym) {
-                    // case SDLK_ESCAPE:
-                    //   running = 0;
-                    //   break;
-                    case 'f':
-                        full_screen = !full_screen;
-                        if (full_screen) {
-                            SDL_SetWindowFullscreen(
-                                window,
-                                window_flags | SDL_WINDOW_FULLSCREEN_DESKTOP);
-                        } else {
-                            SDL_SetWindowFullscreen(window, window_flags);
-                        }
-                        break;
-                    default:
-                        break;
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_KEYDOWN: {
+                    switch (event.key.keysym.sym) {
+                        // case SDLK_ESCAPE:
+                        //   running = 0;
+                        //   break;
+                        case 'f':
+                            full_screen = !full_screen;
+                            if (full_screen) {
+                                SDL_SetWindowFullscreen(
+                                    window,
+                                    window_flags
+                                        | SDL_WINDOW_FULLSCREEN_DESKTOP);
+                            } else {
+                                SDL_SetWindowFullscreen(window, window_flags);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
                 }
-            } else if (Event.type == SDL_QUIT) {
-                running = false;
+                case SDL_QUIT: {
+                    running = false;
+                    break;
+                }
+
+                case SDL_WINDOWEVENT: {
+                    switch (event.window.event) {
+                        case SDL_WINDOWEVENT_RESIZED:
+                        case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                            handle_window_size_changed(core, window);
+                            break;
+                        }
+                    }
+                    break;
+                }
             }
         }
 
