@@ -16,4 +16,21 @@ void PlatformSupportLinux::log(const char* fmt, ...)
 
 char PlatformSupportLinux::get_path_separator() const { return '/'; }
 
+void PlatformSupportLinux::set_full_screen(bool full_screen)
+{
+    if (full_screen) {
+        SDL_SetWindowFullscreen(native_window_,
+                                window_flags_ | SDL_WINDOW_FULLSCREEN_DESKTOP);
+    } else {
+        SDL_SetWindowFullscreen(native_window_, window_flags_);
+    }
+}
+
+PlatformSupportLinux::PlatformSupportLinux(SDL_Window* window,
+                                           uint32_t window_flags)
+: native_window_(window)
+, window_flags_(window_flags)
+{
+}
+
 } // namespace anyone

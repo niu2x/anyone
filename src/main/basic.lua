@@ -48,7 +48,6 @@ function post_output_hook ( package )
 #include "string.h"
 #include "tolua++.h"
 
-#define tolua_pushcppstring(x,y)                tolua_pushstring(x,y.c_str())
 #define tolua_iscppstring                       tolua_isstring
 #define anyone_pushcppstring(lua_state, sz) lua_pushlstring(lua_state, sz.c_str(), sz.size())
 ]] )

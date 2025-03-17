@@ -40,12 +40,15 @@ int main(int argc, char* argv[])
     auto project_dir = result["project"].as<std::string>();
 
     anyone::Core core;
-    core.set_platform_support(std::make_unique<anyone::PlatformSupportLinux>());
-    core.set_project_dir(project_dir);
 
     uint32_t window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
     SDL_Window* window = SDL_CreateWindow(
         "Anyone Game", 0, 0, 256, 256, window_flags);
+
+    core.set_platform_support(
+        std::make_unique<anyone::PlatformSupportLinux>(window, window_flags));
+    core.set_project_dir(project_dir);
+
     // assert(Window);
     SDL_GLContext Context = SDL_GL_CreateContext(window);
 
@@ -68,14 +71,8 @@ int main(int argc, char* argv[])
                         //   break;
                         case 'f':
                             full_screen = !full_screen;
-                            if (full_screen) {
-                                SDL_SetWindowFullscreen(
-                                    window,
-                                    window_flags
-                                        | SDL_WINDOW_FULLSCREEN_DESKTOP);
-                            } else {
-                                SDL_SetWindowFullscreen(window, window_flags);
-                            }
+                            GET_PLATFORM_SUPPORT()->set_full_screen(
+                                full_screen);
                             break;
                         default:
                             break;
