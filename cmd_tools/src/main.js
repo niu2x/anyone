@@ -65,7 +65,7 @@ program.command("init")
     const configPath = path.join(dir, "project.json")
     const projectConfig = {
       "name": "Anyone Game",
-      "entry": "entry.lua"
+      "entry": "entry"
     }
     fs.writeFileSync(configPath, JSON.stringify(projectConfig, null, "  "))
   })
