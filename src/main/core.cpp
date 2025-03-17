@@ -11,17 +11,22 @@ extern int luaopen_anyone(lua_State* tolua_S);
 const char* vertex_source = R"(
     #version 330 core
     layout(location = 0) in vec3 position;
+    layout(location = 1) in vec2 uv;
+    out vec2 v_uv;
     void main() {
         gl_Position = vec4(position, 1.0);
+        v_uv = uv;
     }
 
 )";
 
 const char* fragment_source = R"(
     #version 330 core
+    uniform sampler2D tex;
+    in vec2 v_uv;
     out vec4 color;
     void main() {
-        color = vec4(1.0, 0.0, 0.0, 1.0); // Red color
+        color = texture(tex, v_uv);
     }
 )";
 
@@ -44,23 +49,25 @@ void Core::render()
 
     struct PosXYZ {
         float x, y, z;
+        float u, v;
     };
 
-    auto vertex_buffer = new GL_VertexBuffer(72);
+    auto vertex_buffer = new GL_VertexBuffer(120);
     vertex_buffer->alloc_cpu_buffer();
     PosXYZ* pos_list = (PosXYZ*)vertex_buffer->get_cpu_buffer();
 
-    pos_list[0] = { 0, 0, 0 };
-    pos_list[1] = { 1, 0, 0 };
-    pos_list[2] = { 1, 1, 0 };
+    pos_list[0] = { -1, -1, 0, 0, 0 };
+    pos_list[1] = { 1, -1, 0, 1, 0 };
+    pos_list[2] = { 1, 1, 0, 1, 1 };
 
-    pos_list[3] = { 0, 0, 0 };
-    pos_list[4] = { 0, -1, 0 };
-    pos_list[5] = { -1, -1, 0 };
+    pos_list[3] = { -1, -1, 0, 0, 0 };
+    pos_list[4] = { 1, 1, 0, 1, 1 };
+    pos_list[5] = { -1, 1, 0, 0, 1 };
 
     vertex_buffer->apply();
     vertex_buffer->free_cpu_buffer();
-    vertex_buffer->set_vertex_layout({ VertexAttr::POSITION_XYZ });
+    vertex_buffer->set_vertex_layout(
+        { VertexAttr::POSITION_XYZ, VertexAttr::UV });
     vertex_buffer->bind();
 
     auto program = new GL_Program();
@@ -69,8 +76,30 @@ void Core::render()
     program->compile();
     program->use();
 
+    auto texture = new GL_Texture2D(framebuffer_width_, framebuffer_height_);
+    texture->alloc_cpu_buffer();
+
+    uint32_t* pixel_buffer = (uint32_t*)texture->get_cpu_buffer();
+
+    for (int x = 0; x < framebuffer_width_; x++) {
+        for (int y = 0; y < framebuffer_height_; y++) {
+            if (((x / 32) % 2 == 1) ^ ((y / 32) % 2 == 1))
+                pixel_buffer[y * framebuffer_width_ + x] = 0xFF000000;
+            else {
+                pixel_buffer[y * framebuffer_width_ + x] = 0xFFFFFFFF;
+            }
+        }
+    }
+
+    texture->apply();
+    texture->free_cpu_buffer();
+
+    texture->bind(0);
+    program->set_uniform_texture("tex", 0);
+
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
+    delete texture;
     delete program;
     delete vertex_buffer;
 }

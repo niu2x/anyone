@@ -23,19 +23,25 @@ void GL_Texture2D::apply()
                  height_,
                  0,
                  GL_RGBA,
-                 GL_BYTE,
+                 GL_UNSIGNED_BYTE,
                  cpu_buffer_.data());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
+    glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void GL_Texture2D::alloc_cpu_buffer()
 {
     cpu_buffer_.resize(width_ * height_ * 4);
+}
+
+void GL_Texture2D::bind(int tex_unit)
+{
+    glActiveTexture(GL_TEXTURE0 + tex_unit);
+    glBindTexture(GL_TEXTURE_2D, name_);
 }
 
 void GL_Texture2D::free_cpu_buffer() { cpu_buffer_.clear(); }
@@ -78,6 +84,7 @@ struct AttrDesc {
 const AttrDesc attrs_desc[] = {
     { 3, GL_FLOAT, false },
     { 4, GL_BYTE, true },
+    { 2, GL_FLOAT, false },
 };
 
 size_t gl_sizeof(GLenum type)
@@ -104,6 +111,7 @@ void GL_VertexBuffer::bind()
         stride += desc.num_component * gl_sizeof(desc.type);
     }
 
+    size_t offset = 0;
     for (auto attr : vertex_layout_) {
         auto desc = attrs_desc[(int)attr];
         glVertexAttribPointer(attr_index,
@@ -111,8 +119,9 @@ void GL_VertexBuffer::bind()
                               desc.type,
                               desc.normalized,
                               stride,
-                              nullptr);
+                              (void*)offset);
         glEnableVertexAttribArray(attr_index++);
+        offset += desc.num_component * gl_sizeof(desc.type);
     }
 
     for (; attr_index < (int)VertexAttr::COUNT; attr_index++) {
@@ -178,6 +187,13 @@ bool GL_Program::attach_shader(ShaderType shader_type, const char* source_code)
     } else {
         return false;
     }
+}
+
+void GL_Program::set_uniform_texture(const char* uniform_name, int value)
+{
+    auto location = glGetUniformLocation(name_, uniform_name);
+    NX_ASSERT(location >= 0, "invalid uniform: %s", uniform_name)
+    glUniform1i(location, value);
 }
 
 bool GL_Program::compile()

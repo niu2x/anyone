@@ -39,6 +39,7 @@ private:
 enum class VertexAttr {
     POSITION_XYZ,
     COLOR_RGBA,
+    UV,
     COUNT,
 };
 
@@ -86,6 +87,8 @@ public:
 
     bool is_ready() const;
     void use();
+
+    void set_uniform_texture(const char* uniform_name, int value);
 
 private:
     GLuint name_;
