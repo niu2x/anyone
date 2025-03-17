@@ -1,6 +1,7 @@
 #include "core.h"
 #include "platform.h"
 #include "gl.h"
+#include "ttf.h"
 #include "../nlohmann/json.hpp"
 using json = nlohmann::json;
 
@@ -37,7 +38,12 @@ Core::Core() : framebuffer_width_(0), framebuffer_height_(0)
     lua_ = luaL_newstate();
 }
 
-Core::~Core() { lua_close(lua_); }
+Core::~Core()
+{
+    lua_close(lua_);
+    ft_library_.reset();
+    platform_support_.reset();
+}
 
 void Core::update() { }
 
@@ -157,6 +163,8 @@ int Core::load_lua()
 
 void Core::start_game()
 {
+    ft_library_ = std::make_unique<FreeTypeLibrary>();
+
     set_global_gl_state();
 
     luaL_openlibs(lua_);

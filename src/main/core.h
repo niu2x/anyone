@@ -12,6 +12,7 @@ extern "C" {
 namespace anyone {
 
 class PlatformSupport;
+class FreeTypeLibrary;
 
 class Core : public Singleton<Core> {
 public:
@@ -37,6 +38,8 @@ public:
 private:
     lua_State* lua_;
     UniquePtr<PlatformSupport> platform_support_;
+    UniquePtr<FreeTypeLibrary> ft_library_;
+
     Optional<String> project_dir_;
 
     int framebuffer_width_;
