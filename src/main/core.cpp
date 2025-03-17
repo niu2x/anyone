@@ -128,6 +128,8 @@ int Core::load_lua()
 
 void Core::start_game()
 {
+    set_global_gl_state();
+
     luaL_openlibs(lua_);
 
     luaopen_anyone(lua_);

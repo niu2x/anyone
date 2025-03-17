@@ -229,4 +229,14 @@ void GL_Program::use()
     glUseProgram(name_);
 }
 
+void set_global_gl_state()
+{
+    glDisable(GL_MULTISAMPLE);
+
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_POINT_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+}
+
 } // namespace anyone

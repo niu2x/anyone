@@ -95,4 +95,6 @@ private:
     void delete_shaders();
 };
 
+void set_global_gl_state();
+
 } // namespace anyone

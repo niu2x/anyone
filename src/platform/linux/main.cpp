@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <SDL2/SDL.h>
+// #include <SDL2/SDL_opengl.h>
 
 #include "platform_linux.h"
 #include "core.h"
 #include "glad/glad.h"
 #include "../../cxxopts.hpp"
-
 // #include <boost/program_options.hpp>
 // #include <boost/variant/variant.hpp>
 // #include <boost/variant/get.hpp>
@@ -55,6 +55,14 @@ int main(int argc, char* argv[])
     auto project_dir = result["project"].as<std::string>();
 
     anyone::Core core;
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+                        SDL_GL_CONTEXT_PROFILE_CORE);
+    // 启用多重采样
+    // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4); // 4x MSAA
 
     uint32_t window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
     SDL_Window* window = SDL_CreateWindow(
