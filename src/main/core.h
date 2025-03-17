@@ -39,6 +39,9 @@ private:
     UniquePtr<PlatformSupport> platform_support_;
     Optional<String> project_dir_;
 
+    int framebuffer_width_;
+    int framebuffer_height_;
+
     int load_lua();
     static int lua_loader(lua_State* L);
 };

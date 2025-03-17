@@ -223,4 +223,10 @@ GLenum GL_Program::to_gl(ShaderType type)
     return 0;
 }
 
+void GL_Program::use()
+{
+    NX_ASSERT(is_ready(), "gl program is not ready");
+    glUseProgram(name_);
+}
+
 } // namespace anyone

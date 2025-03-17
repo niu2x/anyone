@@ -85,6 +85,7 @@ public:
     ~GL_Program();
 
     bool is_ready() const;
+    void use();
 
 private:
     GLuint name_;

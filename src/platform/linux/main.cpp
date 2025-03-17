@@ -35,10 +35,10 @@ void handle_window_size_changed(anyone::Core& core, SDL_Window* window)
     if (SDL_GetDisplayDPI(display_index, &ddpi, &hdpi, &vdpi) != 0) {
         return;
     }
-    printf("Display DPI: diagonal=%f, horizontal=%f, vertical=%f\n",
-           ddpi,
-           hdpi,
-           vdpi);
+    // printf("Display DPI: diagonal=%f, horizontal=%f, vertical=%f\n",
+    //        ddpi,
+    //        hdpi,
+    //        vdpi);
 }
 
 int main(int argc, char* argv[])

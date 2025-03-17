@@ -1,13 +1,36 @@
 #include "core.h"
 #include "platform.h"
+#include "gl.h"
 #include "../nlohmann/json.hpp"
 using json = nlohmann::json;
 
 extern int luaopen_anyone(lua_State* tolua_S);
 
+// Shader sources
+
+const char* vertex_source = R"(
+    #version 330 core
+    layout(location = 0) in vec3 position;
+    void main() {
+        gl_Position = vec4(position, 1.0);
+    }
+
+)";
+
+const char* fragment_source = R"(
+    #version 330 core
+    out vec4 color;
+    void main() {
+        color = vec4(1.0, 0.0, 0.0, 1.0); // Red color
+    }
+)";
+
 namespace anyone {
 
-Core::Core() { lua_ = luaL_newstate(); }
+Core::Core() : framebuffer_width_(0), framebuffer_height_(0)
+{
+    lua_ = luaL_newstate();
+}
 
 Core::~Core() { lua_close(lua_); }
 
@@ -15,14 +38,47 @@ void Core::update() { }
 
 void Core::render()
 {
-    // glViewport(0, 0, 1, 1);
-    glClearColor(1.f, 0.f, 1.f, 0.f);
+    glViewport(0, 0, framebuffer_width_, framebuffer_height_);
+    glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    struct PosXYZ {
+        float x, y, z;
+    };
+
+    auto vertex_buffer = new GL_VertexBuffer(72);
+    vertex_buffer->alloc_cpu_buffer();
+    PosXYZ* pos_list = (PosXYZ*)vertex_buffer->get_cpu_buffer();
+
+    pos_list[0] = { 0, 0, 0 };
+    pos_list[1] = { 1, 0, 0 };
+    pos_list[2] = { 1, 1, 0 };
+
+    pos_list[3] = { 0, 0, 0 };
+    pos_list[4] = { 0, -1, 0 };
+    pos_list[5] = { -1, -1, 0 };
+
+    vertex_buffer->apply();
+    vertex_buffer->free_cpu_buffer();
+    vertex_buffer->set_vertex_layout({ VertexAttr::POSITION_XYZ });
+    vertex_buffer->bind();
+
+    auto program = new GL_Program();
+    program->attach_shader(GL_Program::ShaderType::VERTEX, vertex_source);
+    program->attach_shader(GL_Program::ShaderType::FRAGMENT, fragment_source);
+    program->compile();
+    program->use();
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    delete program;
+    delete vertex_buffer;
 }
 
 void Core::notify_framebuffer_size_changed(int width, int height)
 {
-    LOG("framebuffer_size_changed %d %d", width, height);
+    framebuffer_width_ = width;
+    framebuffer_height_ = height;
 }
 
 void Core::set_platform_support(std::unique_ptr<PlatformSupport> p)
