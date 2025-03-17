@@ -13,8 +13,9 @@ target_include_directories(main PUBLIC
 )
 
 target_link_libraries(main PUBLIC 
-	nx
 	tolua
+	nx
+	freetype
 )
 
 anyone_init_cxx_target(main)
