@@ -1,0 +1,5 @@
+add_library(tolua "")
+file(GLOB src_files "*.c")
+target_sources(tolua PRIVATE ${src_files})
+target_include_directories(tolua PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(tolua PUBLIC lua)

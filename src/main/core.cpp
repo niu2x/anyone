@@ -3,6 +3,8 @@
 #include "../nlohmann/json.hpp"
 using json = nlohmann::json;
 
+extern int luaopen_anyone(lua_State* tolua_S);
+
 namespace anyone {
 
 Core::Core() { lua_ = luaL_newstate(); }
@@ -71,6 +73,9 @@ int Core::load_lua()
 void Core::start_game()
 {
     luaL_openlibs(lua_);
+
+    luaopen_anyone(lua_);
+
     lua_pushcfunction(lua_, lua_loader);
     lua_setglobal(lua_, "__native_lua_loader");
     luaL_dostring(lua_, R"RAW(
