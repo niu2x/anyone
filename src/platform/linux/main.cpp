@@ -24,6 +24,21 @@ void handle_window_size_changed(anyone::Core& core, SDL_Window* window)
     int framebuffer_width, framebuffer_height;
     SDL_GL_GetDrawableSize(window, &framebuffer_width, &framebuffer_height);
     core.notify_framebuffer_size_changed(framebuffer_width, framebuffer_height);
+
+    float ddpi, hdpi, vdpi;
+    int display_index = SDL_GetWindowDisplayIndex(window);
+    if (display_index < 0) {
+        return;
+    }
+
+    // 获取显示器的 DPI 信息
+    if (SDL_GetDisplayDPI(display_index, &ddpi, &hdpi, &vdpi) != 0) {
+        return;
+    }
+    printf("Display DPI: diagonal=%f, horizontal=%f, vertical=%f\n",
+           ddpi,
+           hdpi,
+           vdpi);
 }
 
 int main(int argc, char* argv[])

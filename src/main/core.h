@@ -32,6 +32,8 @@ public:
         return platform_support_.get();
     }
 
+    void dbg_text(int x, int y, const char* xx);
+
 private:
     lua_State* lua_;
     UniquePtr<PlatformSupport> platform_support_;

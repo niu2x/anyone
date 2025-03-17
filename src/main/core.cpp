@@ -113,4 +113,6 @@ void Core::start_game()
     }
 }
 
+void Core::dbg_text(int x, int y, const char* xx) { }
+
 } // namespace anyone
