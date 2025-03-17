@@ -69,6 +69,59 @@ void GL_VertexBuffer::set_vertex_layout(const VertexLayout& layout)
     vertex_layout_ = layout;
 }
 
+struct AttrDesc {
+    int num_component;
+    GLenum type;
+    bool normalized;
+};
+
+const AttrDesc attrs_desc[] = {
+    { 3, GL_FLOAT, false },
+    { 4, GL_BYTE, true },
+};
+
+size_t gl_sizeof(GLenum type)
+{
+    switch (type) {
+        case GL_BYTE:
+            return 1;
+        case GL_FLOAT:
+            return 4;
+    }
+
+    NX_PANIC("gl_sizeof for %d is not implemented", type);
+    return 0;
+}
+
+void GL_VertexBuffer::bind()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, name_);
+    int attr_index = 0;
+    size_t stride = 0;
+
+    for (auto attr : vertex_layout_) {
+        auto desc = attrs_desc[(int)attr];
+        stride += desc.num_component * gl_sizeof(desc.type);
+    }
+
+    for (auto attr : vertex_layout_) {
+        auto desc = attrs_desc[(int)attr];
+        glVertexAttribPointer(attr_index,
+                              desc.num_component,
+                              desc.type,
+                              desc.normalized,
+                              stride,
+                              nullptr);
+        glEnableVertexAttribArray(attr_index++);
+    }
+
+    for (; attr_index < (int)VertexAttr::COUNT; attr_index++) {
+        glDisableVertexAttribArray(attr_index);
+    }
+}
+
+void GL_VertexBuffer::unbind() { glBindBuffer(GL_ARRAY_BUFFER, 0); }
+
 } // namespace anyone
 
 namespace anyone {

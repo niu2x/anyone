@@ -28,6 +28,8 @@ public:
     int get_width() const { return width_; }
     int get_height() const { return height_; }
 
+    void bind(int tex_unit);
+
 private:
     GLuint name_;
     int width_, height_;
@@ -37,6 +39,7 @@ private:
 enum class VertexAttr {
     POSITION_XYZ,
     COLOR_RGBA,
+    COUNT,
 };
 
 using VertexLayout = Vector<VertexAttr>;
@@ -57,6 +60,10 @@ public:
     }
 
     void set_vertex_layout(const VertexLayout& layout);
+
+    void bind();
+
+    static void unbind();
 
 private:
     GLuint name_;
