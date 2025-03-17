@@ -39,6 +39,7 @@ void handle_window_size_changed(anyone::Core& core, SDL_Window* window)
     //        ddpi,
     //        hdpi,
     //        vdpi);
+    core.notify_dpi_changed(hdpi, vdpi);
 }
 
 int main(int argc, char* argv[])
@@ -73,8 +74,8 @@ int main(int argc, char* argv[])
     core.set_project_dir(project_dir);
 
     // assert(Window);
-    SDL_GLContext Context = SDL_GL_CreateContext(window);
-
+    SDL_GLContext context = SDL_GL_CreateContext(window);
+    SDL_GL_MakeCurrent(window, context);
     gladLoadGL();
 
     handle_window_size_changed(core, window);

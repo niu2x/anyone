@@ -14,7 +14,11 @@ GL_Texture2D::~GL_Texture2D() { glDeleteTextures(1, &name_); }
 
 void GL_Texture2D::apply()
 {
-    NX_ASSERT(cpu_buffer_.data() != nullptr, "no pixels_buffer");
+    NX_ASSERT(cpu_buffer_.size() > 0, "no pixels_buffer");
+
+    // LOG("cpu_buffer_.size() %lu", cpu_buffer_.size());
+    // memset(cpu_buffer_.data(), 0xff, cpu_buffer_.size());
+    // glActiveTexture(GL_TEXTURE0 + 0);
     glBindTexture(GL_TEXTURE_2D, name_);
     glTexImage2D(GL_TEXTURE_2D,
                  0,
@@ -25,6 +29,8 @@ void GL_Texture2D::apply()
                  GL_RGBA,
                  GL_UNSIGNED_BYTE,
                  cpu_buffer_.data());
+
+    LOG("glTexImage2D %d %d %d", name_, width_, height_);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -61,7 +67,7 @@ void GL_VertexBuffer::apply()
 {
     auto cpu_buf = cpu_buffer_.data();
 
-    NX_ASSERT(cpu_buf != nullptr, "no cpu_buffer");
+    NX_ASSERT(cpu_buffer_.size() > 0, "no cpu_buffer");
     glBindBuffer(GL_ARRAY_BUFFER, name_);
     glBufferData(GL_ARRAY_BUFFER, buf_size_, cpu_buf, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -129,7 +135,7 @@ void GL_VertexBuffer::bind()
     }
 }
 
-void GL_VertexBuffer::unbind() { glBindBuffer(GL_ARRAY_BUFFER, 0); }
+// void GL_VertexBuffer::unbind() { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
 } // namespace anyone
 
@@ -248,11 +254,17 @@ void GL_Program::use()
 void set_global_gl_state()
 {
     glDisable(GL_MULTISAMPLE);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_BLEND);
 
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
 }
 
 } // namespace anyone

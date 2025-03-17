@@ -12,7 +12,16 @@ extern "C" {
 namespace anyone {
 
 class PlatformSupport;
+class Font;
 class FreeTypeLibrary;
+class GL_Program;
+class GL_VertexBuffer;
+class GL_Texture2D;
+
+struct DPI {
+    float hori;
+    float vert;
+};
 
 class Core : public Singleton<Core> {
 public:
@@ -34,6 +43,10 @@ public:
     }
 
     void dbg_text(int x, int y, const char* xx);
+    FreeTypeLibrary* get_ft_library() const { return ft_library_.get(); }
+
+    void notify_dpi_changed(float hdpi, float vdpi);
+    DPI get_dpi() const { return dpi_; }
 
 private:
     lua_State* lua_;
@@ -41,9 +54,15 @@ private:
     UniquePtr<FreeTypeLibrary> ft_library_;
 
     Optional<String> project_dir_;
+    UniquePtr<Font> dbg_font_;
 
     int framebuffer_width_;
     int framebuffer_height_;
+
+    GL_Program* test_program_;
+    GL_VertexBuffer* test_vertex_buffer_;
+
+    DPI dpi_;
 
     int load_lua();
     static int lua_loader(lua_State* L);

@@ -21,7 +21,7 @@ public:
 
     uint8_t* get_cpu_buffer()
     {
-        NX_ASSERT(cpu_buffer_.data() != nullptr, "no pixels_buffer");
+        NX_ASSERT(cpu_buffer_.size() > 0, "no pixels_buffer");
         return cpu_buffer_.data();
     }
 
@@ -56,7 +56,7 @@ public:
 
     uint8_t* get_cpu_buffer()
     {
-        NX_ASSERT(cpu_buffer_.data() != nullptr, "no cpu_buffer");
+        NX_ASSERT(cpu_buffer_.size() > 0, "no cpu_buffer");
         return cpu_buffer_.data();
     }
 
@@ -64,7 +64,7 @@ public:
 
     void bind();
 
-    static void unbind();
+    // static void unbind();
 
 private:
     GLuint name_;
