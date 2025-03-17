@@ -60,8 +60,14 @@ void GL_VertexBuffer::apply()
     glBufferData(GL_ARRAY_BUFFER, buf_size_, cpu_buf, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+
 void GL_VertexBuffer::alloc_cpu_buffer() { cpu_buffer_.resize(buf_size_); }
 void GL_VertexBuffer::free_cpu_buffer() { cpu_buffer_.clear(); }
+
+void GL_VertexBuffer::set_vertex_layout(const VertexLayout& layout)
+{
+    vertex_layout_ = layout;
+}
 
 } // namespace anyone
 

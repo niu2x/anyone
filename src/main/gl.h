@@ -34,6 +34,13 @@ private:
     ByteBuffer cpu_buffer_;
 };
 
+enum class VertexAttr {
+    POSITION_XYZ,
+    COLOR_RGBA,
+};
+
+using VertexLayout = Vector<VertexAttr>;
+
 class GL_VertexBuffer : public GL_Object {
 public:
     GL_VertexBuffer(size_t buf_size);
@@ -49,10 +56,13 @@ public:
         return cpu_buffer_.data();
     }
 
+    void set_vertex_layout(const VertexLayout& layout);
+
 private:
     GLuint name_;
     size_t buf_size_;
     ByteBuffer cpu_buffer_;
+    VertexLayout vertex_layout_;
 };
 
 class GL_Program : public GL_Object {
