@@ -47,61 +47,61 @@ void Core::render()
     glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    struct PosXYZ {
-        float x, y, z;
-        float u, v;
-    };
+    // struct PosXYZ {
+    //     float x, y, z;
+    //     float u, v;
+    // };
 
-    auto vertex_buffer = new GL_VertexBuffer(120);
-    vertex_buffer->alloc_cpu_buffer();
-    PosXYZ* pos_list = (PosXYZ*)vertex_buffer->get_cpu_buffer();
+    // auto vertex_buffer = new GL_VertexBuffer(120);
+    // vertex_buffer->alloc_cpu_buffer();
+    // PosXYZ* pos_list = (PosXYZ*)vertex_buffer->get_cpu_buffer();
 
-    pos_list[0] = { -1, -1, 0, 0, 0 };
-    pos_list[1] = { 1, -1, 0, 1, 0 };
-    pos_list[2] = { 1, 1, 0, 1, 1 };
+    // pos_list[0] = { -1, -1, 0, 0, 0 };
+    // pos_list[1] = { 1, -1, 0, 1, 0 };
+    // pos_list[2] = { 1, 1, 0, 1, 1 };
 
-    pos_list[3] = { -1, -1, 0, 0, 0 };
-    pos_list[4] = { 1, 1, 0, 1, 1 };
-    pos_list[5] = { -1, 1, 0, 0, 1 };
+    // pos_list[3] = { -1, -1, 0, 0, 0 };
+    // pos_list[4] = { 1, 1, 0, 1, 1 };
+    // pos_list[5] = { -1, 1, 0, 0, 1 };
 
-    vertex_buffer->apply();
-    vertex_buffer->free_cpu_buffer();
-    vertex_buffer->set_vertex_layout(
-        { VertexAttr::POSITION_XYZ, VertexAttr::UV });
-    vertex_buffer->bind();
+    // vertex_buffer->apply();
+    // vertex_buffer->free_cpu_buffer();
+    // vertex_buffer->set_vertex_layout(
+    //     { VertexAttr::POSITION_XYZ, VertexAttr::UV });
+    // vertex_buffer->bind();
 
-    auto program = new GL_Program();
-    program->attach_shader(GL_Program::ShaderType::VERTEX, vertex_source);
-    program->attach_shader(GL_Program::ShaderType::FRAGMENT, fragment_source);
-    program->compile();
-    program->use();
+    // auto program = new GL_Program();
+    // program->attach_shader(GL_Program::ShaderType::VERTEX, vertex_source);
+    // program->attach_shader(GL_Program::ShaderType::FRAGMENT, fragment_source);
+    // program->compile();
+    // program->use();
 
-    auto texture = new GL_Texture2D(framebuffer_width_, framebuffer_height_);
-    texture->alloc_cpu_buffer();
+    // auto texture = new GL_Texture2D(framebuffer_width_, framebuffer_height_);
+    // texture->alloc_cpu_buffer();
 
-    uint32_t* pixel_buffer = (uint32_t*)texture->get_cpu_buffer();
+    // uint32_t* pixel_buffer = (uint32_t*)texture->get_cpu_buffer();
 
-    for (int x = 0; x < framebuffer_width_; x++) {
-        for (int y = 0; y < framebuffer_height_; y++) {
-            if (((x / 32) % 2 == 1) ^ ((y / 32) % 2 == 1))
-                pixel_buffer[y * framebuffer_width_ + x] = 0xFF000000;
-            else {
-                pixel_buffer[y * framebuffer_width_ + x] = 0xFFFFFFFF;
-            }
-        }
-    }
+    // for (int x = 0; x < framebuffer_width_; x++) {
+    //     for (int y = 0; y < framebuffer_height_; y++) {
+    //         if (((x / 32) % 2 == 1) ^ ((y / 32) % 2 == 1))
+    //             pixel_buffer[y * framebuffer_width_ + x] = 0xFF000000;
+    //         else {
+    //             pixel_buffer[y * framebuffer_width_ + x] = 0xFFFFFFFF;
+    //         }
+    //     }
+    // }
 
-    texture->apply();
-    texture->free_cpu_buffer();
+    // texture->apply();
+    // texture->free_cpu_buffer();
 
-    texture->bind(0);
-    program->set_uniform_texture("tex", 0);
+    // texture->bind(0);
+    // program->set_uniform_texture("tex", 0);
 
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    // glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    delete texture;
-    delete program;
-    delete vertex_buffer;
+    // delete texture;
+    // delete program;
+    // delete vertex_buffer;
 }
 
 void Core::notify_framebuffer_size_changed(int width, int height)
