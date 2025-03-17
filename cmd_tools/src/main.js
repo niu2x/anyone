@@ -62,6 +62,10 @@ program
 program.command("init")
   .argument('<dir>', 'project directory')
   .action((dir) => {
+    if (dir == undefined) {
+      dir = "./"
+    }
+    
     const configPath = path.join(dir, "project.json")
     const projectConfig = {
       "name": "Anyone Game",
