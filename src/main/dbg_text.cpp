@@ -44,15 +44,31 @@ DebugText::DebugText(Font* font)
 , vertex_count_(0)
 , texture_(nullptr)
 {
-    auto font_size = font_->get_font_pixel_size();
 
-    auto size = GET_CORE()->get_framebuffer_size();
-    screens_.resize((size.width / font_size) * (size.height / font_size));
+    screens_.resize(get_cell_count());
     memset(screens_.data(), 0, screens_.size());
     program_ = create_gl_program(dbg_text_vertex_source,
                                  dbg_text_fragment_source);
 
     GET_CORE()->add_framebuffer_size_listener(this);
+}
+
+int DebugText::get_cell_count() const
+{
+    auto size = GET_CORE()->get_framebuffer_size();
+    return (size.width / get_font_width()) * (size.height / get_font_height());
+}
+
+int DebugText::get_font_width() const
+{
+    auto font_size = font_->get_font_pixel_size();
+    return font_size * 0.6;
+}
+
+int DebugText::get_font_height() const
+{
+    auto font_size = font_->get_font_pixel_size();
+    return font_size;
 }
 
 DebugText::~DebugText()
@@ -66,9 +82,7 @@ DebugText::~DebugText()
 
 void DebugText::on_framebuffer_size_changed()
 {
-    auto font_size = font_->get_font_pixel_size();
-    auto size = GET_CORE()->get_framebuffer_size();
-    screens_.resize((size.width / font_size) * (size.height / font_size));
+    screens_.resize(get_cell_count());
     memset(screens_.data(), 0, screens_.size());
     dirty_ = true;
 }
@@ -80,10 +94,8 @@ struct Vertex {
 
 void DebugText::printf(int x, int y, const char* msg)
 {
-    auto font_size = font_->get_font_pixel_size();
     auto size = GET_CORE()->get_framebuffer_size();
-    int cell_width = (size.width / font_size);
-    int cell_height = (size.height / font_size);
+    int cell_width = (size.width / get_font_width());
 
     for (int i = 0; i < strlen(msg); i++) {
         if (x + i >= 0 && x + i < cell_width) {
@@ -98,9 +110,10 @@ void DebugText::render()
 {
     auto size = GET_CORE()->get_framebuffer_size();
 
-    auto font_size = font_->get_font_pixel_size();
-
     if (dirty_) {
+        auto font_width = get_font_width();
+        auto font_height = get_font_height();
+
         dirty_ = false;
 
         if (vbo_) {
@@ -114,8 +127,8 @@ void DebugText::render()
         for (int i = 0; i < screens_.size(); i++) {
             char c = screens_[i];
             if (c) {
-                auto x = i % (size.width / font_size);
-                auto y = i / (size.width / font_size);
+                auto x = i % (size.width / font_width);
+                auto y = i / (size.width / font_width);
                 chars_counter++;
             }
         }
@@ -136,12 +149,12 @@ void DebugText::render()
                     if (char_info) {
                         texture = char_info->texture;
 
-                        auto cell_x = i % (size.width / font_size);
-                        auto cell_y = i / (size.width / font_size);
+                        auto cell_x = i % (size.width / font_width);
+                        auto cell_y = i / (size.width / font_width);
 
                         vertexs[vertex_index++] = {
-                            .x = cell_x * font_size + char_info->bitmap_left,
-                            .y = cell_y * font_size + font_size * 0.666
+                            .x = cell_x * font_width + char_info->bitmap_left,
+                            .y = cell_y * font_height + font_height * 0.666
                                  - char_info->bitmap_top,
                             .u = ((float)char_info->left)
                                  / texture->get_width(),
@@ -150,9 +163,9 @@ void DebugText::render()
                         };
 
                         vertexs[vertex_index++] = {
-                            .x = cell_x * font_size + char_info->bitmap_left,
-                            .y = cell_y * font_size + char_info->height
-                                 + font_size * 0.666 - char_info->bitmap_top,
+                            .x = cell_x * font_width + char_info->bitmap_left,
+                            .y = cell_y * font_height + char_info->height
+                                 + font_height * 0.666 - char_info->bitmap_top,
                             .u = ((float)char_info->left)
                                  / texture->get_width(),
                             .v = ((float)char_info->top + char_info->height)
@@ -160,41 +173,26 @@ void DebugText::render()
                         };
 
                         vertexs[vertex_index++] = {
-                            .x = cell_x * font_size + char_info->width
+                            .x = cell_x * font_width + char_info->width
                                  + char_info->bitmap_left,
-                            .y = cell_y * font_size + char_info->height
-                                 + font_size * 0.666 - char_info->bitmap_top,
+                            .y = cell_y * font_height + char_info->height
+                                 + font_height * 0.666 - char_info->bitmap_top,
                             .u = ((float)char_info->left + char_info->width)
                                  / texture->get_width(),
                             .v = ((float)char_info->top + char_info->height)
                                  / texture->get_height(),
                         };
 
-                        vertexs[vertex_index++] = {
-                            .x = cell_x * font_size + char_info->bitmap_left,
-                            .y = cell_y * font_size + font_size * 0.666
-                                 - char_info->bitmap_top,
-                            .u = ((float)char_info->left)
-                                 / texture->get_width(),
-                            .v = ((float)char_info->top)
-                                 / texture->get_height(),
-                        };
+                        vertexs[vertex_index] = vertexs[vertex_index - 3];
+                        vertex_index++;
+
+                        vertexs[vertex_index] = vertexs[vertex_index - 2];
+                        vertex_index++;
 
                         vertexs[vertex_index++] = {
-                            .x = cell_x * font_size + char_info->width
+                            .x = cell_x * font_width + char_info->width
                                  + char_info->bitmap_left,
-                            .y = cell_y * font_size + char_info->height
-                                 + font_size * 0.666 - char_info->bitmap_top,
-                            .u = ((float)char_info->left + char_info->width)
-                                 / texture->get_width(),
-                            .v = ((float)char_info->top + char_info->height)
-                                 / texture->get_height(),
-                        };
-
-                        vertexs[vertex_index++] = {
-                            .x = cell_x * font_size + char_info->width
-                                 + char_info->bitmap_left,
-                            .y = cell_y * font_size + font_size * 0.666
+                            .y = cell_y * font_height + font_height * 0.666
                                  - char_info->bitmap_top,
                             .u = ((float)char_info->left + char_info->width)
                                  / texture->get_width(),
