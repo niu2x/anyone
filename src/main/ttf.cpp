@@ -74,7 +74,7 @@ Font::Font(int tex_width, int tex_height, int font_pixel_size)
 Font::~Font()
 {
     for (auto tex : textures_) {
-        delete tex;
+        tex->release();
     }
     textures_.clear();
 }

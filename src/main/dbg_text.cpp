@@ -81,9 +81,10 @@ DebugText::~DebugText()
 {
     GET_CORE()->remove_framebuffer_size_listener(this);
 
-    delete program_;
+    program_->release();
+
     if (vbo_)
-        delete vbo_;
+        vbo_->release();
 }
 
 void DebugText::on_framebuffer_size_changed()
@@ -123,7 +124,7 @@ void DebugText::render()
         dirty_ = false;
 
         if (vbo_) {
-            delete vbo_;
+            vbo_->release();
             vbo_ = nullptr;
         }
 

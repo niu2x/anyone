@@ -64,4 +64,21 @@ public:
     virtual void on_framebuffer_size_changed() { }
 };
 
+class Ref {
+public:
+    Ref();
+    virtual ~Ref();
+
+    void retain() { counter_++; }
+
+    void release()
+    {
+        if (--counter_ == 0)
+            delete this;
+    }
+
+private:
+    uint64_t counter_;
+};
+
 } // namespace anyone

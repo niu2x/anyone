@@ -7,10 +7,10 @@ namespace anyone {
 void set_global_gl_state();
 void check_gl_version();
 
-class GL_Object {
+class GL_Object : public Ref {
 public:
     GL_Object();
-    virtual ~GL_Object() = 0;
+    ~GL_Object();
 };
 
 class GL_Texture2D : public GL_Object {
