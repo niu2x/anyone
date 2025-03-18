@@ -110,4 +110,34 @@ void check_gl_version();
 GL_Program* create_gl_program(const char* vertex_source,
                               const char* fragment_source);
 
+enum class DrawPrimitive {
+    POINT,
+    LINE,
+    TRIANGLE,
+};
+
+enum class VertexStrategy {
+    POINT_LIST,
+};
+
+enum class PolygonMode {
+    POINT,
+    LINE,
+    FILL,
+};
+
+struct DrawOperation {
+    DrawPrimitive primitive;
+    VertexStrategy strategy;
+    PolygonMode polygon_mode;
+
+    GL_VertexBuffer* vertex_buffer;
+    int vertex_count;
+
+    GL_Program* program;
+    GL_Texture2D* texture;
+};
+
+void execute_operation(const DrawOperation& operation);
+
 } // namespace anyone

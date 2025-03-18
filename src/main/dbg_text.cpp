@@ -4,10 +4,14 @@ namespace anyone {
 
 const char* dbg_text_vertex_source = R"(
     #version 330 core
+
     layout(location = 0) in vec2 position;
     layout(location = 1) in vec2 uv;
+
     uniform vec2 framebuffer_size;
+
     out vec2 v_uv;
+
     void main() {
         vec2 p = position;
         p.xy /= framebuffer_size;
@@ -22,9 +26,10 @@ const char* dbg_text_vertex_source = R"(
 
 const char* dbg_text_fragment_source = R"(
     #version 330 core
-    uniform vec2 framebuffer_size;
+
     uniform sampler2D tex;
     uniform vec4 font_color;
+
     in vec2 v_uv;
     out vec4 color;
     void main() {
@@ -212,7 +217,7 @@ void DebugText::render()
     }
 
     if (vbo_) {
-        vbo_->bind();
+
         texture_->bind(0);
 
         // LOG("texture_ %d %d", texture_->get_height(), texture_->get_width());
@@ -222,7 +227,16 @@ void DebugText::render()
         program_->set_uniform_texture("tex", 0);
         program_->set_uniform_vec4("font_color", 1.0, 1.0, 1.0, 1.0);
         program_->set_uniform_vec2("framebuffer_size", size.width, size.height);
-        glDrawArrays(GL_TRIANGLES, 0, vertex_count_);
+
+        draw_operation_.vertex_buffer = vbo_;
+        draw_operation_.texture = texture_;
+        draw_operation_.program = program_;
+        draw_operation_.primitive = DrawPrimitive::TRIANGLE;
+        draw_operation_.polygon_mode = PolygonMode::FILL;
+        draw_operation_.strategy = VertexStrategy::POINT_LIST;
+        draw_operation_.vertex_count = vertex_count_;
+
+        execute_operation(draw_operation_);
     }
 }
 

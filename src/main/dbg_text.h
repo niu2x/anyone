@@ -24,6 +24,8 @@ private:
     GL_Texture2D* texture_;
     GL_Program* program_;
 
+    DrawOperation draw_operation_;
+
     int get_font_width() const;
     int get_font_height() const;
     int get_cell_count() const;

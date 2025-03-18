@@ -312,4 +312,58 @@ GL_Program* create_gl_program(const char* vertex_source,
     return prog;
 }
 
+void execute_operation(const DrawOperation& op)
+{
+
+    switch (op.polygon_mode) {
+        case PolygonMode::POINT: {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+            break;
+        }
+        case PolygonMode::LINE: {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            break;
+        }
+        case PolygonMode::FILL: {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            break;
+        }
+    }
+
+    switch (op.primitive) {
+        case DrawPrimitive::TRIANGLE: {
+            switch (op.strategy) {
+                case VertexStrategy::POINT_LIST: {
+                    op.vertex_buffer->bind();
+                    glDrawArrays(GL_TRIANGLES, 0, op.vertex_count);
+                    break;
+                }
+            }
+            break;
+        }
+
+        case DrawPrimitive::LINE: {
+            switch (op.strategy) {
+                case VertexStrategy::POINT_LIST: {
+                    op.vertex_buffer->bind();
+                    glDrawArrays(GL_LINES, 0, op.vertex_count);
+                    break;
+                }
+            }
+            break;
+        }
+
+        case DrawPrimitive::POINT: {
+            switch (op.strategy) {
+                case VertexStrategy::POINT_LIST: {
+                    op.vertex_buffer->bind();
+                    glDrawArrays(GL_POINTS, 0, op.vertex_count);
+                    break;
+                }
+            }
+            break;
+        }
+    }
+}
+
 } // namespace anyone
