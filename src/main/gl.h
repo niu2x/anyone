@@ -4,6 +4,9 @@
 #include <unordered_set>
 namespace anyone {
 
+void set_global_gl_state();
+void check_gl_version();
+
 class GL_Object {
 public:
     GL_Object();
@@ -105,10 +108,14 @@ private:
     void delete_shaders();
 };
 
-void set_global_gl_state();
-void check_gl_version();
 GL_Program* create_gl_program(const char* vertex_source,
                               const char* fragment_source);
+
+class GL_ProgramManager {
+public:
+    GL_ProgramManager();
+    ~GL_ProgramManager();
+};
 
 enum class DrawPrimitive {
     POINT,
