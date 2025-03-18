@@ -90,6 +90,7 @@ struct AttrDesc {
 
 const AttrDesc attrs_desc[] = {
     { 3, GL_FLOAT, false },
+    { 2, GL_FLOAT, false },
     { 4, GL_BYTE, true },
     { 2, GL_FLOAT, false },
 };
@@ -194,6 +195,13 @@ bool GL_Program::attach_shader(ShaderType shader_type, const char* source_code)
     } else {
         return false;
     }
+}
+
+void GL_Program::set_uniform_vec2(const char* uniform_name, float x, float y)
+{
+    auto location = glGetUniformLocation(name_, uniform_name);
+    NX_ASSERT(location >= 0, "invalid uniform: %s", uniform_name)
+    glUniform2f(location, x, y);
 }
 
 void GL_Program::set_uniform_texture(const char* uniform_name, int value)

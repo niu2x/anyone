@@ -2,6 +2,7 @@
 #include "platform.h"
 #include "gl.h"
 #include "ttf.h"
+#include "dbg_text.h"
 #include "embed/default_ttf.h"
 #include "../nlohmann/json.hpp"
 #include <sstream>
@@ -34,6 +35,37 @@ const char* fragment_source = R"(
     }
 )";
 
+const char* dbg_text_vertex_source = R"(
+    #version 330 core
+    layout(location = 0) in vec2 position;
+    layout(location = 1) in vec2 uv;
+
+    uniform vec2 framebuffer_size;
+
+    out vec2 v_uv;
+    void main() {
+        vec2 p = position;
+        p.xy /= framebuffer_size;
+        p.xy *= 2;
+        p.xy -= vec2(1.0, 1.0);
+        p.y = -p.y;
+        gl_Position = vec4(p.x, p.y, 0.0,  1.0);
+        v_uv = uv;
+    }
+
+)";
+
+const char* dbg_text_fragment_source = R"(
+    #version 330 core
+    uniform vec2 framebuffer_size;
+    uniform sampler2D tex;
+    in vec2 v_uv;
+    out vec4 color;
+    void main() {
+        color = texture(tex, v_uv);
+    }
+)";
+
 namespace anyone {
 
 Core::Core() : framebuffer_width_(0), framebuffer_height_(0), dpi_ { 90, 90 }
@@ -45,6 +77,9 @@ Core::~Core()
 {
     delete test_program_;
     delete test_vertex_buffer_;
+
+    delete dbg_text_program_;
+    dbg_text_.reset();
     lua_close(lua_);
     dbg_font_.reset();
     ft_library_.reset();
@@ -59,11 +94,11 @@ void Core::render()
     glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    test_vertex_buffer_->bind();
-    test_program_->use();
+    // test_vertex_buffer_->bind();
+    // test_program_->use();
 
     // dbg_font_->build_ascii_chars(default_ttf, default_ttf_length);
-    auto texture = dbg_font_->get_texture(0);
+    // auto texture = dbg_font_->get_texture(0);
 
     // auto texture = new GL_Texture2D(framebuffer_width_, framebuffer_height_);
     // texture->alloc_cpu_buffer();
@@ -83,10 +118,13 @@ void Core::render()
     // texture->apply();
     // texture->free_cpu_buffer();
 
-    texture->bind(0);
-    test_program_->set_uniform_texture("tex", 0);
+    // texture->bind(0);
+    // test_program_->set_uniform_texture("tex", 0);
 
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    // glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    dbg_text_->printf(0, 0, "FPS: ");
+    dbg_text_->render();
 
     // delete texture;
     // delete program;
@@ -164,6 +202,8 @@ void Core::start_game()
     dbg_font_ = std::make_unique<Font>(512, 512, 32);
     dbg_font_->build_ascii_chars(default_ttf, default_ttf_length);
 
+    dbg_text_ = std::make_unique<DebugText>(dbg_font_.get());
+
     struct PosXYZ {
         float x, y, z;
         float u, v;
@@ -191,6 +231,13 @@ void Core::start_game()
     test_program_->attach_shader(GL_Program::ShaderType::FRAGMENT,
                                  fragment_source);
     test_program_->compile();
+
+    dbg_text_program_ = new GL_Program();
+    dbg_text_program_->attach_shader(GL_Program::ShaderType::VERTEX,
+                                     dbg_text_vertex_source);
+    dbg_text_program_->attach_shader(GL_Program::ShaderType::FRAGMENT,
+                                     dbg_text_fragment_source);
+    dbg_text_program_->compile();
 
     luaL_openlibs(lua_);
 
@@ -233,6 +280,25 @@ void Core::start_game()
     }
 }
 
-void Core::dbg_text(int x, int y, const char* xx) { }
+void Core::dbg_text(int x, int y, const char* xx)
+{
+    dbg_text_->printf(x, y, xx);
+}
+
+void Core::add_framebuffer_size_listener(FramebufferSizeListener* l)
+{
+    framebuffer_size_event_.add_listener(l);
+}
+
+void Core::remove_framebuffer_size_listener(FramebufferSizeListener* l)
+{
+    framebuffer_size_event_.remove_listener(l);
+}
+
+void Core::fire_framebuffer_size_changed()
+{
+    framebuffer_size_event_.dispatch(
+        &FramebufferSizeListener::on_framebuffer_size_changed);
+}
 
 } // namespace anyone

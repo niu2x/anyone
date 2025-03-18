@@ -122,17 +122,21 @@ void Font::build_chars(const uint8_t* font_ptr,
 
         auto pixels = (uint32_t*)current_tex->get_cpu_buffer();
 
+        auto ii = i % (page_width * page_height);
         if (!FT_Load_Char(face, chars[i], FT_LOAD_RENDER)) {
             for (int x = 0; x < slot->bitmap.width; x++) {
                 for (int y = 0; y < slot->bitmap.rows; y++) {
-                    auto ii = (i % (page_width * page_height));
                     pixels[(y + ii / page_width * cell_size_) * tex_width_
-                           + (x + ii % page_width * cell_size_)
-                           + slot->bitmap_left]
+                           + (x + ii % page_width * cell_size_)]
                         = slot->bitmap.buffer[y * slot->bitmap.width + x];
                 }
             }
-            LOG("load char");
+            // LOG("load char");
+            chars_info_[chars[i]] = { .texture = current_tex,
+                                      .left = ii % page_width * cell_size_,
+                                      .top = ii / page_width * cell_size_,
+                                      .width = (int)slot->bitmap.width,
+                                      .height = (int)slot->bitmap.rows };
         }
     }
     ft->unload_face("dbg_font");
@@ -141,6 +145,15 @@ void Font::build_chars(const uint8_t* font_ptr,
         current_tex->apply();
         current_tex->free_cpu_buffer();
     }
+}
+
+const Font::CharInfo* Font::lookup_char(uint32_t code) const
+{
+    auto it = chars_info_.find(code);
+    if (it == chars_info_.end())
+        return nullptr;
+
+    return &(it->second);
 }
 
 } // namespace anyone

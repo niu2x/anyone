@@ -38,6 +38,7 @@ private:
 
 enum class VertexAttr {
     POSITION_XYZ,
+    POSITION_XY,
     COLOR_RGBA,
     UV,
     COUNT,
@@ -89,6 +90,7 @@ public:
     void use();
 
     void set_uniform_texture(const char* uniform_name, int value);
+    void set_uniform_vec2(const char* uniform_name, float x, float y);
 
 private:
     GLuint name_;

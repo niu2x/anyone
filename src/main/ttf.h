@@ -25,6 +25,11 @@ private:
 
 class Font {
 public:
+    struct CharInfo {
+        GL_Texture2D* texture;
+        int left, top, width, height;
+    };
+
     Font(int tex_width, int tex_height, int font_pixel_size);
     ~Font();
     void build_ascii_chars(const uint8_t* font_ptr, size_t font_len);
@@ -35,12 +40,15 @@ public:
     GL_Texture2D* get_texture(int index) const { return textures_[index]; }
     int get_page_num() const { return textures_.size(); }
 
+    const CharInfo* lookup_char(uint32_t code) const;
+
 private:
     Vector<GL_Texture2D*> textures_;
     int cell_size_;
     int tex_width_;
     int tex_height_;
     int font_pixel_size_;
+    std::unordered_map<uint32_t, CharInfo> chars_info_;
 };
 
 } // namespace anyone
