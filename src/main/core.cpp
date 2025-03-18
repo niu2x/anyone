@@ -123,22 +123,8 @@ int Core::load_lua()
     return 1;
 }
 
-void Core::start_game()
+void Core::init_lua()
 {
-    check_gl_version();
-    set_global_gl_state();
-
-    ft_library_ = std::make_unique<FreeTypeLibrary>();
-    dbg_font_ = std::make_unique<Font>(512, 512, 32);
-    dbg_font_->build_ascii_chars(default_ttf, default_ttf_length);
-
-    dbg_text_ = std::make_unique<DebugText>(dbg_font_.get());
-
-    struct PosXYZ {
-        float x, y, z;
-        float u, v;
-    };
-
     luaL_openlibs(lua_);
 
     luaopen_anyone(lua_);
@@ -146,9 +132,12 @@ void Core::start_game()
     lua_pushcfunction(lua_, lua_loader);
     lua_setglobal(lua_, "__native_lua_loader");
     luaL_dostring(lua_, R"RAW(
-    	package.searchers = {__native_lua_loader}
+        package.searchers = {__native_lua_loader}
     )RAW");
+}
 
+void Core::run_project()
+{
     if (!project_dir_) {
         NX_PANIC("no project_dir");
     }
@@ -178,6 +167,22 @@ void Core::start_game()
         const char* error_msg = lua_tolstring(lua_, -1, nullptr);
         LOG("lua error: %s", error_msg);
     }
+}
+
+void Core::start_game()
+{
+    check_gl_version();
+    set_global_gl_state();
+
+    ft_library_ = std::make_unique<FreeTypeLibrary>();
+    dbg_font_ = std::make_unique<Font>(512, 512, 32);
+    dbg_font_->build_ascii_chars(default_ttf, default_ttf_length);
+
+    dbg_text_ = std::make_unique<DebugText>(dbg_font_.get());
+
+    init_lua();
+
+    run_project();
 }
 
 void Core::dbg_printf(int x, int y, const char* xx)

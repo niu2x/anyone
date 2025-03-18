@@ -30,7 +30,6 @@ void GL_Texture2D::apply()
                  GL_UNSIGNED_BYTE,
                  cpu_buffer_.data());
 
-    LOG("glTexImage2D %d %d %d", name_, width_, height_);
     glTexParameteri(
         GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

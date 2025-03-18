@@ -82,6 +82,9 @@ private:
 
     int load_lua();
     static int lua_loader(lua_State* L);
+
+    void init_lua();
+    void run_project();
 };
 
 } // namespace anyone
