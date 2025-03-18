@@ -25,18 +25,22 @@ private:
 
 class Font {
 public:
-    Font(int width, int height, int cell_size);
+    Font(int tex_width, int tex_height, int font_pixel_size);
     ~Font();
     void build_ascii_chars(const uint8_t* font_ptr, size_t font_len);
     void build_chars(const uint8_t* font_ptr,
                      size_t font_len,
                      const char* chars);
 
-    GL_Texture2D* get_texture() const { return texture_; }
+    GL_Texture2D* get_texture(int index) const { return textures_[index]; }
+    int get_page_num() const { return textures_.size(); }
 
 private:
-    GL_Texture2D* texture_;
+    Vector<GL_Texture2D*> textures_;
     int cell_size_;
+    int tex_width_;
+    int tex_height_;
+    int font_pixel_size_;
 };
 
 } // namespace anyone

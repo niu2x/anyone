@@ -63,7 +63,7 @@ void Core::render()
     test_program_->use();
 
     // dbg_font_->build_ascii_chars(default_ttf, default_ttf_length);
-    auto texture = dbg_font_->get_texture();
+    auto texture = dbg_font_->get_texture(0);
 
     // auto texture = new GL_Texture2D(framebuffer_width_, framebuffer_height_);
     // texture->alloc_cpu_buffer();
@@ -157,8 +157,7 @@ int Core::load_lua()
 
 void Core::start_game()
 {
-    LOG("OpenGL version: %s\n", glGetString(GL_VERSION));
-
+    check_gl_version();
     set_global_gl_state();
 
     ft_library_ = std::make_unique<FreeTypeLibrary>();
@@ -174,13 +173,13 @@ void Core::start_game()
     test_vertex_buffer_->alloc_cpu_buffer();
     PosXYZ* pos_list = (PosXYZ*)test_vertex_buffer_->get_cpu_buffer();
 
-    pos_list[0] = { -1, -1, 0, 0, 0 };
-    pos_list[1] = { 1, -1, 0, 1, 0 };
-    pos_list[2] = { 1, 1, 0, 1, 1 };
+    pos_list[0] = { -1, -1, 0, 0, 1 };
+    pos_list[1] = { 1, -1, 0, 1, 1 };
+    pos_list[2] = { 1, 1, 0, 1, 0 };
 
-    pos_list[3] = { -1, -1, 0, 0, 0 };
-    pos_list[4] = { 1, 1, 0, 1, 1 };
-    pos_list[5] = { -1, 1, 0, 0, 1 };
+    pos_list[3] = { -1, -1, 0, 0, 1 };
+    pos_list[4] = { 1, 1, 0, 1, 0 };
+    pos_list[5] = { -1, 1, 0, 0, 0 };
 
     test_vertex_buffer_->apply();
     test_vertex_buffer_->free_cpu_buffer();

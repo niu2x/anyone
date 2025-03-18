@@ -31,8 +31,8 @@ void GL_Texture2D::apply()
                  cpu_buffer_.data());
 
     LOG("glTexImage2D %d %d %d", name_, width_, height_);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
+    glTexParameteri(
+        GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -250,6 +250,22 @@ void GL_Program::use()
 {
     NX_ASSERT(is_ready(), "gl program is not ready");
     glUseProgram(name_);
+}
+
+void check_gl_version()
+{
+    auto gl_version = glGetString(GL_VERSION);
+    LOG("OpenGL version: %s\n", gl_version);
+    int major, minor;
+    if (sscanf((const char*)gl_version, "%d.%d", &major, &minor) != 2) {
+        NX_PANIC("parse gl_version error");
+    }
+
+    if (major == 3 || minor >= 3) {
+    } else if (major >= 4) {
+    } else {
+        NX_PANIC("gl_version is too low");
+    }
 }
 
 void set_global_gl_state()

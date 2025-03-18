@@ -62,18 +62,28 @@ FT_Face FreeTypeLibrary::get_face(const char* key) const
 
 namespace anyone {
 
-Font::Font(int width, int height, int cell_size) : cell_size_(cell_size)
+Font::Font(int tex_width, int tex_height, int font_pixel_size)
+: tex_width_(tex_width)
+, tex_height_(tex_height)
+, font_pixel_size_(font_pixel_size)
+, cell_size_(0)
 {
-    texture_ = new GL_Texture2D(width, height);
+    cell_size_ = font_pixel_size_ + 4;
 }
 
-Font::~Font() { delete texture_; }
+Font::~Font()
+{
+    for (auto tex : textures_) {
+        delete tex;
+    }
+    textures_.clear();
+}
 
 void Font::build_ascii_chars(const uint8_t* font_ptr, size_t font_len)
 {
     build_chars(font_ptr,
                 font_len,
-                "01234567890abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXY"
+                "0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXY"
                 "Z:;'\"[]{}!@#$%^&*()-=_+,.<>/?|\\~` ");
 }
 
@@ -81,41 +91,56 @@ void Font::build_chars(const uint8_t* font_ptr,
                        size_t font_len,
                        const char* chars)
 {
-    texture_->alloc_cpu_buffer();
 
     auto ft = GET_CORE()->get_ft_library();
     ft->load_face("dbg_font", font_ptr, font_len);
     auto face = ft->get_face("dbg_font");
 
-    auto dpi = GET_CORE()->get_dpi();
+    GL_Texture2D* current_tex = nullptr;
+    int page_index = -1;
 
-    FT_Set_Char_Size(face, 50 * 64, 0, dpi.hori, dpi.vert);
+    int page_width = tex_width_ / cell_size_;
+    int page_height = tex_height_ / cell_size_;
+    FT_Set_Pixel_Sizes(face, font_pixel_size_, font_pixel_size_);
     auto slot = face->glyph;
 
-    auto pixels = (uint32_t*)texture_->get_cpu_buffer();
+    auto str_len = strlen(chars);
+    for (int i = 0; i < str_len; i++) {
+        if (current_tex == nullptr
+            || i >= (page_index + 1) * page_width * page_height) {
 
-    int tex_width = texture_->get_width();
-    int tex_height = texture_->get_height();
-
-    if (!FT_Load_Char(face, 'A', FT_LOAD_RENDER)) {
-        for (int x = 0; x < slot->bitmap.width; x++) {
-            for (int y = 0; y < slot->bitmap.rows; y++) {
-                pixels[y * tex_width + x + slot->bitmap_left]
-                    = slot->bitmap.buffer[y * slot->bitmap.width + x];
+            if (current_tex) {
+                current_tex->apply();
+                current_tex->free_cpu_buffer();
             }
+
+            page_index++;
+            current_tex = new GL_Texture2D(tex_width_, tex_height_);
+            textures_.push_back(current_tex);
+            current_tex->alloc_cpu_buffer();
         }
 
-        LOG("load char");
+        auto pixels = (uint32_t*)current_tex->get_cpu_buffer();
+
+        if (!FT_Load_Char(face, chars[i], FT_LOAD_RENDER)) {
+            for (int x = 0; x < slot->bitmap.width; x++) {
+                for (int y = 0; y < slot->bitmap.rows; y++) {
+                    auto ii = (i % (page_width * page_height));
+                    pixels[(y + ii / page_width * cell_size_) * tex_width_
+                           + (x + ii % page_width * cell_size_)
+                           + slot->bitmap_left]
+                        = slot->bitmap.buffer[y * slot->bitmap.width + x];
+                }
+            }
+            LOG("load char");
+        }
     }
-
     ft->unload_face("dbg_font");
-    texture_->apply();
-    texture_->free_cpu_buffer();
 
-    // GLenum err;
-    // while ((err = glGetError()) != GL_NO_ERROR) {
-    //     LOG("opengl error");
-    // }
+    if (current_tex) {
+        current_tex->apply();
+        current_tex->free_cpu_buffer();
+    }
 }
 
 } // namespace anyone

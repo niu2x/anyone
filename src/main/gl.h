@@ -99,5 +99,6 @@ private:
 };
 
 void set_global_gl_state();
+void check_gl_version();
 
 } // namespace anyone
