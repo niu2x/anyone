@@ -25,6 +25,12 @@ struct DPI {
 
 class Core : public Singleton<Core> {
 public:
+    class FramebufferSizeListener {
+    public:
+        virtual ~FramebufferSizeListener() { }
+        virtual void on_framebuffer_size_changed() { }
+    };
+
     Core();
     ~Core();
 
