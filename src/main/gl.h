@@ -77,6 +77,37 @@ private:
     VertexLayout vertex_layout_;
 };
 
+enum UniformType {
+    TEXTURE,
+    VEC2,
+    VEC3,
+    VEC4,
+};
+
+struct UniformVec4 {
+    float data[4];
+};
+
+struct UniformVec3 {
+    float data[3];
+};
+
+struct UniformVec2 {
+    float data[2];
+};
+
+struct UniformTexture {
+    String key;
+    RefPtr<GL_Texture2D> texture;
+    int tex_unit;
+};
+
+struct UniformValue {
+    String name;
+    UniformType type;
+    std::variant<UniformTexture, UniformVec2, UniformVec3, UniformVec4> value;
+};
+
 class GL_Program : public GL_Object {
 public:
     enum class ShaderType {
@@ -97,11 +128,14 @@ public:
 
     void set_uniform_texture(const char* uniform_name, int value);
     void set_uniform_vec2(const char* uniform_name, float x, float y);
+    void set_uniform_vec3(const char* uniform_name, float x, float y, float z);
     void set_uniform_vec4(const char* uniform_name,
                           float x,
                           float y,
                           float z,
                           float w);
+
+    void set_uniform(const UniformValue& uniform);
     const String& get_key() const { return key_; }
 
 private:

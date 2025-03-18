@@ -80,10 +80,8 @@ DebugText::~DebugText()
 {
     GET_CORE()->remove_framebuffer_size_listener(this);
 
-    program_->release();
-
-    if (vbo_)
-        vbo_->release();
+    SAFE_RELEASE(program_);
+    SAFE_RELEASE(vbo_);
 }
 
 void DebugText::on_framebuffer_size_changed()
@@ -122,10 +120,7 @@ void DebugText::render()
 
         dirty_ = false;
 
-        if (vbo_) {
-            vbo_->release();
-            vbo_ = nullptr;
-        }
+        SAFE_RELEASE(vbo_);
 
         int chars_counter = 0;
         GL_Texture2D* texture;

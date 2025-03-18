@@ -232,11 +232,48 @@ void GL_Program::set_uniform_vec4(const char* uniform_name,
     glUniform4f(location, x, y, z, w);
 }
 
+void GL_Program::set_uniform_vec3(const char* uniform_name,
+                                  float x,
+                                  float y,
+                                  float z)
+{
+    auto location = glGetUniformLocation(name_, uniform_name);
+    NX_ASSERT(location >= 0, "invalid uniform: %s", uniform_name)
+    glUniform3f(location, x, y, z);
+}
+
 void GL_Program::set_uniform_texture(const char* uniform_name, int value)
 {
     auto location = glGetUniformLocation(name_, uniform_name);
     NX_ASSERT(location >= 0, "invalid uniform: %s", uniform_name)
     glUniform1i(location, value);
+}
+
+void GL_Program::set_uniform(const UniformValue& uniform)
+{
+    auto name = uniform.name.c_str();
+    switch (uniform.type) {
+        case UniformType::TEXTURE: {
+            auto& v = std::get<UniformTexture>(uniform.value);
+            set_uniform_texture(name, v.tex_unit);
+            break;
+        }
+        case UniformType::VEC2: {
+            auto& v = std::get<UniformVec2>(uniform.value);
+            set_uniform_vec2(name, v.data[0], v.data[1]);
+            break;
+        }
+        case UniformType::VEC3: {
+            auto& v = std::get<UniformVec3>(uniform.value);
+            set_uniform_vec3(name, v.data[0], v.data[1], v.data[2]);
+            break;
+        }
+        case UniformType::VEC4: {
+            auto& v = std::get<UniformVec4>(uniform.value);
+            set_uniform_vec4(name, v.data[0], v.data[1], v.data[2], v.data[3]);
+            break;
+        }
+    }
 }
 
 bool GL_Program::compile()

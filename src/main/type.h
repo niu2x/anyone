@@ -2,6 +2,21 @@
 
 #include <nx/alias.h>
 
+#define SAFE_RELEASE(ptr)                                                      \
+    {                                                                          \
+        if (ptr) {                                                             \
+            ptr->release();                                                    \
+            ptr = nullptr;                                                     \
+        }                                                                      \
+    }
+
+#define SAFE_RETAIN(ptr)                                                       \
+    {                                                                          \
+        if (ptr) {                                                             \
+            ptr->retain();                                                     \
+        }                                                                      \
+    }
+
 namespace anyone {
 
 using namespace nx;
@@ -82,6 +97,49 @@ public:
 private:
     uint64_t counter_;
     static uint64_t object_counter_;
+};
+
+template <class T>
+class RefPtr {
+public:
+    RefPtr() : object_(nullptr) { }
+    RefPtr(T* o) : object_(o) { SAFE_RETAIN(object_); }
+    ~RefPtr() { SAFE_RELEASE(object_); }
+
+    RefPtr(const RefPtr& other) : object_(other.object_)
+    {
+        SAFE_RETAIN(object_);
+    }
+
+    RefPtr(RefPtr&& other) : object_(other.object_) { other.object_ = nullptr; }
+
+    RefPtr& operator=(const RefPtr& other)
+    {
+        RefPtr tmp(other);
+        this->swap(tmp);
+        return *this;
+    }
+
+    RefPtr& operator=(RefPtr&& other)
+    {
+        RefPtr tmp(std::move(other));
+        this->swap(tmp);
+        return *this;
+    }
+
+    void swap(RefPtr& other)
+    {
+        auto tmp = object_;
+        object_ = other.object_;
+        other.object_ = tmp;
+    }
+
+    T* get() const { return object_; }
+
+    operator bool() const { return object_ != nullptr; }
+
+private:
+    T* object_;
 };
 
 } // namespace anyone
