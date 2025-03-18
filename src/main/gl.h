@@ -102,5 +102,7 @@ private:
 
 void set_global_gl_state();
 void check_gl_version();
+GL_Program* create_gl_program(const char* vertex_source,
+                              const char* fragment_source);
 
 } // namespace anyone

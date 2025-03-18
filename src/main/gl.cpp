@@ -292,4 +292,14 @@ void set_global_gl_state()
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
 }
 
+GL_Program* create_gl_program(const char* vertex_source,
+                              const char* fragment_source)
+{
+    auto prog = new GL_Program();
+    prog->attach_shader(GL_Program::ShaderType::VERTEX, vertex_source);
+    prog->attach_shader(GL_Program::ShaderType::FRAGMENT, fragment_source);
+    prog->compile();
+    return prog;
+}
+
 } // namespace anyone

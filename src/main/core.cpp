@@ -13,27 +13,27 @@ extern int luaopen_anyone(lua_State* tolua_S);
 
 // Shader sources
 
-const char* vertex_source = R"(
-    #version 330 core
-    layout(location = 0) in vec3 position;
-    layout(location = 1) in vec2 uv;
-    out vec2 v_uv;
-    void main() {
-        gl_Position = vec4(position, 1.0);
-        v_uv = uv;
-    }
+// const char* vertex_source = R"(
+//     #version 330 core
+//     layout(location = 0) in vec3 position;
+//     layout(location = 1) in vec2 uv;
+//     out vec2 v_uv;
+//     void main() {
+//         gl_Position = vec4(position, 1.0);
+//         v_uv = uv;
+//     }
 
-)";
+// )";
 
-const char* fragment_source = R"(
-    #version 330 core
-    uniform sampler2D tex;
-    in vec2 v_uv;
-    out vec4 color;
-    void main() {
-        color = texture(tex, v_uv);
-    }
-)";
+// const char* fragment_source = R"(
+//     #version 330 core
+//     uniform sampler2D tex;
+//     in vec2 v_uv;
+//     out vec4 color;
+//     void main() {
+//         color = texture(tex, v_uv);
+//     }
+// )";
 
 const char* dbg_text_vertex_source = R"(
     #version 330 core
@@ -66,15 +66,20 @@ const char* dbg_text_fragment_source = R"(
 
 namespace anyone {
 
-Core::Core() : framebuffer_width_(0), framebuffer_height_(0), dpi_ { 90, 90 }
+Core::Core()
+: framebuffer_width_(0)
+, framebuffer_height_(0)
+, dpi_ { 90, 90 }
+, dbg_text_program_(nullptr)
 {
     lua_ = luaL_newstate();
 }
 
 Core::~Core()
 {
-
-    delete dbg_text_program_;
+    if (dbg_text_program_) {
+        delete dbg_text_program_;
+    }
     dbg_text_.reset();
     lua_close(lua_);
     dbg_font_.reset();
@@ -167,12 +172,8 @@ void Core::start_game()
         float u, v;
     };
 
-    dbg_text_program_ = new GL_Program();
-    dbg_text_program_->attach_shader(GL_Program::ShaderType::VERTEX,
-                                     dbg_text_vertex_source);
-    dbg_text_program_->attach_shader(GL_Program::ShaderType::FRAGMENT,
-                                     dbg_text_fragment_source);
-    dbg_text_program_->compile();
+    dbg_text_program_ = create_gl_program(dbg_text_vertex_source,
+                                          dbg_text_fragment_source);
 
     luaL_openlibs(lua_);
 
