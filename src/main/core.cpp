@@ -97,8 +97,8 @@ int Core::load_lua()
         return 0;
     }
 
-    auto file_path = path_join(*project_dir_, "src");
-    file_path = path_join(file_path, String(mod_name) + ".lua");
+    auto file_path = fs::join_path(*project_dir_, "src");
+    file_path = fs::join_path(file_path, String(mod_name) + ".lua");
 
     fs::File lua_file(file_path);
     if (!lua_file.open_read()) {
@@ -141,7 +141,7 @@ void Core::run_project()
     if (!project_dir_) {
         NX_PANIC("no project_dir");
     }
-    auto config_path = path_join(*project_dir_, "project.json");
+    auto config_path = fs::join_path(*project_dir_, "project.json");
 
     fs::File config_file(config_path);
     if (!config_file.open_read()) {

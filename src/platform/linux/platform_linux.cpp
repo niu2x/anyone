@@ -14,8 +14,6 @@ void PlatformSupportLinux::log(const char* fmt, ...)
     fflush(stdout);
 }
 
-char PlatformSupportLinux::get_path_separator() const { return '/'; }
-
 void PlatformSupportLinux::set_full_screen(bool full_screen)
 {
     if (full_screen) {

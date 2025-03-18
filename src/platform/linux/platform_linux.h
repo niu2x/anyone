@@ -11,7 +11,6 @@ public:
     ~PlatformSupportLinux() { }
 
     void log(const char* fmt, ...) override;
-    char get_path_separator() const override;
     void set_full_screen(bool full_screen) override;
 
 private:

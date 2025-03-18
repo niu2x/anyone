@@ -58,8 +58,6 @@ private:
     Vector<T*> listeners_;
 };
 
-String path_join(const String&, const String&);
-
 class FramebufferSizeListener {
 public:
     virtual ~FramebufferSizeListener() { }

@@ -27,7 +27,6 @@ class PlatformSupport {
 public:
     virtual ~PlatformSupport() = 0;
     virtual void log(const char* fmt, ...) = 0;
-    virtual char get_path_separator() const = 0;
     virtual void set_full_screen(bool full_screen) = 0;
 };
 } // namespace anyone
