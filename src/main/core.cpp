@@ -39,9 +39,7 @@ const char* dbg_text_vertex_source = R"(
     #version 330 core
     layout(location = 0) in vec2 position;
     layout(location = 1) in vec2 uv;
-
     uniform vec2 framebuffer_size;
-
     out vec2 v_uv;
     void main() {
         vec2 p = position;
@@ -75,8 +73,6 @@ Core::Core() : framebuffer_width_(0), framebuffer_height_(0), dpi_ { 90, 90 }
 
 Core::~Core()
 {
-    delete test_program_;
-    delete test_vertex_buffer_;
 
     delete dbg_text_program_;
     dbg_text_.reset();
@@ -94,46 +90,8 @@ void Core::render()
     glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // test_vertex_buffer_->bind();
-    // test_program_->use();
-
-    // dbg_font_->build_ascii_chars(default_ttf, default_ttf_length);
-    // auto texture = dbg_font_->get_texture(0);
-
-    // auto texture = new GL_Texture2D(framebuffer_width_, framebuffer_height_);
-    // texture->alloc_cpu_buffer();
-
-    // uint32_t* pixel_buffer = (uint32_t*)texture->get_cpu_buffer();
-
-    // for (int x = 0; x < 512; x++) {
-    //     for (int y = 0; y < 512; y++) {
-    //         if (((x / 32) % 2 == 1) ^ ((y / 32) % 2 == 1))
-    //             pixel_buffer[y * 512 + x] = 0xFF000000;
-    //         else {
-    //             pixel_buffer[y * 512 + x] = 0xFFFFFFFF;
-    //         }
-    //     }
-    // }
-
-    // texture->apply();
-    // texture->free_cpu_buffer();
-
-    // texture->bind(0);
-    // test_program_->set_uniform_texture("tex", 0);
-
-    // glDrawArrays(GL_TRIANGLES, 0, 6);
-
     dbg_text_->printf(0, 0, "FPS: ");
     dbg_text_->render();
-
-    // delete texture;
-    // delete program;
-    // delete vertex_buffer;
-
-    // GLenum err;
-    // while ((err = glGetError()) != GL_NO_ERROR) {
-    //     LOG("opengl error");
-    // }
 }
 
 void Core::notify_framebuffer_size_changed(int width, int height)
@@ -208,29 +166,6 @@ void Core::start_game()
         float x, y, z;
         float u, v;
     };
-
-    test_vertex_buffer_ = new GL_VertexBuffer(120);
-    test_vertex_buffer_->alloc_cpu_buffer();
-    PosXYZ* pos_list = (PosXYZ*)test_vertex_buffer_->get_cpu_buffer();
-
-    pos_list[0] = { -1, -1, 0, 0, 1 };
-    pos_list[1] = { 1, -1, 0, 1, 1 };
-    pos_list[2] = { 1, 1, 0, 1, 0 };
-
-    pos_list[3] = { -1, -1, 0, 0, 1 };
-    pos_list[4] = { 1, 1, 0, 1, 0 };
-    pos_list[5] = { -1, 1, 0, 0, 0 };
-
-    test_vertex_buffer_->apply();
-    test_vertex_buffer_->free_cpu_buffer();
-    test_vertex_buffer_->set_vertex_layout(
-        { VertexAttr::POSITION_XYZ, VertexAttr::UV });
-
-    test_program_ = new GL_Program();
-    test_program_->attach_shader(GL_Program::ShaderType::VERTEX, vertex_source);
-    test_program_->attach_shader(GL_Program::ShaderType::FRAGMENT,
-                                 fragment_source);
-    test_program_->compile();
 
     dbg_text_program_ = new GL_Program();
     dbg_text_program_->attach_shader(GL_Program::ShaderType::VERTEX,

@@ -85,9 +85,6 @@ private:
     int framebuffer_width_;
     int framebuffer_height_;
 
-    GL_Program* test_program_;
-    GL_VertexBuffer* test_vertex_buffer_;
-
     DPI dpi_;
 
     Event<FramebufferSizeListener> framebuffer_size_event_;
