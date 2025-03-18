@@ -2,7 +2,7 @@
 
 namespace anyone {
 
-const char* dbg_text_vertex_source = R"(
+const GL_ProgramSource program_source = { .vertex = R"(
     #version 330 core
 
     layout(location = 0) in vec2 position;
@@ -22,9 +22,8 @@ const char* dbg_text_vertex_source = R"(
         v_uv = uv;
     }
 
-)";
-
-const char* dbg_text_fragment_source = R"(
+)",
+                                          .fragment = R"(
     #version 330 core
 
     uniform sampler2D tex;
@@ -35,7 +34,7 @@ const char* dbg_text_fragment_source = R"(
     void main() {
         color = font_color * texture(tex, v_uv).r;
     }
-)";
+)" };
 
 void DebugText::clear()
 {
@@ -53,8 +52,7 @@ DebugText::DebugText(Font* font)
 
     screens_.resize(get_cell_count());
     memset(screens_.data(), 0, screens_.size());
-    program_ = create_gl_program(dbg_text_vertex_source,
-                                 dbg_text_fragment_source);
+    program_ = create_gl_program("program:debug_text", program_source);
 
     GET_CORE()->add_framebuffer_size_listener(this);
     NX_ASSERT(font_->get_page_num() == 1, "page num it not 1");

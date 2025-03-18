@@ -166,16 +166,34 @@ GLuint compile_shader(GLenum shader_type, const char* source)
     return shader;
 }
 
-GL_Program::GL_Program() : name_(0) { }
+std::unordered_map<String, GL_Program*> GL_Program::alive_programs_;
+
+GL_Program::GL_Program(const String& key) : key_(key), name_(0)
+{
+    NX_ASSERT(!alive_programs_.count(key), "program %s exist", key_.c_str());
+    alive_programs_[key_] = this;
+}
 
 GL_Program::~GL_Program()
 {
+    alive_programs_.erase(key_);
+
     if (name_) {
         glDeleteProgram(name_);
     }
 
     delete_shaders();
 }
+
+GL_Program* GL_Program::get_program(const String& key)
+{
+    auto it = alive_programs_.find(key);
+    if (it != alive_programs_.end()) {
+        return it->second;
+    }
+    return nullptr;
+}
+
 void GL_Program::delete_shaders()
 {
     for (auto& it : gl_shaders_) {
@@ -273,7 +291,7 @@ void GL_Program::use()
 void check_gl_version()
 {
     auto gl_version = glGetString(GL_VERSION);
-    LOG("OpenGL version: %s\n", gl_version);
+    LOG("OpenGL version: %s", gl_version);
     int major, minor;
     if (sscanf((const char*)gl_version, "%d.%d", &major, &minor) != 2) {
         NX_PANIC("parse gl_version error");
@@ -302,19 +320,17 @@ void set_global_gl_state()
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
 }
 
-GL_Program* create_gl_program(const char* vertex_source,
-                              const char* fragment_source)
+GL_Program* create_gl_program(const String& key, const GL_ProgramSource& source)
 {
-    auto prog = new GL_Program();
-    prog->attach_shader(GL_Program::ShaderType::VERTEX, vertex_source);
-    prog->attach_shader(GL_Program::ShaderType::FRAGMENT, fragment_source);
+    auto prog = new GL_Program(key);
+    prog->attach_shader(GL_Program::ShaderType::VERTEX, source.vertex);
+    prog->attach_shader(GL_Program::ShaderType::FRAGMENT, source.fragment);
     prog->compile();
     return prog;
 }
 
 void execute_operation(const DrawOperation& op)
 {
-
     switch (op.polygon_mode) {
         case PolygonMode::POINT: {
             glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);

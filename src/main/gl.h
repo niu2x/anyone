@@ -84,10 +84,13 @@ public:
         FRAGMENT,
     };
 
-    GL_Program();
+    static GL_Program* get_program(const String& key);
+
+    GL_Program(const String& key);
+    ~GL_Program();
+
     bool attach_shader(ShaderType shader_type, const char* source_code);
     bool compile();
-    ~GL_Program();
 
     bool is_ready() const;
     void use();
@@ -99,23 +102,33 @@ public:
                           float y,
                           float z,
                           float w);
+    const String& get_key() const { return key_; }
 
 private:
+    String key_;
     GLuint name_;
     std::unordered_map<GLenum, GLuint> gl_shaders_;
     static GLenum to_gl(ShaderType type);
 
     void delete_shaders();
+    static std::unordered_map<String, GL_Program*> alive_programs_;
 };
 
-GL_Program* create_gl_program(const char* vertex_source,
-                              const char* fragment_source);
-
-class GL_ProgramManager {
-public:
-    GL_ProgramManager();
-    ~GL_ProgramManager();
+struct GL_ProgramSource {
+    const char* vertex;
+    const char* fragment;
 };
+
+GL_Program* create_gl_program(const String& key,
+                              const GL_ProgramSource& source);
+
+// class GL_ProgramManager {
+// public:
+//     GL_ProgramManager();
+//     ~GL_ProgramManager();
+// private:
+//     std::unordered_map<String, GL_Program*> programs_;
+// };
 
 enum class DrawPrimitive {
     POINT,
