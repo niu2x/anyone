@@ -15,7 +15,10 @@ public:
 
 class GL_Texture2D : public GL_Object {
 public:
+    static GL_Texture2D* get_texture(const String& key);
+
     GL_Texture2D(int width, int height);
+    GL_Texture2D(const String& key, int width, int height);
     ~GL_Texture2D();
 
     void apply();
@@ -37,6 +40,9 @@ private:
     GLuint name_;
     int width_, height_;
     ByteBuffer cpu_buffer_;
+    String key_;
+
+    static std::unordered_map<String, GL_Texture2D*> alive_textures_;
 };
 
 enum class VertexAttr {

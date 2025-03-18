@@ -13,7 +13,19 @@ void Material::set_program(GL_Program* p)
     program_ = p;
 }
 
-void Material::use() { }
+void Material::use()
+{
+    program_->use();
+    for (auto u : uniforms_) {
+        if (u.second.type == UniformType::TEXTURE) {
+            auto& tex = std::get<UniformTexture>(u.second.value);
+            if (tex.texture) {
+                tex.texture->bind(tex.tex_unit);
+            }
+        }
+        program_->set_uniform(u.second);
+    }
+}
 
 void Material::compile()
 {

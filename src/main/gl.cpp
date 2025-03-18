@@ -5,12 +5,37 @@ namespace anyone {
 GL_Object::GL_Object() { }
 GL_Object::~GL_Object() { }
 
-GL_Texture2D::GL_Texture2D(int w, int h) : name_(0), width_(w), height_(h)
+GL_Texture2D::GL_Texture2D(int w, int h) : GL_Texture2D("", w, h) { }
+
+GL_Texture2D::GL_Texture2D(const String& key, int w, int h)
+: name_(0)
+, width_(w)
+, height_(h)
+, key_(key)
 {
     glGenTextures(1, &name_);
+
+    if (key_ != "") {
+        alive_textures_[key_] = this;
+    }
 }
 
-GL_Texture2D::~GL_Texture2D() { glDeleteTextures(1, &name_); }
+GL_Texture2D::~GL_Texture2D()
+{
+    alive_textures_.erase(key_);
+    glDeleteTextures(1, &name_);
+}
+
+GL_Texture2D* GL_Texture2D::get_texture(const String& key)
+{
+    auto it = alive_textures_.find(key);
+    if (it != alive_textures_.end()) {
+        return it->second;
+    }
+    return nullptr;
+}
+
+std::unordered_map<String, GL_Texture2D*> GL_Texture2D::alive_textures_;
 
 void GL_Texture2D::apply()
 {
@@ -171,7 +196,8 @@ std::unordered_map<String, GL_Program*> GL_Program::alive_programs_;
 GL_Program::GL_Program(const String& key) : key_(key), name_(0)
 {
     NX_ASSERT(!alive_programs_.count(key), "program %s exist", key_.c_str());
-    alive_programs_[key_] = this;
+    if (key_ != "")
+        alive_programs_[key_] = this;
 }
 
 GL_Program::~GL_Program()
