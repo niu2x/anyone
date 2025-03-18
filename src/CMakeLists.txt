@@ -7,13 +7,23 @@ target_sources(${runtime} PRIVATE
 	"version.cpp"
 )
 
-
-find_package(SDL2 REQUIRED)
 target_link_libraries(${runtime} PRIVATE 
 	main
 	platform_linux
 	glad
-	SDL2
-	GL
 )
+
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+	# target_link_libraries(${runtime} PRIVATE 
+	# 	GL
+	# )
+endif()
+
+
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+	target_link_libraries(${runtime} PRIVATE 
+		GL
+	)
+endif()
+
 

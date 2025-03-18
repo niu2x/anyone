@@ -4,6 +4,7 @@
 #include "ttf.h"
 #include "embed/default_ttf.h"
 #include "../nlohmann/json.hpp"
+#include <sstream>
 
 using json = nlohmann::json;
 
@@ -156,6 +157,8 @@ int Core::load_lua()
 
 void Core::start_game()
 {
+    LOG("OpenGL version: %s\n", glGetString(GL_VERSION));
+
     set_global_gl_state();
 
     ft_library_ = std::make_unique<FreeTypeLibrary>();
