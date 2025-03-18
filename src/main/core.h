@@ -31,12 +31,6 @@ struct FramebufferSize {
 
 class Core : public Singleton<Core> {
 public:
-    class FramebufferSizeListener {
-    public:
-        virtual ~FramebufferSizeListener() { }
-        virtual void on_framebuffer_size_changed() { }
-    };
-
     Core();
     ~Core();
 
@@ -54,7 +48,7 @@ public:
         return platform_support_.get();
     }
 
-    void dbg_text(int x, int y, const char* xx);
+    void dbg_printf(int x, int y, const char* xx);
     FreeTypeLibrary* get_ft_library() const { return ft_library_.get(); }
 
     void notify_dpi_changed(float hdpi, float vdpi);
@@ -68,8 +62,6 @@ public:
         return { framebuffer_width_, framebuffer_height_ };
     }
 
-    GL_Program* get_dbg_text_program() const { return dbg_text_program_; }
-
 private:
     void fire_framebuffer_size_changed();
 
@@ -80,7 +72,6 @@ private:
     Optional<String> project_dir_;
     UniquePtr<Font> dbg_font_;
     UniquePtr<DebugText> dbg_text_;
-    GL_Program* dbg_text_program_;
 
     int framebuffer_width_;
     int framebuffer_height_;

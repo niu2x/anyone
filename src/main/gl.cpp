@@ -62,7 +62,7 @@ GL_VertexBuffer::GL_VertexBuffer(size_t size) : buf_size_(size)
     glGenBuffers(1, &name_);
 }
 
-GL_VertexBuffer::~GL_VertexBuffer() { glDeleteTextures(1, &name_); }
+GL_VertexBuffer::~GL_VertexBuffer() { glDeleteBuffers(1, &name_); }
 
 void GL_VertexBuffer::apply()
 {

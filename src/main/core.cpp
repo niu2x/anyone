@@ -35,51 +35,15 @@ extern int luaopen_anyone(lua_State* tolua_S);
 //     }
 // )";
 
-const char* dbg_text_vertex_source = R"(
-    #version 330 core
-    layout(location = 0) in vec2 position;
-    layout(location = 1) in vec2 uv;
-    uniform vec2 framebuffer_size;
-    out vec2 v_uv;
-    void main() {
-        vec2 p = position;
-        p.xy /= framebuffer_size;
-        p.xy *= 2;
-        p.xy -= vec2(1.0, 1.0);
-        p.y = -p.y;
-        gl_Position = vec4(p.x, p.y, 0.0,  1.0);
-        v_uv = uv;
-    }
-
-)";
-
-const char* dbg_text_fragment_source = R"(
-    #version 330 core
-    uniform vec2 framebuffer_size;
-    uniform sampler2D tex;
-    in vec2 v_uv;
-    out vec4 color;
-    void main() {
-        color = texture(tex, v_uv);
-    }
-)";
-
 namespace anyone {
 
-Core::Core()
-: framebuffer_width_(0)
-, framebuffer_height_(0)
-, dpi_ { 90, 90 }
-, dbg_text_program_(nullptr)
+Core::Core() : framebuffer_width_(0), framebuffer_height_(0), dpi_ { 90, 90 }
 {
     lua_ = luaL_newstate();
 }
 
 Core::~Core()
 {
-    if (dbg_text_program_) {
-        delete dbg_text_program_;
-    }
     dbg_text_.reset();
     lua_close(lua_);
     dbg_font_.reset();
@@ -95,7 +59,8 @@ void Core::render()
     glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    dbg_text_->printf(0, 0, "FPS: ");
+    dbg_text_->printf(0, 0, "Hello,'niu2x'");
+    dbg_text_->printf(1, 1, "Hello,'niu2x'");
     dbg_text_->render();
 }
 
@@ -103,6 +68,8 @@ void Core::notify_framebuffer_size_changed(int width, int height)
 {
     framebuffer_width_ = width;
     framebuffer_height_ = height;
+
+    fire_framebuffer_size_changed();
 }
 
 void Core::notify_dpi_changed(float hdpi, float vdpi)
@@ -172,9 +139,6 @@ void Core::start_game()
         float u, v;
     };
 
-    dbg_text_program_ = create_gl_program(dbg_text_vertex_source,
-                                          dbg_text_fragment_source);
-
     luaL_openlibs(lua_);
 
     luaopen_anyone(lua_);
@@ -216,7 +180,7 @@ void Core::start_game()
     }
 }
 
-void Core::dbg_text(int x, int y, const char* xx)
+void Core::dbg_printf(int x, int y, const char* xx)
 {
     dbg_text_->printf(x, y, xx);
 }

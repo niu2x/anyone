@@ -132,11 +132,15 @@ void Font::build_chars(const uint8_t* font_ptr,
                 }
             }
             // LOG("load char");
-            chars_info_[chars[i]] = { .texture = current_tex,
-                                      .left = ii % page_width * cell_size_,
-                                      .top = ii / page_width * cell_size_,
-                                      .width = (int)slot->bitmap.width,
-                                      .height = (int)slot->bitmap.rows };
+            chars_info_[chars[i]] = {
+                .texture = current_tex,
+                .left = ii % page_width * cell_size_,
+                .top = ii / page_width * cell_size_,
+                .width = (int)slot->bitmap.width,
+                .height = (int)slot->bitmap.rows,
+                .bitmap_left = slot->bitmap_left,
+                .bitmap_top = slot->bitmap_top,
+            };
         }
     }
     ft->unload_face("dbg_font");

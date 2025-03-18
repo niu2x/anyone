@@ -60,4 +60,10 @@ private:
 
 String path_join(const String&, const String&);
 
+class FramebufferSizeListener {
+public:
+    virtual ~FramebufferSizeListener() { }
+    virtual void on_framebuffer_size_changed() { }
+};
+
 } // namespace anyone

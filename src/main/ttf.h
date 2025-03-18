@@ -28,6 +28,7 @@ public:
     struct CharInfo {
         GL_Texture2D* texture;
         int left, top, width, height;
+        int bitmap_left, bitmap_top;
     };
 
     Font(int tex_width, int tex_height, int font_pixel_size);
@@ -41,6 +42,8 @@ public:
     int get_page_num() const { return textures_.size(); }
 
     const CharInfo* lookup_char(uint32_t code) const;
+
+    int get_font_pixel_size() const { return font_pixel_size_; }
 
 private:
     Vector<GL_Texture2D*> textures_;

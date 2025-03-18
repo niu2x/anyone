@@ -76,6 +76,7 @@ int main(int argc, char* argv[])
     // assert(Window);
     SDL_GLContext context = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, context);
+    SDL_GL_SetSwapInterval(1);
     gladLoadGL();
 
     handle_window_size_changed(core, window);
@@ -126,5 +127,10 @@ int main(int argc, char* argv[])
 
         SDL_GL_SwapWindow(window);
     }
+
+    SDL_GL_DeleteContext(context);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
     return 0;
 }

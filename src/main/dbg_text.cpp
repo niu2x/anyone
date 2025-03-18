@@ -2,6 +2,41 @@
 
 namespace anyone {
 
+const char* dbg_text_vertex_source = R"(
+    #version 330 core
+    layout(location = 0) in vec2 position;
+    layout(location = 1) in vec2 uv;
+    uniform vec2 framebuffer_size;
+    out vec2 v_uv;
+    void main() {
+        vec2 p = position;
+        p.xy /= framebuffer_size;
+        p.xy *= 2;
+        p.xy -= vec2(1.0, 1.0);
+        p.y = -p.y;
+        gl_Position = vec4(p.x, p.y, 0.0,  1.0);
+        v_uv = uv;
+    }
+
+)";
+
+const char* dbg_text_fragment_source = R"(
+    #version 330 core
+    uniform vec2 framebuffer_size;
+    uniform sampler2D tex;
+    in vec2 v_uv;
+    out vec4 color;
+    void main() {
+        color = texture(tex, v_uv);
+    }
+)";
+
+void DebugText::clear()
+{
+    memset(screens_.data(), 0, screens_.size());
+    dirty_ = true;
+}
+
 DebugText::DebugText(Font* font)
 : font_(font)
 , dirty_(true)
@@ -9,17 +44,33 @@ DebugText::DebugText(Font* font)
 , vertex_count_(0)
 , texture_(nullptr)
 {
+    auto font_size = font_->get_font_pixel_size();
+
     auto size = GET_CORE()->get_framebuffer_size();
-    screens_.resize((size.width / 32) * (size.height * 32));
+    screens_.resize((size.width / font_size) * (size.height / font_size));
     memset(screens_.data(), 0, screens_.size());
-    // screens_[0] = 'A';
-    // screens_[1] = 'B';
+    program_ = create_gl_program(dbg_text_vertex_source,
+                                 dbg_text_fragment_source);
+
+    GET_CORE()->add_framebuffer_size_listener(this);
 }
 
 DebugText::~DebugText()
 {
+    GET_CORE()->remove_framebuffer_size_listener(this);
+
+    delete program_;
     if (vbo_)
         delete vbo_;
+}
+
+void DebugText::on_framebuffer_size_changed()
+{
+    auto font_size = font_->get_font_pixel_size();
+    auto size = GET_CORE()->get_framebuffer_size();
+    screens_.resize((size.width / font_size) * (size.height / font_size));
+    memset(screens_.data(), 0, screens_.size());
+    dirty_ = true;
 }
 
 struct Vertex {
@@ -29,20 +80,25 @@ struct Vertex {
 
 void DebugText::printf(int x, int y, const char* msg)
 {
+    auto font_size = font_->get_font_pixel_size();
     auto size = GET_CORE()->get_framebuffer_size();
-    int cell_width = (size.width / 32);
-    int cell_height = (size.height / 32);
+    int cell_width = (size.width / font_size);
+    int cell_height = (size.height / font_size);
 
     for (int i = 0; i < strlen(msg); i++) {
         if (x + i >= 0 && x + i < cell_width) {
             screens_[x + i + y * cell_width] = msg[i];
         }
     }
+
+    dirty_ = true;
 }
 
 void DebugText::render()
 {
     auto size = GET_CORE()->get_framebuffer_size();
+
+    auto font_size = font_->get_font_pixel_size();
 
     if (dirty_) {
         dirty_ = false;
@@ -58,8 +114,8 @@ void DebugText::render()
         for (int i = 0; i < screens_.size(); i++) {
             char c = screens_[i];
             if (c) {
-                auto x = i % (size.width / 32);
-                auto y = i / (size.width / 32);
+                auto x = i % (size.width / font_size);
+                auto y = i / (size.width / font_size);
                 chars_counter++;
             }
         }
@@ -80,12 +136,13 @@ void DebugText::render()
                     if (char_info) {
                         texture = char_info->texture;
 
-                        auto cell_x = i % (size.width / 32);
-                        auto cell_y = i / (size.width / 32);
+                        auto cell_x = i % (size.width / font_size);
+                        auto cell_y = i / (size.width / font_size);
 
                         vertexs[vertex_index++] = {
-                            .x = cell_x * 32,
-                            .y = cell_y * 32,
+                            .x = cell_x * font_size + char_info->bitmap_left,
+                            .y = cell_y * font_size + font_size * 0.666
+                                 - char_info->bitmap_top,
                             .u = ((float)char_info->left)
                                  / texture->get_width(),
                             .v = ((float)char_info->top)
@@ -93,8 +150,9 @@ void DebugText::render()
                         };
 
                         vertexs[vertex_index++] = {
-                            .x = cell_x * 32,
-                            .y = cell_y * 32 + char_info->height,
+                            .x = cell_x * font_size + char_info->bitmap_left,
+                            .y = cell_y * font_size + char_info->height
+                                 + font_size * 0.666 - char_info->bitmap_top,
                             .u = ((float)char_info->left)
                                  / texture->get_width(),
                             .v = ((float)char_info->top + char_info->height)
@@ -102,8 +160,10 @@ void DebugText::render()
                         };
 
                         vertexs[vertex_index++] = {
-                            .x = cell_x * 32 + char_info->width,
-                            .y = cell_y * 32 + char_info->height,
+                            .x = cell_x * font_size + char_info->width
+                                 + char_info->bitmap_left,
+                            .y = cell_y * font_size + char_info->height
+                                 + font_size * 0.666 - char_info->bitmap_top,
                             .u = ((float)char_info->left + char_info->width)
                                  / texture->get_width(),
                             .v = ((float)char_info->top + char_info->height)
@@ -111,8 +171,9 @@ void DebugText::render()
                         };
 
                         vertexs[vertex_index++] = {
-                            .x = cell_x * 32,
-                            .y = cell_y * 32,
+                            .x = cell_x * font_size + char_info->bitmap_left,
+                            .y = cell_y * font_size + font_size * 0.666
+                                 - char_info->bitmap_top,
                             .u = ((float)char_info->left)
                                  / texture->get_width(),
                             .v = ((float)char_info->top)
@@ -120,8 +181,10 @@ void DebugText::render()
                         };
 
                         vertexs[vertex_index++] = {
-                            .x = cell_x * 32 + char_info->width,
-                            .y = cell_y * 32 + char_info->height,
+                            .x = cell_x * font_size + char_info->width
+                                 + char_info->bitmap_left,
+                            .y = cell_y * font_size + char_info->height
+                                 + font_size * 0.666 - char_info->bitmap_top,
                             .u = ((float)char_info->left + char_info->width)
                                  / texture->get_width(),
                             .v = ((float)char_info->top + char_info->height)
@@ -129,8 +192,10 @@ void DebugText::render()
                         };
 
                         vertexs[vertex_index++] = {
-                            .x = cell_x * 32 + char_info->width,
-                            .y = cell_y * 32,
+                            .x = cell_x * font_size + char_info->width
+                                 + char_info->bitmap_left,
+                            .y = cell_y * font_size + font_size * 0.666
+                                 - char_info->bitmap_top,
                             .u = ((float)char_info->left + char_info->width)
                                  / texture->get_width(),
                             .v = ((float)char_info->top)
@@ -139,7 +204,8 @@ void DebugText::render()
                     }
                 }
             }
-            texture_ = texture;
+            if (!texture_)
+                texture_ = texture;
             vbo_->apply();
             vbo_->free_cpu_buffer();
             vertex_count_ = vertex_index;
@@ -149,12 +215,13 @@ void DebugText::render()
     if (vbo_) {
         vbo_->bind();
         texture_->bind(0);
-        auto program = GET_CORE()->get_dbg_text_program();
-        NX_ASSERT(program->is_ready(), "gl program not ready");
 
-        program->use();
-        program->set_uniform_texture("tex", 0);
-        program->set_uniform_vec2("framebuffer_size", size.width, size.height);
+        // LOG("texture_ %d %d", texture_->get_height(), texture_->get_width());
+
+        NX_ASSERT(program_->is_ready(), "gl program not ready");
+        program_->use();
+        program_->set_uniform_texture("tex", 0);
+        program_->set_uniform_vec2("framebuffer_size", size.width, size.height);
         glDrawArrays(GL_TRIANGLES, 0, vertex_count_);
     }
 }
