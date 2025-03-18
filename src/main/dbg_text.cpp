@@ -57,6 +57,7 @@ DebugText::DebugText(Font* font)
                                  dbg_text_fragment_source);
 
     GET_CORE()->add_framebuffer_size_listener(this);
+    NX_ASSERT(font_->get_page_num() == 1, "page num it not 1");
 }
 
 int DebugText::get_cell_count() const

@@ -33,6 +33,7 @@ public:
 
     Font(int tex_width, int tex_height, int font_pixel_size);
     ~Font();
+    
     void build_ascii_chars(const uint8_t* font_ptr, size_t font_len);
     void build_chars(const uint8_t* font_ptr,
                      size_t font_len,

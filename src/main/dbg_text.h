@@ -19,6 +19,7 @@ private:
     Vector<char> screens_;
     Font* font_;
     bool dirty_;
+    
     GL_VertexBuffer* vbo_;
     int vertex_count_;
     GL_Texture2D* texture_;
