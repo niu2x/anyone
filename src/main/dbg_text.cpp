@@ -24,10 +24,11 @@ const char* dbg_text_fragment_source = R"(
     #version 330 core
     uniform vec2 framebuffer_size;
     uniform sampler2D tex;
+    uniform vec4 font_color;
     in vec2 v_uv;
     out vec4 color;
     void main() {
-        color = texture(tex, v_uv);
+        color = font_color * texture(tex, v_uv).r;
     }
 )";
 
@@ -219,6 +220,7 @@ void DebugText::render()
         NX_ASSERT(program_->is_ready(), "gl program not ready");
         program_->use();
         program_->set_uniform_texture("tex", 0);
+        program_->set_uniform_vec4("font_color", 1.0, 1.0, 1.0, 1.0);
         program_->set_uniform_vec2("framebuffer_size", size.width, size.height);
         glDrawArrays(GL_TRIANGLES, 0, vertex_count_);
     }

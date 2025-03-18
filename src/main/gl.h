@@ -91,6 +91,11 @@ public:
 
     void set_uniform_texture(const char* uniform_name, int value);
     void set_uniform_vec2(const char* uniform_name, float x, float y);
+    void set_uniform_vec4(const char* uniform_name,
+                          float x,
+                          float y,
+                          float z,
+                          float w);
 
 private:
     GLuint name_;

@@ -203,6 +203,17 @@ void GL_Program::set_uniform_vec2(const char* uniform_name, float x, float y)
     glUniform2f(location, x, y);
 }
 
+void GL_Program::set_uniform_vec4(const char* uniform_name,
+                                  float x,
+                                  float y,
+                                  float z,
+                                  float w)
+{
+    auto location = glGetUniformLocation(name_, uniform_name);
+    NX_ASSERT(location >= 0, "invalid uniform: %s", uniform_name)
+    glUniform4f(location, x, y, z, w);
+}
+
 void GL_Program::set_uniform_texture(const char* uniform_name, int value)
 {
     auto location = glGetUniformLocation(name_, uniform_name);
