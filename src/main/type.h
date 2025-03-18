@@ -77,8 +77,11 @@ public:
             delete this;
     }
 
+    static uint64_t get_object_counter() { return object_counter_; }
+
 private:
     uint64_t counter_;
+    static uint64_t object_counter_;
 };
 
 } // namespace anyone

@@ -55,82 +55,89 @@ int main(int argc, char* argv[])
     auto result = options.parse(argc, argv);
     auto project_dir = result["project"].as<std::string>();
 
-    anyone::Core core;
+    {
 
-    // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    // SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
-    //                     SDL_GL_CONTEXT_PROFILE_CORE);
-    // 启用多重采样
-    // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-    // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4); // 4x MSAA
+        anyone::Core core;
 
-    uint32_t window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
-    SDL_Window* window = SDL_CreateWindow(
-        "Anyone Game", 0, 0, 256, 256, window_flags);
+        // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        // SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+        //                     SDL_GL_CONTEXT_PROFILE_CORE);
+        // 启用多重采样
+        // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+        // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4); // 4x MSAA
 
-    core.set_platform_support(
-        std::make_unique<anyone::PlatformSupportLinux>(window, window_flags));
-    core.set_project_dir(project_dir);
+        uint32_t window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+        SDL_Window* window = SDL_CreateWindow(
+            "Anyone Game", 0, 0, 256, 256, window_flags);
 
-    // assert(Window);
-    SDL_GLContext context = SDL_GL_CreateContext(window);
-    SDL_GL_MakeCurrent(window, context);
-    SDL_GL_SetSwapInterval(1);
-    gladLoadGL();
+        core.set_platform_support(
+            std::make_unique<anyone::PlatformSupportLinux>(window,
+                                                           window_flags));
+        core.set_project_dir(project_dir);
 
-    handle_window_size_changed(core, window);
+        // assert(Window);
+        SDL_GLContext context = SDL_GL_CreateContext(window);
+        SDL_GL_MakeCurrent(window, context);
+        SDL_GL_SetSwapInterval(1);
+        gladLoadGL();
 
-    core.start_game();
+        handle_window_size_changed(core, window);
 
-    bool running = true;
-    bool full_screen = false;
-    while (running) {
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_KEYDOWN: {
-                    switch (event.key.keysym.sym) {
-                        // case SDLK_ESCAPE:
-                        //   running = 0;
-                        //   break;
-                        case 'f':
-                            full_screen = !full_screen;
-                            GET_PLATFORM_SUPPORT()->set_full_screen(
-                                full_screen);
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                }
-                case SDL_QUIT: {
-                    running = false;
-                    break;
-                }
+        core.start_game();
 
-                case SDL_WINDOWEVENT: {
-                    switch (event.window.event) {
-                        case SDL_WINDOWEVENT_RESIZED:
-                        case SDL_WINDOWEVENT_SIZE_CHANGED: {
-                            handle_window_size_changed(core, window);
-                            break;
+        bool running = true;
+        bool full_screen = false;
+        while (running) {
+            SDL_Event event;
+            while (SDL_PollEvent(&event)) {
+                switch (event.type) {
+                    case SDL_KEYDOWN: {
+                        switch (event.key.keysym.sym) {
+                            // case SDLK_ESCAPE:
+                            //   running = 0;
+                            //   break;
+                            case 'f':
+                                full_screen = !full_screen;
+                                GET_PLATFORM_SUPPORT()->set_full_screen(
+                                    full_screen);
+                                break;
+                            default:
+                                break;
                         }
+                        break;
                     }
-                    break;
+                    case SDL_QUIT: {
+                        running = false;
+                        break;
+                    }
+
+                    case SDL_WINDOWEVENT: {
+                        switch (event.window.event) {
+                            case SDL_WINDOWEVENT_RESIZED:
+                            case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                                handle_window_size_changed(core, window);
+                                break;
+                            }
+                        }
+                        break;
+                    }
                 }
             }
+
+            core.update();
+            core.render();
+
+            SDL_GL_SwapWindow(window);
         }
 
-        core.update();
-        core.render();
-
-        SDL_GL_SwapWindow(window);
+        SDL_GL_DeleteContext(context);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
     }
 
-    SDL_GL_DeleteContext(context);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    printf("remain ref object counter: %d\n",
+           anyone::Ref::get_object_counter());
 
     return 0;
 }
