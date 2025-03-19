@@ -11,6 +11,8 @@ class GL_Object : public Ref {
 public:
     GL_Object();
     ~GL_Object();
+
+    const char* get_type() const override { return "GL_Object"; }
 };
 
 class GL_Texture2D : public GL_Object {
@@ -35,6 +37,7 @@ public:
     int get_height() const { return height_; }
 
     void bind(int tex_unit);
+    const char* get_type() const override { return "GL_Texture2D"; }
 
 private:
     GLuint name_;
@@ -143,6 +146,8 @@ public:
 
     void set_uniform(const UniformValue& uniform);
     const String& get_key() const { return key_; }
+
+    const char* get_type() const override { return "GL_Program"; }
 
 private:
     String key_;

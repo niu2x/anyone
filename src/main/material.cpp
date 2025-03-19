@@ -34,7 +34,7 @@ void Material::compile()
         if (u.second.type == UniformType::TEXTURE) {
             auto& tex = std::get<UniformTexture>(u.second.value);
             tex.tex_unit = tex_unit++;
-            if (!tex.texture) {
+            if (tex.key != "") {
                 tex.texture = GL_Texture2D::get_texture(tex.key);
             }
         }

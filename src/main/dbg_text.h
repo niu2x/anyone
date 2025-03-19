@@ -2,6 +2,7 @@
 
 #include "gl.h"
 #include "ttf.h"
+#include "material.h"
 
 namespace anyone {
 
@@ -22,9 +23,11 @@ private:
     
     GL_VertexBuffer* vbo_;
     int vertex_count_;
-    GL_Texture2D* texture_;
-    GL_Program* program_;
 
+    // GL_Texture2D* texture_;
+    // GL_Program* program_;
+    //
+    Material* material_;
     DrawOperation draw_operation_;
 
     int get_font_width() const;

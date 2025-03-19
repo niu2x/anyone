@@ -138,6 +138,6 @@ int main(int argc, char* argv[])
 
     printf("remain ref object counter: %d\n",
            anyone::Ref::get_object_counter());
-
+    anyone::Ref::dump_alive_objects();
     return 0;
 }

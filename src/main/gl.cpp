@@ -16,6 +16,8 @@ GL_Texture2D::GL_Texture2D(const String& key, int w, int h)
     glGenTextures(1, &name_);
 
     if (key_ != "") {
+        NX_ASSERT(
+            !alive_textures_.count(key_), "texture %s exist", key_.c_str());
         alive_textures_[key_] = this;
     }
 }

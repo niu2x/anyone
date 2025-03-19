@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nx/alias.h>
+#include <unordered_set>
 
 #define SAFE_RELEASE(ptr)                                                      \
     {                                                                          \
@@ -93,10 +94,14 @@ public:
     }
 
     static uint64_t get_object_counter() { return object_counter_; }
+    static void dump_alive_objects();
+
+    virtual const char* get_type() const { return "ref"; }
 
 private:
     uint64_t counter_;
     static uint64_t object_counter_;
+    static std::unordered_set<Ref*> alive_objects_;
 };
 
 template <class T>
