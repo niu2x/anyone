@@ -56,7 +56,6 @@ int main(int argc, char* argv[])
     auto project_dir = result["project"].as<std::string>();
 
     {
-
         anyone::Core core;
 
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
