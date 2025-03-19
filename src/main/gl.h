@@ -191,6 +191,8 @@ enum class PolygonMode {
     FILL,
 };
 
+class Material;
+
 struct DrawOperation {
     DrawPrimitive primitive;
     VertexStrategy strategy;
@@ -198,9 +200,7 @@ struct DrawOperation {
 
     GL_VertexBuffer* vertex_buffer;
     int vertex_count;
-
-    GL_Program* program;
-    GL_Texture2D* texture;
+    Material* material;
 };
 
 void execute_operation(const DrawOperation& operation);

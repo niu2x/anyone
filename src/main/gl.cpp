@@ -1,4 +1,5 @@
 #include "gl.h"
+#include "material.h"
 
 namespace anyone {
 
@@ -410,6 +411,8 @@ void execute_operation(const DrawOperation& op)
             break;
         }
     }
+
+    op.material->use();
 
     switch (op.primitive) {
         case DrawPrimitive::TRIANGLE: {

@@ -69,6 +69,11 @@ DebugText::DebugText(Font* font)
     uniform.value = UniformVec4 { { 1.0, 1.0, 1.0, 1.0 } };
     material_->set_uniform(uniform);
 
+    draw_operation_.material = material_;
+    draw_operation_.primitive = DrawPrimitive::TRIANGLE;
+    draw_operation_.polygon_mode = PolygonMode::FILL;
+    draw_operation_.strategy = VertexStrategy::POINT_LIST;
+
     // program_->set_uniform_texture("tex", 0);
     // program_->set_uniform_vec4("font_color", 1.0, 1.0, 1.0, 1.0);
     // program_->set_uniform_vec2("framebuffer_size", size.width, size.height);
@@ -245,6 +250,9 @@ void DebugText::render()
             material_->set_uniform(uniform);
 
             material_->compile();
+            draw_operation_.vertex_count = vertex_count_;
+
+            draw_operation_.vertex_buffer = vbo_;
         }
     }
 
@@ -255,13 +263,7 @@ void DebugText::render()
         // LOG("texture_ %d %d", texture_->get_height(), texture_->get_width());
 
         // NX_ASSERT(program_->is_ready(), "gl program not ready");
-        material_->use();
-
-        draw_operation_.vertex_buffer = vbo_;
-        draw_operation_.primitive = DrawPrimitive::TRIANGLE;
-        draw_operation_.polygon_mode = PolygonMode::FILL;
-        draw_operation_.strategy = VertexStrategy::POINT_LIST;
-        draw_operation_.vertex_count = vertex_count_;
+        // material_->use();
 
         execute_operation(draw_operation_);
     }
