@@ -59,8 +59,7 @@ void Core::render()
     glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    dbg_text_->printf(0, 0, "Hello,'niu2x'");
-    dbg_text_->printf(1, 1, "Hello,'niu2x'");
+    dbg_printf(0, 0, "FPS: %.2f", frame_stats_.avg_fps);
     dbg_text_->render();
 }
 
@@ -125,8 +124,16 @@ int Core::load_lua()
 
 void Core::kick_one_frame()
 {
+    frame_stats_.frame_start = time_now();
+
     render();
     update();
+
+    frame_stats_.frame_stop = time_now();
+    frame_stats_.duration_cache.push_back(
+        time_diff(frame_stats_.frame_start, frame_stats_.frame_stop));
+    frame_stats_.avg_duration = frame_stats_.duration_cache.get_avg();
+    frame_stats_.avg_fps = 1000 / frame_stats_.avg_duration;
 }
 
 void Core::init_lua()
@@ -191,9 +198,12 @@ void Core::start_game()
     run_project();
 }
 
-void Core::dbg_printf(int x, int y, const char* xx)
+void Core::dbg_printf(int x, int y, const char* fmt, ...)
 {
-    dbg_text_->printf(x, y, xx);
+    va_list args;
+    va_start(args, fmt);
+    dbg_text_->vprintf(x, y, fmt, args);
+    va_end(args);
 }
 
 void Core::add_framebuffer_size_listener(FramebufferSizeListener* l)

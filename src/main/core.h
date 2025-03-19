@@ -29,6 +29,14 @@ struct FramebufferSize {
     int height;
 };
 
+struct FrameStats {
+    TimePoint frame_start;
+    TimePoint frame_stop;
+    LatestCache<TimeDuration, 8> duration_cache;
+    TimeDuration avg_duration;
+    TimeDuration avg_fps;
+};
+
 class Core : public Singleton<Core> {
 public:
     Core();
@@ -46,7 +54,7 @@ public:
         return platform_support_.get();
     }
 
-    void dbg_printf(int x, int y, const char* xx);
+    void dbg_printf(int x, int y, const char* xx, ...);
     FreeTypeLibrary* get_ft_library() const { return ft_library_.get(); }
 
     void notify_dpi_changed(float hdpi, float vdpi);
@@ -88,6 +96,8 @@ private:
 
     void init_lua();
     void run_project();
+
+    FrameStats frame_stats_;
 };
 
 } // namespace anyone

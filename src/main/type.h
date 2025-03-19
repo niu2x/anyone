@@ -149,4 +149,28 @@ private:
     T* object_;
 };
 
+template <class T, int N>
+class LatestCache {
+public:
+    LatestCache() : next_pos_(0) { }
+    void push_back(const T& data)
+    {
+        data_[next_pos_++] = data;
+        if (next_pos_ == N)
+            next_pos_ = 0;
+    }
+
+    T get_avg() const
+    {
+        T sum = 0;
+        for (auto& x : data_)
+            sum += x;
+        return sum / N;
+    }
+
+private:
+    T data_[N];
+    int next_pos_;
+};
+
 } // namespace anyone

@@ -118,14 +118,16 @@ struct Vertex {
     float u, v;
 };
 
-void DebugText::printf(int x, int y, const char* msg)
+void DebugText::vprintf(int x, int y, const char* msg, va_list args)
 {
+    char message[256];
+    vsnprintf(message, 256, msg, args);
     auto size = GET_CORE()->get_framebuffer_size();
     int cell_width = (size.width / get_font_width());
 
-    for (int i = 0; i < strlen(msg); i++) {
+    for (int i = 0; i < strlen(message); i++) {
         if (x + i >= 0 && x + i < cell_width) {
-            screens_[x + i + y * cell_width] = msg[i];
+            screens_[x + i + y * cell_width] = message[i];
         }
     }
 
