@@ -123,6 +123,12 @@ int Core::load_lua()
     return 1;
 }
 
+void Core::kick_one_frame()
+{
+    render();
+    update();
+}
+
 void Core::init_lua()
 {
     luaL_openlibs(lua_);

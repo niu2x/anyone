@@ -38,8 +38,6 @@ public:
     void set_project_dir(const String& project_dir);
 
     void start_game();
-    void update();
-    void render();
 
     void notify_framebuffer_size_changed(int width, int height);
 
@@ -62,8 +60,13 @@ public:
         return { framebuffer_width_, framebuffer_height_ };
     }
 
+    void kick_one_frame();
+
 private:
     void fire_framebuffer_size_changed();
+
+    void update();
+    void render();
 
     lua_State* lua_;
     UniquePtr<PlatformSupport> platform_support_;

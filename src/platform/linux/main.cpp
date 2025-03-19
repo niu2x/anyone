@@ -125,8 +125,7 @@ int main(int argc, char* argv[])
                 }
             }
 
-            core.update();
-            core.render();
+            core.kick_one_frame();
 
             SDL_GL_SwapWindow(window);
         }
