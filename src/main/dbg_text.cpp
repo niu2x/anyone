@@ -36,6 +36,13 @@ const GL_ProgramSource program_source = { .vertex = R"(
     }
 )" };
 
+const char* meterial_script = R"(
+
+material_name = dbg_text
+uniform vec4 font_color = { 1.0, 1.0, 1.0, 1.0 } 
+
+)";
+
 void DebugText::clear()
 {
     memset(screens_.data(), 0, screens_.size());
