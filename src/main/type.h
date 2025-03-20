@@ -157,7 +157,7 @@ public:
 
     void add(const String& key, T* obj)
     {
-        NX_ASSERT(!objects_.count(key), "texture %s exist", key.c_str());
+        NX_ASSERT(!objects_.count(key), "ref %s exist", key.c_str());
         objects_[key] = obj;
     }
 
@@ -174,6 +174,33 @@ public:
 
 private:
     std::unordered_map<String, T*> objects_;
+};
+
+template <class T>
+class RefCache {
+public:
+    RefCache() { }
+    ~RefCache() { }
+
+    void add(const String& key, T* obj)
+    {
+        NX_ASSERT(!objects_.count(key), "ref %s exist", key.c_str());
+        objects_[key] = obj;
+    }
+
+    void remove(const String& key) { objects_.erase(key); }
+
+    T* get(const String& key) const
+    {
+        auto it = objects_.find(key);
+        if (it != objects_.end()) {
+            return it->second.get();
+        }
+        return nullptr;
+    }
+
+private:
+    std::unordered_map<String, RefPtr<T>> objects_;
 };
 
 template <class T, int N>
