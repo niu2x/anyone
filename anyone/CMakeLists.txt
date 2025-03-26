@@ -13,11 +13,10 @@ set(runtime "anyone_rt")
 add_executable(${runtime} "")
 anyone_init_cxx_target(${runtime})
 
-target_include_directories(${runtime} PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>  
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>  
+target_include_directories(${runtime} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
-target_include_directories(${runtime} PRIVATE src/)
 target_link_libraries(${runtime} PRIVATE
     nx
 )
@@ -36,8 +35,6 @@ target_link_libraries(${runtime} PRIVATE
 	platform_linux
 	glad
 )
-
-
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
 	target_link_libraries(${runtime} PRIVATE 
