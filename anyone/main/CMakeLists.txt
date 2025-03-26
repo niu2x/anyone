@@ -1,26 +1,28 @@
-add_library(main "")
+add_library(anyone_main "")
 
 file(GLOB_RECURSE src_files 
 	"./*.cpp"
 )
 
-target_sources(main PRIVATE
-	${src_files}
+target_sources(anyone_main PRIVATE
+	# ${src_files}
+	empty.cpp
 )
 
-target_include_directories(main PUBLIC
+target_include_directories(anyone_main PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries(main PUBLIC 
-	glad
+target_link_libraries(anyone_main PUBLIC 
+	# glad
 	tolua
-	nx
 	freetype
+	anyone_base
+	anyone_platform_api
 )
 
-anyone_init_cxx_target(main)
+anyone_init_cxx_target(anyone_main)
 
-target_compile_definitions(main PUBLIC 
+target_compile_definitions(anyone_main PUBLIC 
 	ANYONE_TARGET_LINUX
 )

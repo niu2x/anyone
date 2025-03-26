@@ -3,11 +3,11 @@
 namespace anyone {
 
 struct SemanticVersion {
-	int major;
-	int minor;
-	int patch;
+    int major;
+    int minor;
+    int patch;
 };
 
 SemanticVersion get_version();
 
-}
+} // namespace anyone

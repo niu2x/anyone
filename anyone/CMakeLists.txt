@@ -9,36 +9,40 @@ include(warning_as_error)
 include(CMakePackageConfigHelpers)
 
 
-set(runtime "anyone_rt")
-add_executable(${runtime} "")
-anyone_init_cxx_target(${runtime})
+# set(runtime "anyone_rt")
+# add_executable(${runtime} "")
+# anyone_init_cxx_target(${runtime})
 
-target_include_directories(${runtime} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${CMAKE_CURRENT_BINARY_DIR}/include
-)
+# target_include_directories(${runtime} PRIVATE
+#     ${CMAKE_CURRENT_SOURCE_DIR}/
+#     ${CMAKE_CURRENT_BINARY_DIR}/include
+# )
 
 add_subdirectory(3rd/lua)
 add_subdirectory(3rd/tolua)
 
+add_subdirectory(base)
 add_subdirectory(main)
+add_subdirectory(platform/api)
 add_subdirectory(platform/linux)
-
-target_sources(${runtime} PRIVATE
-	"version.cpp"
-)
-
-target_link_libraries(${runtime} PRIVATE 
-	main
-	platform_linux
-	glad
-    nx
-)
-
-if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-	target_link_libraries(${runtime} PRIVATE 
-		GL
-	)
-endif()
+add_subdirectory(entry)
 
 
+# target_sources(${runtime} PRIVATE
+# 	"version.cpp"
+# )
+
+# target_link_libraries(${runtime} PRIVATE 
+#     nx
+#     freetype
+# 	glad
+# )
+
+# if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+# 	target_link_libraries(${runtime} PRIVATE 
+# 		GL
+# 	)
+# 	target_compile_definitions(${runtime} PRIVATE 
+# 		ANYONE_TARGET_LINUX
+# 	)
+# endif()
