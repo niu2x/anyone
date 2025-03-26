@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nx/alias.h>
+#include <unordered_set>
 
 #define SAFE_RELEASE(ptr)                                                      \
     {                                                                          \
@@ -93,10 +94,14 @@ public:
     }
 
     static uint64_t get_object_counter() { return object_counter_; }
+    static void dump_alive_objects();
+
+    virtual const char* get_type() const { return "ref"; }
 
 private:
     uint64_t counter_;
     static uint64_t object_counter_;
+    static std::unordered_set<Ref*> alive_objects_;
 };
 
 template <class T>
@@ -142,6 +147,84 @@ public:
 
 private:
     T* object_;
+};
+
+template <class T>
+class WeakRefCache {
+public:
+    WeakRefCache() { }
+    ~WeakRefCache() { }
+
+    void add(const String& key, T* obj)
+    {
+        NX_ASSERT(!objects_.count(key), "ref %s exist", key.c_str());
+        objects_[key] = obj;
+    }
+
+    void remove(const String& key) { objects_.erase(key); }
+
+    T* get(const String& key) const
+    {
+        auto it = objects_.find(key);
+        if (it != objects_.end()) {
+            return it->second;
+        }
+        return nullptr;
+    }
+
+private:
+    std::unordered_map<String, T*> objects_;
+};
+
+template <class T>
+class RefCache {
+public:
+    RefCache() { }
+    ~RefCache() { }
+
+    void add(const String& key, T* obj)
+    {
+        NX_ASSERT(!objects_.count(key), "ref %s exist", key.c_str());
+        objects_[key] = obj;
+    }
+
+    void remove(const String& key) { objects_.erase(key); }
+
+    T* get(const String& key) const
+    {
+        auto it = objects_.find(key);
+        if (it != objects_.end()) {
+            return it->second.get();
+        }
+        return nullptr;
+    }
+
+private:
+    std::unordered_map<String, RefPtr<T>> objects_;
+};
+
+template <class T, int N>
+class LatestCache {
+public:
+    LatestCache() : next_pos_(0) { }
+    void push_back(const T& data)
+    {
+        data_[next_pos_++] = data;
+        if (next_pos_ == N)
+            next_pos_ = 0;
+    }
+
+    T get_avg() const
+    {
+        T sum = 0;
+        for (auto& x : data_)
+            sum += x;
+        return sum / N;
+    }
+
+private:
+    T data_[N];
+    int next_pos_;
 };
 
 } // namespace anyone

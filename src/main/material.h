@@ -4,7 +4,7 @@
 
 namespace anyone {
 
-class Material {
+class Material : public Ref {
 public:
     Material();
     ~Material();
@@ -15,6 +15,7 @@ public:
     void set_uniform(const UniformValue& uniform);
     void unset_uniform(const String& name);
     void compile();
+    const char* get_type() const override { return "Material"; }
 
 private:
     GL_Program* program_;

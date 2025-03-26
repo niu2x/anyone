@@ -56,7 +56,6 @@ int main(int argc, char* argv[])
     auto project_dir = result["project"].as<std::string>();
 
     {
-
         anyone::Core core;
 
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -125,8 +124,7 @@ int main(int argc, char* argv[])
                 }
             }
 
-            core.update();
-            core.render();
+            core.kick_one_frame();
 
             SDL_GL_SwapWindow(window);
         }
@@ -138,6 +136,6 @@ int main(int argc, char* argv[])
 
     printf("remain ref object counter: %d\n",
            anyone::Ref::get_object_counter());
-
+    anyone::Ref::dump_alive_objects();
     return 0;
 }

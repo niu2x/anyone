@@ -11,12 +11,12 @@ class GL_Object : public Ref {
 public:
     GL_Object();
     ~GL_Object();
+
+    const char* get_type() const override { return "GL_Object"; }
 };
 
 class GL_Texture2D : public GL_Object {
 public:
-    static GL_Texture2D* get_texture(const String& key);
-
     GL_Texture2D(int width, int height);
     GL_Texture2D(const String& key, int width, int height);
     ~GL_Texture2D();
@@ -35,14 +35,14 @@ public:
     int get_height() const { return height_; }
 
     void bind(int tex_unit);
+    const char* get_type() const override { return "GL_Texture2D"; }
+    const String& get_key() const { return key_; }
 
 private:
     GLuint name_;
     int width_, height_;
     ByteBuffer cpu_buffer_;
     String key_;
-
-    static std::unordered_map<String, GL_Texture2D*> alive_textures_;
 };
 
 enum class VertexAttr {
@@ -71,11 +71,8 @@ public:
     }
 
     void set_vertex_layout(const VertexLayout& layout);
-
     void bind();
-
     // static void unbind();
-
 private:
     GLuint name_;
     size_t buf_size_;
@@ -121,8 +118,6 @@ public:
         FRAGMENT,
     };
 
-    static GL_Program* get_program(const String& key);
-
     GL_Program(const String& key);
     ~GL_Program();
 
@@ -144,6 +139,8 @@ public:
     void set_uniform(const UniformValue& uniform);
     const String& get_key() const { return key_; }
 
+    const char* get_type() const override { return "GL_Program"; }
+
 private:
     String key_;
     GLuint name_;
@@ -151,7 +148,6 @@ private:
     static GLenum to_gl(ShaderType type);
 
     void delete_shaders();
-    static std::unordered_map<String, GL_Program*> alive_programs_;
 };
 
 struct GL_ProgramSource {
@@ -160,14 +156,21 @@ struct GL_ProgramSource {
 };
 
 GL_Program* create_gl_program(const String& key,
-                              const GL_ProgramSource& source);
 
-// class GL_ProgramManager {
+                              const GL_ProgramSource& source);
+// template <class T>
+// class RefManager {
 // public:
-//     GL_ProgramManager();
-//     ~GL_ProgramManager();
+//     RefManager() {}
+//     ~RefManager() {}
+
+//     void add(T *obj) {
+//     }
+
+//     void remove(const String &key) {
+//     }
 // private:
-//     std::unordered_map<String, GL_Program*> programs_;
+//     std::unordered_map<String, RefPtr<T>> objects_;
 // };
 
 enum class DrawPrimitive {
@@ -186,6 +189,8 @@ enum class PolygonMode {
     FILL,
 };
 
+class Material;
+
 struct DrawOperation {
     DrawPrimitive primitive;
     VertexStrategy strategy;
@@ -193,11 +198,12 @@ struct DrawOperation {
 
     GL_VertexBuffer* vertex_buffer;
     int vertex_count;
-
-    GL_Program* program;
-    GL_Texture2D* texture;
+    Material* material;
 };
 
 void execute_operation(const DrawOperation& operation);
+
+extern WeakRefCache<GL_Texture2D> alive_textures;
+extern WeakRefCache<GL_Program> alive_programs;
 
 } // namespace anyone

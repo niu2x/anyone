@@ -2,6 +2,8 @@
 
 #include "gl.h"
 #include "ttf.h"
+#include "material.h"
+#include <stdarg.h>
 
 namespace anyone {
 
@@ -10,7 +12,7 @@ public:
     DebugText(Font* font);
     ~DebugText();
     void render();
-    void printf(int x, int y, const char* msg);
+    void vprintf(int x, int y, const char* msg, va_list args);
     void clear();
 
     void on_framebuffer_size_changed() override;
@@ -22,9 +24,11 @@ private:
     
     GL_VertexBuffer* vbo_;
     int vertex_count_;
-    GL_Texture2D* texture_;
-    GL_Program* program_;
 
+    // GL_Texture2D* texture_;
+    // GL_Program* program_;
+    //
+    Material* material_;
     DrawOperation draw_operation_;
 
     int get_font_width() const;

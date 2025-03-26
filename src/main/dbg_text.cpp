@@ -36,6 +36,11 @@ const GL_ProgramSource program_source = { .vertex = R"(
     }
 )" };
 
+// const char* meterial_script = R"(
+// material_name = dbg_text
+// uniform vec4 font_color = { 1.0, 1.0, 1.0, 1.0 }
+// )";
+
 void DebugText::clear()
 {
     memset(screens_.data(), 0, screens_.size());
@@ -47,15 +52,36 @@ DebugText::DebugText(Font* font)
 , dirty_(true)
 , vbo_(nullptr)
 , vertex_count_(0)
-, texture_(nullptr)
+// , texture_(nullptr)
+, material_(nullptr)
 {
 
     screens_.resize(get_cell_count());
     memset(screens_.data(), 0, screens_.size());
-    program_ = create_gl_program("program:debug_text", program_source);
 
     GET_CORE()->add_framebuffer_size_listener(this);
     NX_ASSERT(font_->get_page_num() == 1, "page num it not 1");
+
+    material_ = new Material();
+
+    auto prog = create_gl_program("program:debug_text", program_source);
+    material_->set_program(prog);
+    prog->release();
+
+    UniformValue uniform;
+    uniform.name = "font_color";
+    uniform.type = UniformType::VEC4;
+    uniform.value = UniformVec4 { { 1.0, 1.0, 1.0, 1.0 } };
+    material_->set_uniform(uniform);
+
+    draw_operation_.material = material_;
+    draw_operation_.primitive = DrawPrimitive::TRIANGLE;
+    draw_operation_.polygon_mode = PolygonMode::FILL;
+    draw_operation_.strategy = VertexStrategy::POINT_LIST;
+
+    // program_->set_uniform_texture("tex", 0);
+    // program_->set_uniform_vec4("font_color", 1.0, 1.0, 1.0, 1.0);
+    // program_->set_uniform_vec2("framebuffer_size", size.width, size.height);
 }
 
 int DebugText::get_cell_count() const
@@ -78,9 +104,10 @@ int DebugText::get_font_height() const
 
 DebugText::~DebugText()
 {
+    SAFE_RELEASE(material_);
+
     GET_CORE()->remove_framebuffer_size_listener(this);
 
-    SAFE_RELEASE(program_);
     SAFE_RELEASE(vbo_);
 }
 
@@ -96,14 +123,16 @@ struct Vertex {
     float u, v;
 };
 
-void DebugText::printf(int x, int y, const char* msg)
+void DebugText::vprintf(int x, int y, const char* msg, va_list args)
 {
+    char message[256];
+    vsnprintf(message, 256, msg, args);
     auto size = GET_CORE()->get_framebuffer_size();
     int cell_width = (size.width / get_font_width());
 
-    for (int i = 0; i < strlen(msg); i++) {
+    for (int i = 0; i < strlen(message); i++) {
         if (x + i >= 0 && x + i < cell_width) {
-            screens_[x + i + y * cell_width] = msg[i];
+            screens_[x + i + y * cell_width] = message[i];
         }
     }
 
@@ -203,33 +232,45 @@ void DebugText::render()
                     }
                 }
             }
-            if (!texture_)
-                texture_ = texture;
+
             vbo_->apply();
             vbo_->free_cpu_buffer();
             vertex_count_ = vertex_index;
+
+            // if (!texture_)
+            // texture_ = texture;
+
+            UniformValue uniform;
+            uniform.name = "tex";
+            uniform.type = UniformType::TEXTURE;
+            uniform.value = UniformTexture {
+                .key = "",
+                .texture = RefPtr<GL_Texture2D> { texture },
+                .tex_unit = 0
+            };
+
+            material_->set_uniform(uniform);
+
+            uniform.name = "framebuffer_size";
+            uniform.type = UniformType::VEC2;
+            uniform.value = UniformVec2 { { size.width, size.height } };
+            material_->set_uniform(uniform);
+
+            material_->compile();
+            draw_operation_.vertex_count = vertex_count_;
+
+            draw_operation_.vertex_buffer = vbo_;
         }
     }
 
     if (vbo_) {
 
-        texture_->bind(0);
+        // texture_->bind(0);
 
         // LOG("texture_ %d %d", texture_->get_height(), texture_->get_width());
 
-        NX_ASSERT(program_->is_ready(), "gl program not ready");
-        program_->use();
-        program_->set_uniform_texture("tex", 0);
-        program_->set_uniform_vec4("font_color", 1.0, 1.0, 1.0, 1.0);
-        program_->set_uniform_vec2("framebuffer_size", size.width, size.height);
-
-        draw_operation_.vertex_buffer = vbo_;
-        draw_operation_.texture = texture_;
-        draw_operation_.program = program_;
-        draw_operation_.primitive = DrawPrimitive::TRIANGLE;
-        draw_operation_.polygon_mode = PolygonMode::FILL;
-        draw_operation_.strategy = VertexStrategy::POINT_LIST;
-        draw_operation_.vertex_count = vertex_count_;
+        // NX_ASSERT(program_->is_ready(), "gl program not ready");
+        // material_->use();
 
         execute_operation(draw_operation_);
     }

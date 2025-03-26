@@ -1,4 +1,5 @@
 #include "gl.h"
+#include "material.h"
 
 namespace anyone {
 
@@ -16,26 +17,15 @@ GL_Texture2D::GL_Texture2D(const String& key, int w, int h)
     glGenTextures(1, &name_);
 
     if (key_ != "") {
-        alive_textures_[key_] = this;
+        alive_textures.add(key, this);
     }
 }
 
 GL_Texture2D::~GL_Texture2D()
 {
-    alive_textures_.erase(key_);
+    alive_textures.remove(key_);
     glDeleteTextures(1, &name_);
 }
-
-GL_Texture2D* GL_Texture2D::get_texture(const String& key)
-{
-    auto it = alive_textures_.find(key);
-    if (it != alive_textures_.end()) {
-        return it->second;
-    }
-    return nullptr;
-}
-
-std::unordered_map<String, GL_Texture2D*> GL_Texture2D::alive_textures_;
 
 void GL_Texture2D::apply()
 {
@@ -191,33 +181,20 @@ GLuint compile_shader(GLenum shader_type, const char* source)
     return shader;
 }
 
-std::unordered_map<String, GL_Program*> GL_Program::alive_programs_;
-
 GL_Program::GL_Program(const String& key) : key_(key), name_(0)
 {
-    NX_ASSERT(!alive_programs_.count(key), "program %s exist", key_.c_str());
-    if (key_ != "")
-        alive_programs_[key_] = this;
+    if (key_ != "") {
+        alive_programs.add(key, this);
+    }
 }
 
 GL_Program::~GL_Program()
 {
-    alive_programs_.erase(key_);
-
+    alive_programs.remove(key_);
     if (name_) {
         glDeleteProgram(name_);
     }
-
     delete_shaders();
-}
-
-GL_Program* GL_Program::get_program(const String& key)
-{
-    auto it = alive_programs_.find(key);
-    if (it != alive_programs_.end()) {
-        return it->second;
-    }
-    return nullptr;
 }
 
 void GL_Program::delete_shaders()
@@ -409,6 +386,8 @@ void execute_operation(const DrawOperation& op)
         }
     }
 
+    op.material->use();
+
     switch (op.primitive) {
         case DrawPrimitive::TRIANGLE: {
             switch (op.strategy) {
@@ -444,5 +423,8 @@ void execute_operation(const DrawOperation& op)
         }
     }
 }
+
+WeakRefCache<GL_Texture2D> alive_textures;
+WeakRefCache<GL_Program> alive_programs;
 
 } // namespace anyone
