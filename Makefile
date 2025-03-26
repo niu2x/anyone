@@ -1,8 +1,10 @@
 build:
 	./tools/build_cmake_project.sh freetype
 	./tools/build_cmake_project.sh nx -DNX_STATIC=ON
-	cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Debug -Dnx_DIR=./dist/lib/cmake/niu2x -Dfreetype_DIR=./dist/lib/cmake/freetype
-	cmake --build build -j 2
+	cmake -S anyone -B build/anyone -DCMAKE_BUILD_TYPE=Debug \
+									-Dnx_DIR=$(PWD)/dist/lib/cmake/niu2x \
+									-Dfreetype_DIR=$(PWD)/dist/lib/cmake/freetype
+	cmake --build build/anyone -j 2
 
 update_version:
 	change-version Node cmd_tools/package.json -i -v $(version)
