@@ -1,0 +1,13 @@
+digraph ComponentRelation {
+	"base";
+	"platform/api";
+	"platform/impl";
+	"main";
+	"entry";
+
+	"platform/api" -> "base";
+	"platform/impl" -> "platform/api";
+	"main" -> "platform/api";
+	"entry" -> "main";
+	"entry" -> "platform/impl";
+}

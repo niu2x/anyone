@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace anyone {
 
 struct SemanticVersion {
