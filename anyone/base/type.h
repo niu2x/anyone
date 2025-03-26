@@ -74,11 +74,11 @@ private:
     Vector<T*> listeners_;
 };
 
-class FramebufferSizeListener {
-public:
-    virtual ~FramebufferSizeListener() { }
-    virtual void on_framebuffer_size_changed() { }
-};
+// class FramebufferSizeListener {
+// public:
+//     virtual ~FramebufferSizeListener() { }
+//     virtual void on_framebuffer_size_changed() { }
+// };
 
 class Ref {
 public:

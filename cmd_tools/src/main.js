@@ -22,7 +22,7 @@ import {
 const __filename = fileURLToPath(
   import.meta.url);
 const __dirname = dirname(__filename);
-const anyone_rt = path.join(__dirname, "../../build/anyone/anyone_rt")
+const anyone_rt = path.join(__dirname, "../../build/anyone/entry/anyone_rt")
 
 function waitWork(worker) {
   return new Promise((resolve, reject) => {
