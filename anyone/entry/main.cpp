@@ -1,4 +1,7 @@
+#if defined(ANYONE_TARGET_LINUX)
 #include "platform/linux/support.h"
+#endif
+
 #include "main/core.h"
 #include "3rd/cxxopts.hpp"
 
@@ -28,10 +31,12 @@ int main(int argc, char* argv[])
 
     auto result = options.parse(argc, argv);
     auto project_dir = result["project"].as<std::string>();
-    anyone::PlatformLinux platform_linux;
+    #if defined(ANYONE_TARGET_LINUX)
+    anyone::PlatformLinux platform_impl;
+    #endif
 
     StartupConfig config = {
-        .platform_support = &platform_linux,
+        .platform_support = &platform_impl,
         .project_dir = project_dir,
     };
 

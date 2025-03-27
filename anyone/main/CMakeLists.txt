@@ -23,7 +23,3 @@ target_link_libraries(anyone_main PUBLIC
 )
 
 anyone_init_cxx_target(anyone_main)
-
-target_compile_definitions(anyone_main PUBLIC 
-	ANYONE_TARGET_LINUX
-)

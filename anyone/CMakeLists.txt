@@ -24,26 +24,12 @@ add_subdirectory(3rd/tolua)
 add_subdirectory(base)
 add_subdirectory(main)
 add_subdirectory(platform/api)
-add_subdirectory(platform/linux)
 add_subdirectory(entry)
 
 
-
-# target_sources(${runtime} PRIVATE
-# 	"version.cpp"
-# )
-
-# target_link_libraries(${runtime} PRIVATE 
-#     nx
-#     freetype
-# 	glad
-# )
-
-# if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-# 	target_link_libraries(${runtime} PRIVATE 
-# 		GL
-# 	)
-# 	target_compile_definitions(${runtime} PRIVATE 
-# 		ANYONE_TARGET_LINUX
-# 	)
-# endif()
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+	add_subdirectory(platform/linux)
+	target_compile_definitions(anyone_rt PRIVATE 
+		ANYONE_TARGET_LINUX
+	)
+endif()
