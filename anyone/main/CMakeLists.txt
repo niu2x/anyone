@@ -6,6 +6,7 @@ file(GLOB_RECURSE src_files
 
 target_sources(anyone_main PRIVATE
 	# ${src_files}
+	rml_ui.cpp
 	core.cpp
 	color.cpp
 	export_lua.cpp
@@ -17,10 +18,11 @@ target_include_directories(anyone_main PUBLIC
 
 target_link_libraries(anyone_main PUBLIC 
 	# glad
-	tolua
-	freetype
 	anyone_base
 	anyone_platform_api
+	RmlUi::RmlUi
+	freetype
+	tolua
 )
 
 anyone_init_cxx_target(anyone_main)

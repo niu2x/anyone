@@ -9,6 +9,7 @@ extern "C" {
 #include "base/type.h"
 #include "platform/api/support.h"
 #include "input.h"
+#include "rml_ui.h"
 
 namespace anyone {
 
