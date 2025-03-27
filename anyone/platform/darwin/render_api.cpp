@@ -2,9 +2,9 @@
 
 namespace anyone {
 
-OpenGL_API::OpenGL_API() { }
-OpenGL_API::~OpenGL_API() { }
+Metal_API::Metal_API() { }
+Metal_API::~Metal_API() { }
 
-void OpenGL_API::clear() { }
+void Metal_API::clear() { }
 
 } // namespace anyone

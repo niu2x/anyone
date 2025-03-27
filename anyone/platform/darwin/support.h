@@ -5,10 +5,10 @@
 
 namespace anyone {
 
-class OpenGL_API : public RenderAPI {
+class Metal_API : public RenderAPI {
 public:
-    OpenGL_API();
-    ~OpenGL_API();
+    Metal_API();
+    ~Metal_API();
     void clear() override;
 };
 
@@ -30,7 +30,7 @@ private:
     SDL_Window* native_window_;
     SDL_GLContext gl_context_;
     uint32_t window_flags_;
-    OpenGL_API render_api_;
+    Metal_API render_api_;
 };
 
 } // namespace anyone
