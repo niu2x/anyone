@@ -3,7 +3,7 @@ add_subdirectory(glad)
 add_library(anyone_platform_linux "")
 
 target_sources(anyone_platform_linux PRIVATE
-	empty.cpp
+	support.cpp
 	# main.cpp
 	# anyone_platform_linux.cpp
 )
@@ -11,10 +11,10 @@ target_sources(anyone_platform_linux PRIVATE
 find_package(SDL2 REQUIRED)
 
 target_link_libraries(anyone_platform_linux PUBLIC
+	anyone_platform_api
 	glad
 	dl
 	SDL2
-	anyone_platform_api
 )
 
 anyone_init_cxx_target(anyone_platform_linux)
