@@ -1,3 +1,5 @@
+#include "../common/key_code_convert.h"
+#include "main/core.h"
 #include "support.h"
 #include <stdarg.h>
 #include "glad/include/glad/glad.h"

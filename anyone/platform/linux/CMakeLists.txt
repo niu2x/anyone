@@ -5,8 +5,7 @@ add_library(anyone_platform_linux "")
 target_sources(anyone_platform_linux PRIVATE
 	support.cpp
 	render_api.cpp
-	# main.cpp
-	# anyone_platform_linux.cpp
+	../common/key_code_convert.cpp
 )
 
 find_package(SDL2 REQUIRED)
