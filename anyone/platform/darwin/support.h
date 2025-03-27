@@ -7,9 +7,12 @@ namespace anyone {
 
 class Metal_API : public RenderAPI {
 public:
-    Metal_API();
+    Metal_API(SDL_Renderer *sdl_renderer);
     ~Metal_API();
     void clear() override;
+
+private:
+    void *pimp_;
 };
 
 class PlatformDarwin : public PlatformSupport {
@@ -24,13 +27,13 @@ public:
     void swap_buffers() override;
     bool poll_events() override;
 
-    RenderAPI* get_render_api() override { return &render_api_; }
+    RenderAPI* get_render_api() override { return render_api_; }
 
 private:
     SDL_Window* native_window_;
-    SDL_GLContext gl_context_;
+    SDL_Renderer *sdl_renderer_;
     uint32_t window_flags_;
-    Metal_API render_api_;
+    Metal_API *render_api_;
 };
 
 } // namespace anyone

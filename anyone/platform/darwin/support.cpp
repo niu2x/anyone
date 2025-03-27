@@ -3,11 +3,14 @@
 
 namespace anyone {
 
-PlatformDarwin::PlatformDarwin() : native_window_(nullptr), window_flags_(0) { }
+PlatformDarwin::PlatformDarwin() : native_window_(nullptr), window_flags_(0),sdl_renderer_(nullptr),render_api_(nullptr) { }
 
 PlatformDarwin::~PlatformDarwin()
 {
     if (native_window_) {
+        delete render_api_;
+        render_api_ = nullptr;
+        SDL_DestroyRenderer(sdl_renderer_);
         SDL_DestroyWindow(native_window_);
         SDL_Quit();
     }
@@ -38,9 +41,13 @@ void PlatformDarwin::init_window()
 {
     NX_ASSERT(native_window_ == nullptr, "Already exist native_window_");
 
-    window_flags_ = SDL_WINDOW_RESIZABLE;
+    window_flags_ = SDL_WINDOW_RESIZABLE|SDL_WINDOW_METAL;
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
     native_window_ = SDL_CreateWindow(
         "Anyone Game", 0, 0, 256, 256, window_flags_);
+
+    sdl_renderer_ = SDL_CreateRenderer(native_window_, -1, SDL_RENDERER_PRESENTVSYNC);
+    render_api_ = new Metal_API(sdl_renderer_);
 }
 void PlatformDarwin::swap_buffers()
 {

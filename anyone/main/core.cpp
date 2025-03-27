@@ -69,6 +69,9 @@ void Core::update() { }
 
 void Core::render()
 {
+    if(!render_api_){
+        render_api_ = platform_support_->get_render_api();
+    }
     render_api_->clear();
 
     // glViewport(0, 0, framebuffer_width_, framebuffer_height_);
