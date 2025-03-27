@@ -6,6 +6,30 @@
 
 namespace anyone {
 
+void handle_window_size_changed(anyone::Core* core, SDL_Window* window)
+{
+    int framebuffer_width, framebuffer_height;
+    SDL_GL_GetDrawableSize(window, &framebuffer_width, &framebuffer_height);
+    core->notify_framebuffer_size_changed(framebuffer_width,
+                                          framebuffer_height);
+
+    float ddpi, hdpi, vdpi;
+    int display_index = SDL_GetWindowDisplayIndex(window);
+    if (display_index < 0) {
+        return;
+    }
+
+    // 获取显示器的 DPI 信息
+    if (SDL_GetDisplayDPI(display_index, &ddpi, &hdpi, &vdpi) != 0) {
+        return;
+    }
+    // printf("Display DPI: diagonal=%f, horizontal=%f, vertical=%f\n",
+    //        ddpi,
+    //        hdpi,
+    //        vdpi);
+    core->notify_dpi_changed(hdpi, vdpi);
+}
+
 PlatformLinux::PlatformLinux() : native_window_(nullptr), window_flags_(0) { }
 
 PlatformLinux::~PlatformLinux()
@@ -80,7 +104,7 @@ bool PlatformLinux::poll_events()
                 switch (event.window.event) {
                     case SDL_WINDOWEVENT_RESIZED:
                     case SDL_WINDOWEVENT_SIZE_CHANGED: {
-                        // handle_window_size_changed(core, window);
+                        handle_window_size_changed(GET_CORE(), native_window_);
                         break;
                     }
                 }

@@ -20,10 +20,14 @@ class PlatformSupport;
 // class GL_Texture2D;
 // class DebugText;
 
-// struct DPI {
-//     float hori;
-//     float vert;
-// };
+struct DPI {
+    float hori;
+    float vert;
+};
+
+struct IntSize {
+    int width, height;
+};
 
 // struct FramebufferSize {
 //     int width;
@@ -49,18 +53,19 @@ public:
     ~Core();
 
     void set_startup_config(const StartupConfig& config);
+    void kick_one_frame();
 
     // void start_game();
 
-    // void notify_framebuffer_size_changed(int width, int height);
-
     PlatformSupport* get_platform_support() const { return platform_support_; }
+    const DPI& get_dpi() const { return dpi_; }
 
     // void dbg_printf(int x, int y, const char* xx, ...);
     // FreeTypeLibrary* get_ft_library() const { return ft_library_.get(); }
 
-    // void notify_dpi_changed(float hdpi, float vdpi);
-    // DPI get_dpi() const { return dpi_; }
+    void notify_dpi_changed(float hdpi, float vdpi);
+    void notify_framebuffer_size_changed(int width, int height);
+    void notify_keyboard_event(const KeyboardEvent& event);
 
     // void add_framebuffer_size_listener(FramebufferSizeListener* l);
     // void remove_framebuffer_size_listener(FramebufferSizeListener* l);
@@ -69,9 +74,6 @@ public:
     // {
     //     return { framebuffer_width_, framebuffer_height_ };
     // }
-
-    void kick_one_frame();
-    void notify_keyboard_event(const KeyboardEvent& event);
 
 private:
     // void fire_framebuffer_size_changed();
@@ -91,10 +93,8 @@ private:
     // UniquePtr<Font> dbg_font_;
     // UniquePtr<DebugText> dbg_text_;
 
-    // int framebuffer_width_;
-    // int framebuffer_height_;
-
-    // DPI dpi_;
+    DPI dpi_;
+    IntSize framebuffer_size_;
 
     // Event<FramebufferSizeListener> framebuffer_size_event_;
 

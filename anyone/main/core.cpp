@@ -42,9 +42,10 @@ Core::Core()
 , platform_support_(nullptr)
 , render_api_(nullptr)
 , project_dir_(std::nullopt)
+, dpi_ { 90, 90 }
+, framebuffer_size_ { 1, 1 }
 // framebuffer_width_(0),
 // framebuffer_height_(0),
-// dpi_ { 90, 90 },
 {
     lua_ = luaL_newstate();
 }
@@ -77,24 +78,21 @@ void Core::render()
     render_api_->clear();
 
     // glViewport(0, 0, framebuffer_width_, framebuffer_height_);
-
     // dbg_printf(0, 0, "FPS: %.2f", frame_stats_.avg_fps);
     // dbg_text_->render();
 }
 
-// void Core::notify_framebuffer_size_changed(int width, int height)
-// {
-//     framebuffer_width_ = width;
-//     framebuffer_height_ = height;
+void Core::notify_framebuffer_size_changed(int width, int height)
+{
+    framebuffer_size_ = { width, height };
+    // fire_framebuffer_size_changed();
+}
 
-//     fire_framebuffer_size_changed();
-// }
-
-// void Core::notify_dpi_changed(float hdpi, float vdpi)
-// {
-//     dpi_.hori = hdpi;
-//     dpi_.vert = vdpi;
-// }
+void Core::notify_dpi_changed(float hdpi, float vdpi)
+{
+    dpi_.hori = hdpi;
+    dpi_.vert = vdpi;
+}
 
 void Core::set_platform_support(PlatformSupport* p)
 {
