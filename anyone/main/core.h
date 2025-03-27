@@ -8,6 +8,7 @@ extern "C" {
 
 #include "base/type.h"
 #include "platform/api/support.h"
+#include "input.h"
 
 namespace anyone {
 
@@ -70,6 +71,7 @@ public:
     // }
 
     void kick_one_frame();
+    void notify_keyboard_event(const KeyboardEvent& event);
 
 private:
     // void fire_framebuffer_size_changed();

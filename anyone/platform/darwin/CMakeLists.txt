@@ -7,11 +7,13 @@ target_sources(anyone_platform_darwin PRIVATE
 	support.cpp
 	render_api.mm
 	render_impl.m
+	../common/key_code_convert.cpp
 )
 
 
 target_link_libraries(anyone_platform_darwin PUBLIC
 	anyone_platform_api
+	anyone_main
 	dl
 	${SDL2_LIBRARIES}
 )

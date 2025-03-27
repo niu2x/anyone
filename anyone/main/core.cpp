@@ -240,4 +240,15 @@ void Core::init_lua()
 //         &FramebufferSizeListener::on_framebuffer_size_changed);
 // }
 
+void Core::notify_keyboard_event(const KeyboardEvent& event)
+{
+    if (event.type == KeyboardEventType::PRESS) {
+        if (event.key_code == KEY_F) {
+            static bool full_screen = false;
+            platform_support_->set_full_screen(full_screen);
+            full_screen = !full_screen;
+        }
+    }
+}
+
 } // namespace anyone

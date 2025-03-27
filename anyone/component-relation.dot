@@ -7,6 +7,8 @@ digraph ComponentRelation {
 
 	"platform/api" -> "base";
 	"platform/impl" -> "platform/api";
+	"platform/impl" -> "main";
+	
 	"main" -> "platform/api";
 	"entry" -> "main";
 	"entry" -> "platform/impl";

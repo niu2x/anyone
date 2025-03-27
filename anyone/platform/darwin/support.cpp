@@ -1,5 +1,7 @@
+#include "main/core.h"
 #include "support.h"
 #include <stdarg.h>
+#include "../common/key_code_convert.h"
 
 namespace anyone {
 
@@ -61,17 +63,22 @@ bool PlatformDarwin::poll_events()
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_KEYDOWN: {
-                switch (event.key.keysym.sym) {
-                    // case SDLK_ESCAPE:
-                    //   running = 0;
-                    //   break;
-                    case 'f':
-                        // full_screen = !full_screen;
-                        // GET_PLATFORM_SUPPORT()->set_full_screen(full_screen);
-                        break;
-                    default:
-                        break;
-                }
+                int key_code = from_SDL_key_code(event.key.keysym.sym);
+                GET_CORE()->notify_keyboard_event(
+                    { .type = KeyboardEventType::PRESS, .key_code = key_code });
+                // switch (event.key.keysym.sym) {
+                //     // case SDLK_ESCAPE:
+                //     //   running = 0;
+                //     //   break;
+                //     case 'f':
+                //         // full_screen = !full_screen;
+                //         //
+                //         GET_PLATFORM_SUPPORT()->set_full_screen(full_screen);
+                //         break;
+                //     default:
+                //         break;
+                // }
+
                 break;
             }
             case SDL_QUIT: {

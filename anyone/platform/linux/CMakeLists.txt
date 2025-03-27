@@ -13,6 +13,7 @@ find_package(SDL2 REQUIRED)
 
 target_link_libraries(anyone_platform_linux PUBLIC
 	anyone_platform_api
+	anyone_main
 	glad
 	dl
 	SDL2
