@@ -1,11 +1,9 @@
-$#include "core.h"
-$#include "platform.h"
+$#include "main/core.h"
+$#include "platform/api/support.h"
 
 namespace anyone {
 
-class PlatformSupport{
-	void set_full_screen(bool full_screen);
-};
+class PlatformSupport {}
 
 class Core {
 	static Core* get_singleton_ptr();

@@ -6,7 +6,8 @@ file(GLOB_RECURSE src_files
 
 target_sources(anyone_main PRIVATE
 	# ${src_files}
-	empty.cpp
+	core.cpp
+	export_lua.cpp
 )
 
 target_include_directories(anyone_main PUBLIC
