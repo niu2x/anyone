@@ -9,11 +9,12 @@ extern "C" {
 #include "base/type.h"
 #include "platform/api/support.h"
 #include "input.h"
-#include "rml_ui.h"
+// #include "rml_ui.h"
 
 namespace anyone {
 
 class PlatformSupport;
+class RML_UI_Context;
 // class Font;
 // class FreeTypeLibrary;
 // class GL_Program;
@@ -85,17 +86,16 @@ private:
     void update();
     void render();
 
-    lua_State* lua_;
     PlatformSupport* platform_support_;
     RenderAPI* render_api_;
     // UniquePtr<FreeTypeLibrary> ft_library_;
 
-    Optional<String> project_dir_;
-    // UniquePtr<Font> dbg_font_;
-    // UniquePtr<DebugText> dbg_text_;
+    UniquePtr<RML_UI_Context> rml_ui_context_;
 
+    Optional<String> project_dir_;
     DPI dpi_;
     IntSize framebuffer_size_;
+    lua_State* lua_;
 
     // Event<FramebufferSizeListener> framebuffer_size_event_;
 

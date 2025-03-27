@@ -1,5 +1,5 @@
 #include "core.h"
-// #include "platform.h"
+#include "rml_ui.h"
 // #include "gl.h"
 // #include "ttf.h"
 // #include "dbg_text.h"
@@ -40,12 +40,16 @@ extern int luaopen_anyone(lua_State* tolua_S);
 namespace anyone {
 
 Core::Core()
-: lua_(nullptr)
-, platform_support_(nullptr)
+: platform_support_(nullptr)
 , render_api_(nullptr)
+
+, rml_ui_context_(nullptr)
+
 , project_dir_(std::nullopt)
 , dpi_ { 90, 90 }
 , framebuffer_size_ { 1, 1 }
+, lua_(nullptr)
+
 // framebuffer_width_(0),
 // framebuffer_height_(0),
 {
@@ -55,8 +59,11 @@ Core::Core()
 Core::~Core()
 {
     lua_close(lua_);
-    platform_support_ = nullptr;
+
+    rml_ui_context_.reset();
+
     render_api_ = nullptr;
+    platform_support_ = nullptr;
     // dbg_text_.reset();
     // dbg_font_.reset();
     // ft_library_.reset();
@@ -71,6 +78,7 @@ void Core::set_startup_config(const StartupConfig& config)
 void Core::notify_render_api_ready()
 {
     render_api_->set_clear_color(Color::BLUE);
+    rml_ui_context_ = std::make_unique<RML_UI_Context>();
 }
 
 void Core::update() { }
@@ -99,6 +107,8 @@ void Core::notify_dpi_changed(float hdpi, float vdpi)
 void Core::set_platform_support(PlatformSupport* p)
 {
     platform_support_ = p;
+
+    NX_ASSERT(render_api_ == nullptr, "already had render_api_");
     render_api_ = p->get_render_api();
     if (render_api_) {
         notify_render_api_ready();
