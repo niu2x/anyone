@@ -65,13 +65,15 @@ void Core::set_startup_config(const StartupConfig& config)
     set_platform_support(config.platform_support);
 }
 
+void Core::notify_render_api_ready()
+{
+    render_api_->set_clear_color(Color::BLUE);
+}
+
 void Core::update() { }
 
 void Core::render()
 {
-    if(!render_api_){
-        render_api_ = platform_support_->get_render_api();
-    }
     render_api_->clear();
 
     // glViewport(0, 0, framebuffer_width_, framebuffer_height_);
@@ -98,6 +100,9 @@ void Core::set_platform_support(PlatformSupport* p)
 {
     platform_support_ = p;
     render_api_ = p->get_render_api();
+    if (render_api_) {
+        notify_render_api_ready();
+    }
 }
 
 void Core::set_project_dir(const String& dir) { project_dir_ = dir; }
@@ -245,8 +250,8 @@ void Core::notify_keyboard_event(const KeyboardEvent& event)
     if (event.type == KeyboardEventType::PRESS) {
         if (event.key_code == KEY_F) {
             static bool full_screen = false;
-            platform_support_->set_full_screen(full_screen);
             full_screen = !full_screen;
+            platform_support_->set_full_screen(full_screen);
         }
     }
 }

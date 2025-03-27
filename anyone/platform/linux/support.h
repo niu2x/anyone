@@ -10,6 +10,7 @@ public:
     OpenGL_API();
     ~OpenGL_API();
     void clear() override;
+    void set_clear_color(const Color& color) override;
 };
 
 class PlatformLinux : public PlatformSupport {

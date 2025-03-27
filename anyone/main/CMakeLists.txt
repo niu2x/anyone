@@ -7,6 +7,7 @@ file(GLOB_RECURSE src_files
 target_sources(anyone_main PRIVATE
 	# ${src_files}
 	core.cpp
+	color.cpp
 	export_lua.cpp
 )
 

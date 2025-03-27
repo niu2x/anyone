@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base/type.h"
+#include "main/color.h"
 
 namespace anyone {
 
@@ -8,6 +9,7 @@ class RenderAPI {
 public:
     virtual ~RenderAPI() = 0;
     virtual void clear() = 0;
+    virtual void set_clear_color(const Color& color) = 0;
 };
 
 class PlatformSupport {

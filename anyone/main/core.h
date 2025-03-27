@@ -105,6 +105,8 @@ private:
     // void run_project();
 
     // FrameStats frame_stats_;
+
+    void notify_render_api_ready();
 };
 
 } // namespace anyone
