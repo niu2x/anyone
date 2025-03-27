@@ -81,11 +81,12 @@ void Core::notify_render_api_ready()
     rml_ui_context_ = std::make_unique<RML_UI_Context>();
 }
 
-void Core::update() { }
+void Core::update() { rml_ui_context_->update(); }
 
 void Core::render()
 {
     render_api_->clear();
+    rml_ui_context_->render();
 
     // glViewport(0, 0, framebuffer_width_, framebuffer_height_);
     // dbg_printf(0, 0, "FPS: %.2f", frame_stats_.avg_fps);

@@ -42,10 +42,14 @@ public:
     RML_UI_Context();
     ~RML_UI_Context();
 
+    void update();
+    void render();
+
 private:
     rml_ui::MyRenderInterface render_impl_;
     rml_ui::MySystemInterface system_impl_;
     Rml::Context* context_;
+    Rml::ElementDocument* document_;
 };
 
 } // namespace anyone
