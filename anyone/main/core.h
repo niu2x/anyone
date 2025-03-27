@@ -61,6 +61,7 @@ public:
 
     PlatformSupport* get_platform_support() const { return platform_support_; }
     const DPI& get_dpi() const { return dpi_; }
+    RenderAPI* get_render_api() const { return render_api_; }
 
     // void dbg_printf(int x, int y, const char* xx, ...);
     // FreeTypeLibrary* get_ft_library() const { return ft_library_.get(); }
@@ -114,4 +115,5 @@ private:
 
 #define GET_CORE()             anyone::Core::get_singleton_ptr()
 #define GET_PLATFORM_SUPPORT() ((GET_CORE())->get_platform_support())
+#define GET_RENDER_API()       ((GET_CORE())->get_render_api())
 #define LOG(...)               (GET_PLATFORM_SUPPORT())->log(__VA_ARGS__)

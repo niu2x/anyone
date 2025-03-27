@@ -89,6 +89,7 @@ void GL_VertexBuffer::apply()
 }
 
 void GL_VertexBuffer::alloc_cpu_buffer() { cpu_buffer_.resize(buf_size_); }
+
 void GL_VertexBuffer::free_cpu_buffer() { cpu_buffer_.clear(); }
 
 void GL_VertexBuffer::set_vertex_layout(const VertexLayout& layout)
