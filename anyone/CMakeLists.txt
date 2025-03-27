@@ -29,7 +29,17 @@ add_subdirectory(entry)
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
 	add_subdirectory(platform/linux)
+
+	target_link_libraries(anyone_rt PRIVATE anyone_platform_linux)
 	target_compile_definitions(anyone_rt PRIVATE 
 		ANYONE_TARGET_LINUX
+	)
+endif()
+
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+	add_subdirectory(platform/darwin)
+	target_link_libraries(anyone_rt PRIVATE anyone_platform_darwin)
+	target_compile_definitions(anyone_rt PRIVATE 
+		ANYONE_TARGET_DARWIN
 	)
 endif()

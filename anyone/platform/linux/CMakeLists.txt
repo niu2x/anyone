@@ -20,9 +20,7 @@ target_link_libraries(anyone_platform_linux PUBLIC
 
 anyone_init_cxx_target(anyone_platform_linux)
 
-if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
-	target_include_directories(anyone_platform_linux PUBLIC
-		${SDL2_INCLUDE_DIRS}
-	)
-	target_link_directories(anyone_platform_linux PUBLIC ${SDL2_LIBDIR})
-endif()
+target_include_directories(anyone_platform_linux PUBLIC
+	${SDL2_INCLUDE_DIRS}
+)
+target_link_directories(anyone_platform_linux PUBLIC ${SDL2__LIBRARY_DIRS})
