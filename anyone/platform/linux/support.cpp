@@ -1,5 +1,6 @@
 #include "support.h"
 #include <stdarg.h>
+#include "glad/include/glad/glad.h"
 
 namespace anyone {
 
@@ -46,6 +47,7 @@ void PlatformLinux::init_window()
     gl_context_ = SDL_GL_CreateContext(native_window_);
     SDL_GL_MakeCurrent(native_window_, gl_context_);
     SDL_GL_SetSwapInterval(1);
+    gladLoadGL();
 }
 void PlatformLinux::swap_buffers()
 {

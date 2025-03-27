@@ -40,6 +40,7 @@ namespace anyone {
 Core::Core()
 : lua_(nullptr)
 , platform_support_(nullptr)
+, render_api_(nullptr)
 , project_dir_(std::nullopt)
 // framebuffer_width_(0),
 // framebuffer_height_(0),
@@ -52,6 +53,7 @@ Core::~Core()
 {
     lua_close(lua_);
     platform_support_ = nullptr;
+    render_api_ = nullptr;
     // dbg_text_.reset();
     // dbg_font_.reset();
     // ft_library_.reset();
@@ -67,9 +69,9 @@ void Core::update() { }
 
 void Core::render()
 {
+    render_api_->clear();
+
     // glViewport(0, 0, framebuffer_width_, framebuffer_height_);
-    // glClearColor(0.f, 0.f, 0.f, 0.f);
-    // glClear(GL_COLOR_BUFFER_BIT);
 
     // dbg_printf(0, 0, "FPS: %.2f", frame_stats_.avg_fps);
     // dbg_text_->render();
@@ -89,7 +91,11 @@ void Core::render()
 //     dpi_.vert = vdpi;
 // }
 
-void Core::set_platform_support(PlatformSupport* p) { platform_support_ = p; }
+void Core::set_platform_support(PlatformSupport* p)
+{
+    platform_support_ = p;
+    render_api_ = p->get_render_api();
+}
 
 void Core::set_project_dir(const String& dir) { project_dir_ = dir; }
 

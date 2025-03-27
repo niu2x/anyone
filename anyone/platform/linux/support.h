@@ -5,6 +5,13 @@
 
 namespace anyone {
 
+class OpenGL_API : public RenderAPI {
+public:
+    OpenGL_API();
+    ~OpenGL_API();
+    void clear() override;
+};
+
 class PlatformLinux : public PlatformSupport {
 public:
     PlatformLinux();
@@ -17,10 +24,13 @@ public:
     void swap_buffers() override;
     bool poll_events() override;
 
+    RenderAPI* get_render_api() override { return &render_api_; }
+
 private:
     SDL_Window* native_window_;
     SDL_GLContext gl_context_;
     uint32_t window_flags_;
+    OpenGL_API render_api_;
 };
 
 } // namespace anyone

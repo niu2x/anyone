@@ -82,6 +82,7 @@ private:
 
     lua_State* lua_;
     PlatformSupport* platform_support_;
+    RenderAPI* render_api_;
     // UniquePtr<FreeTypeLibrary> ft_library_;
 
     Optional<String> project_dir_;

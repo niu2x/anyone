@@ -4,6 +4,12 @@
 
 namespace anyone {
 
+class RenderAPI {
+public:
+    virtual ~RenderAPI() = 0;
+    virtual void clear() = 0;
+};
+
 class PlatformSupport {
 public:
     virtual ~PlatformSupport() = 0;
@@ -14,6 +20,8 @@ public:
 
     virtual void log(const char* fmt, ...) = 0;
     virtual void set_full_screen(bool full_screen) = 0;
+
+    virtual RenderAPI* get_render_api() = 0;
 };
 
 } // namespace anyone

@@ -12,6 +12,7 @@ static void run(StartupConfig& config)
     auto platform_support = GET_PLATFORM_SUPPORT();
     platform_support->init_window();
     while (platform_support->poll_events()) {
+        core.kick_one_frame();
         platform_support->swap_buffers();
     }
 }
