@@ -8,11 +8,11 @@ const char* demo = R"RAW(
 
 <rml>
 <head>
-    <title>Hello world</title>
+     <link type="text/rcss" href="test.rcss"/>
 </head>
 <body>
-    <h1>RmlUi</h1>
-    <p>Hello <span id="world">world</span>!</p>
+    <p>0</p>
+
 </body>
 </rml>
 
@@ -26,8 +26,8 @@ RML_UI_Context::RML_UI_Context() : context_(nullptr), document_(nullptr)
     Rml::SetSystemInterface(&system_impl_);
     Rml::Initialise();
 
-    context_ = Rml::CreateContext("main", Rml::Vector2i(800, 600));
-    Rml::Debugger::Initialise(context_);
+    context_ = Rml::CreateContext("main", Rml::Vector2i(256, 256));
+    // Rml::Debugger::Initialise(context_);
     Rml::LoadFontFace({ default_ttf, default_ttf_length },
                       "default",
                       Rml::Style::FontStyle::Normal);
@@ -74,7 +74,9 @@ MyRenderInterface::CompileGeometry(Span<const Vertex> vertices,
                                    Span<const int> indices)
 {
     struct GPU_Vertex {
-        float x, y, r, g, b, a, u, v;
+        float x, y;
+        float u, v;
+        uint8_t r, g, b, a;
     };
 
     auto vbo = GET_RENDER_API()->create_vertex_buffer();
@@ -83,51 +85,104 @@ MyRenderInterface::CompileGeometry(Span<const Vertex> vertices,
     for (int i = 0; i < vertices.size(); i++) {
         buf[i].x = vertices[i].position[0];
         buf[i].y = vertices[i].position[1];
-        buf[i].r = vertices[i].colour[0];
-        buf[i].g = vertices[i].colour[1];
-        buf[i].b = vertices[i].colour[2];
-        buf[i].a = vertices[i].colour[3];
+        buf[i].r = vertices[i].colour[0] * 255;
+        buf[i].g = vertices[i].colour[1] * 255;
+        buf[i].b = vertices[i].colour[2] * 255;
+        buf[i].a = vertices[i].colour[3] * 255;
         buf[i].u = vertices[i].tex_coord[0];
         buf[i].v = vertices[i].tex_coord[1];
+        LOG("create vbo %d %f %f %f %f",
+            i,
+            buf[i].x,
+            buf[i].y,
+            vertices[i].tex_coord[0],
+            vertices[i].tex_coord[1]);
     }
 
     vbo->set_vertex_layout({
         VertexAttr::POSITION_XY,
-        VertexAttr::COLOR_RGBA,
         VertexAttr::UV,
+        VertexAttr::COLOR_BYTE_RGBA,
     });
+
+    LOG("create vbo %d", vertices.size());
 
     vbo->apply();
     vbo->free_cpu_buffer();
 
-    return (uintptr_t)vbo;
+    IndiceBuffer* veo = GET_RENDER_API()->create_indice_buffer();
+    veo->alloc_cpu_buffer(indices.size());
+    auto indice_buf = veo->get_cpu_buffer();
+    for (int i = 0; i < indices.size(); i++) {
+        indice_buf[i] = indices[i];
+        LOG("create veo %d %d", i, indice_buf[i]);
+    }
+    veo->apply();
+    veo->free_cpu_buffer();
+
+    auto container = new VertexIndiceBuffer;
+    container->vbo = vbo;
+    container->veo = veo;
+
+    LOG("create veo %d", indices.size());
+    return (uintptr_t)container;
 }
 
 void MyRenderInterface::RenderGeometry(CompiledGeometryHandle geometry,
                                        Vector2f translation,
                                        TextureHandle texture)
 {
+
+    auto container = (VertexIndiceBuffer*)geometry;
+    GET_RENDER_API()->draw({
+        .polygon_mode = PolygonMode::FILL,
+        .vertex_buffer = container->vbo,
+        .indice_buffer = container->veo,
+        .count = container->veo->get_indice_count(),
+        .texture = (Texture2D*)texture,
+    });
+    // LOG("draw %d %f %f",
+    //     container->veo->get_indice_count(),
+    //     translation[0],
+    //     translation[1]);
 }
 
 void MyRenderInterface::ReleaseGeometry(CompiledGeometryHandle geometry)
 {
-    LOG("ReleaseGeometry");
-    GET_RENDER_API()->destroy_vertex_buffer((VertexBuffer*)geometry);
+    // LOG("ReleaseGeometry");
+    auto container = (VertexIndiceBuffer*)geometry;
+    GET_RENDER_API()->destroy_vertex_buffer(container->vbo);
+    GET_RENDER_API()->destroy_indice_buffer(container->veo);
+    delete container;
 }
 
 TextureHandle MyRenderInterface::LoadTexture(Vector2i& texture_dimensions,
                                              const String& source)
 {
-    return 1;
+    LOG("LoadTexture %s", source.c_str());
+    return 0;
 }
 
 TextureHandle MyRenderInterface::GenerateTexture(Span<const byte> source,
                                                  Vector2i source_dimensions)
 {
-    return 0;
+    // LOG("GenerateTexture %d %d %d",
+    //     source.size(),
+    //     source_dimensions[0],
+    //     source_dimensions[1]);
+    //
+    auto tex = GET_RENDER_API()->create_texture_2d();
+    tex->alloc_cpu_buffer(source_dimensions[0], source_dimensions[1]);
+    memcpy(tex->get_cpu_buffer(), source.data(), source.size());
+    tex->apply();
+    tex->free_cpu_buffer();
+    return (uintptr_t)tex;
 }
 
-void MyRenderInterface::ReleaseTexture(TextureHandle texture) { }
+void MyRenderInterface::ReleaseTexture(TextureHandle texture)
+{
+    GET_RENDER_API()->destroy_texture_2d((Texture2D*)texture);
+}
 
 void MyRenderInterface::EnableScissorRegion(bool enable) { }
 

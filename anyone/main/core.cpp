@@ -11,32 +11,6 @@ using json = nlohmann::json;
 
 extern int luaopen_anyone(lua_State* tolua_S);
 
-// Shader sources
-
-// const char* vertex_source = R"(
-//     #version 330 core
-//     layout(location = 0) in vec3 position;
-//     layout(location = 1) in vec2 uv;
-//     out vec2 v_uv;
-//     void main() {
-//         gl_Position = vec4(position, 1.0);
-//         v_uv = uv;
-//     }
-
-// )";
-
-// const char* fragment_source = R"(
-//     #version 330 core
-//     uniform sampler2D tex;
-//     in vec2 v_uv;
-//     out vec4 color;
-//     void main() {
-//         color = texture(tex, v_uv);
-//     }
-// )";
-//
-//
-
 namespace anyone {
 
 Core::Core()

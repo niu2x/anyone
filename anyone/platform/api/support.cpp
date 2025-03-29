@@ -23,4 +23,29 @@ void VertexBuffer::set_vertex_layout(const VertexLayout& layout)
     vertex_layout_ = layout;
 }
 
+IndiceBuffer::IndiceBuffer() { }
+
+IndiceBuffer::~IndiceBuffer() { }
+
+void IndiceBuffer::alloc_cpu_buffer(size_t indice_count)
+{
+    count_ = indice_count;
+    cpu_buffer_.resize(indice_count);
+}
+
+void IndiceBuffer::free_cpu_buffer() { cpu_buffer_.clear(); }
+
+Texture2D::Texture2D() : width_(0), height_(0) { }
+
+Texture2D::~Texture2D() { }
+
+void Texture2D::alloc_cpu_buffer(int w, int h)
+{
+    width_ = w;
+    height_ = h;
+    cpu_buffer_.resize(width_ * height_ * 4);
+}
+
+void Texture2D::free_cpu_buffer() { cpu_buffer_.clear(); }
+
 } // namespace anyone

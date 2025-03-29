@@ -8,7 +8,8 @@ namespace anyone {
 enum class VertexAttr {
     POSITION_XYZ,
     POSITION_XY,
-    COLOR_RGBA,
+    COLOR_BYTE_RGBA,
+    // COLOR_RGBA,
     UV,
     COUNT,
 };
@@ -40,6 +41,87 @@ protected:
     VertexLayout vertex_layout_;
 };
 
+class IndiceBuffer {
+public:
+    IndiceBuffer();
+    virtual ~IndiceBuffer();
+
+    virtual void apply() = 0;
+    virtual void bind() = 0;
+
+    void alloc_cpu_buffer(size_t indice_count);
+    void free_cpu_buffer();
+
+    uint16_t* get_cpu_buffer()
+    {
+        NX_ASSERT(cpu_buffer_.size() > 0, "no cpu_buffer");
+        return cpu_buffer_.data();
+    }
+
+    size_t get_indice_count() const { return count_; }
+
+protected:
+    Vector<uint16_t> cpu_buffer_;
+    size_t count_;
+};
+
+struct VertexIndiceBuffer {
+    VertexBuffer* vbo;
+    IndiceBuffer* veo;
+};
+
+class Texture2D {
+public:
+    Texture2D();
+    virtual ~Texture2D();
+
+    virtual void apply() = 0;
+    virtual void bind(int tex_unit) = 0;
+
+    void alloc_cpu_buffer(int w, int h);
+    void free_cpu_buffer();
+
+    uint8_t* get_cpu_buffer()
+    {
+        NX_ASSERT(cpu_buffer_.size() > 0, "no pixels_buffer");
+        return cpu_buffer_.data();
+    }
+
+    int get_width() const { return width_; }
+    int get_height() const { return height_; }
+
+protected:
+    int width_, height_;
+    ByteBuffer cpu_buffer_;
+};
+
+// enum class VertexStrategy {
+//     POINT_LIST,
+// };
+
+// enum class DrawPrimitive {
+//     POINT,
+//     LINE,
+//     TRIANGLE,
+// };
+
+enum class PolygonMode {
+    POINT,
+    LINE,
+    FILL,
+};
+
+struct DrawOperation {
+    // DrawPrimitive primitive;
+    // VertexStrategy strategy;
+    PolygonMode polygon_mode;
+    VertexBuffer* vertex_buffer;
+    IndiceBuffer* indice_buffer;
+    size_t count;
+    Texture2D* texture;
+    // Material* material;
+};
+
 class RenderAPI {
 public:
     virtual ~RenderAPI() = 0;
@@ -47,6 +129,11 @@ public:
     virtual void set_clear_color(const Color& color) = 0;
     virtual VertexBuffer* create_vertex_buffer() = 0;
     virtual void destroy_vertex_buffer(VertexBuffer* vbo) = 0;
+    virtual IndiceBuffer* create_indice_buffer() = 0;
+    virtual void destroy_indice_buffer(IndiceBuffer* vbo) = 0;
+    virtual Texture2D* create_texture_2d() = 0;
+    virtual void destroy_texture_2d(Texture2D* vbo) = 0;
+    virtual void draw(const DrawOperation& operation) = 0;
 };
 
 class PlatformSupport {
