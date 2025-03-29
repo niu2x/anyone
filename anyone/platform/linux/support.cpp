@@ -56,6 +56,19 @@ void PlatformLinux::init_window()
     SDL_GL_MakeCurrent(native_window_, gl_context_);
     SDL_GL_SetSwapInterval(1);
     gladLoadGL();
+
+    glDisable(GL_MULTISAMPLE);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_BLEND);
+
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_POINT_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
 }
 
 void PlatformLinux::swap_buffers()

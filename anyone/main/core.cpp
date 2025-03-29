@@ -86,6 +86,8 @@ void Core::set_platform_support(PlatformSupport* p)
     render_api_ = p->get_render_api();
     if (render_api_) {
         notify_render_api_ready();
+        auto dpi = platform_support_->get_dpi();
+        LOG("DPI h:%f v:%f", dpi.hori, dpi.vert);
     }
 }
 

@@ -4,41 +4,23 @@
 #include "embed/default_ttf.h"
 
 const char* demo = R"RAW(
-
 <rml>
 <head>
      <link type="text/rcss" href="test.rcss"/>
 </head>
 <body>
-    <p>niu2x,hello</p>
-    <p>niu2x,hello</p>
-    <p>niu2x,hello</p>
-    <p>niu2x,hello</p>
+ <label><input type="checkbox" value="pizza"/> Pizza</label>
+
+<div class="left">
+    <input type="checkbox" value="pasta" id="pasta"/>
+</div>
+<div class="right">
+    <label for="pasta">Pasta</label>
+</div>
 </body>
 </rml>
 
 )RAW";
-
-// const char* material_source = R"RAW(
-// uniform vec2 translation;
-// vertex {
-//     input 0 vec2 vertex;
-//     input 1 vec2 uv;
-//     input 2 vec4 color;
-
-//     vec4 main() {
-
-//     }
-
-// }
-
-// fragment {
-//     vec4 main() {
-
-//     }
-// }
-
-// )RAW";
 
 namespace anyone {
 
@@ -60,7 +42,7 @@ RML_UI_Context::RML_UI_Context()
 
     context_ = Rml::CreateContext(
         "main", Rml::Vector2i(canvas_size_.width, canvas_size_.height));
-    // Rml::Debugger::Initialise(context_);
+    Rml::Debugger::Initialise(context_);
     Rml::LoadFontFace({ default_ttf, default_ttf_length },
                       "default",
                       Rml::Style::FontStyle::Normal);
@@ -68,9 +50,9 @@ RML_UI_Context::RML_UI_Context()
     document_ = context_->LoadDocumentFromMemory(demo);
     if (document_)
         document_->Show();
-
+    auto dpi = GET_CORE()->get_dpi();
+    context_->SetDensityIndependentPixelRatio(dpi.vert / 72.0);
     context_->Update();
-
     NX_ASSERT(document_, "no document");
 }
 
@@ -93,6 +75,9 @@ void RML_UI_Context::notify_framebuffer_size_changed()
 
     context_->SetDimensions(
         Rml::Vector2i(canvas_size_.width, canvas_size_.height));
+
+    auto dpi = GET_CORE()->get_dpi();
+    context_->SetDensityIndependentPixelRatio(dpi.vert / 72.0);
 
     context_->Update();
 }
