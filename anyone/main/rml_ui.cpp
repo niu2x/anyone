@@ -24,7 +24,7 @@ const char* demo = R"RAW(
 
 namespace anyone {
 
-RML_UI_Context::RML_UI_Context()
+RML_UI::RML_UI()
 : context_(nullptr)
 , document_(nullptr)
 , rml_ui_material_(nullptr)
@@ -56,7 +56,7 @@ RML_UI_Context::RML_UI_Context()
     NX_ASSERT(document_, "no document");
 }
 
-RML_UI_Context::~RML_UI_Context()
+RML_UI::~RML_UI()
 {
     GET_RENDER_API()->destroy_material(rml_ui_material_);
 
@@ -68,7 +68,7 @@ RML_UI_Context::~RML_UI_Context()
     Rml::Shutdown();
 }
 
-void RML_UI_Context::notify_framebuffer_size_changed()
+void RML_UI::notify_framebuffer_size_changed()
 {
     canvas_size_ = GET_CORE()->get_framebuffer_size();
     render_impl_.set_canvas_size(canvas_size_);
@@ -82,11 +82,7 @@ void RML_UI_Context::notify_framebuffer_size_changed()
     context_->Update();
 }
 
-void RML_UI_Context::render()
-{
-    // context_->Update();
-    context_->Render();
-}
+void RML_UI::render() { context_->Render(); }
 
 } // namespace anyone
 
@@ -120,16 +116,6 @@ MyRenderInterface::CompileGeometry(Span<const Vertex> vertices,
         buf[i].a = vertices[i].colour[3];
         buf[i].u = vertices[i].tex_coord[0];
         buf[i].v = vertices[i].tex_coord[1];
-        // LOG("create vbo %d %f %f %f %f %x %x %x %x",
-        //     i,
-        //     buf[i].x,
-        //     buf[i].y,
-        //     vertices[i].tex_coord[0],
-        //     vertices[i].tex_coord[1],
-        //     vertices[i].colour[0],
-        //     vertices[i].colour[1],
-        //     vertices[i].colour[2],
-        //     vertices[i].colour[3]);
     }
 
     vbo->set_vertex_layout({
@@ -137,8 +123,6 @@ MyRenderInterface::CompileGeometry(Span<const Vertex> vertices,
         VertexAttr::UV,
         VertexAttr::COLOR_BYTE_RGBA,
     });
-
-    // LOG("create vbo %d", vertices.size());
 
     vbo->apply();
     vbo->free_cpu_buffer();
@@ -148,7 +132,6 @@ MyRenderInterface::CompileGeometry(Span<const Vertex> vertices,
     auto indice_buf = veo->get_cpu_buffer();
     for (int i = 0; i < indices.size(); i++) {
         indice_buf[i] = indices[i];
-        // LOG("create veo %d %d", i, indice_buf[i]);
     }
     veo->apply();
     veo->free_cpu_buffer();
@@ -157,7 +140,6 @@ MyRenderInterface::CompileGeometry(Span<const Vertex> vertices,
     container->vbo = vbo;
     container->veo = veo;
 
-    // LOG("create veo %d", indices.size());
     return (uintptr_t)container;
 }
 

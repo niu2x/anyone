@@ -14,7 +14,7 @@ extern "C" {
 namespace anyone {
 
 class PlatformSupport;
-class RML_UI_Context;
+class RML_UI;
 // class Font;
 // class FreeTypeLibrary;
 // class GL_Program;
@@ -79,7 +79,7 @@ private:
     RenderAPI* render_api_;
     // UniquePtr<FreeTypeLibrary> ft_library_;
 
-    UniquePtr<RML_UI_Context> rml_ui_context_;
+    UniquePtr<RML_UI> rml_ui_;
 
     Optional<String> project_dir_;
     DPI dpi_;

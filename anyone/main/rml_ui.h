@@ -51,10 +51,10 @@ public:
 
 namespace anyone {
 
-class RML_UI_Context {
+class RML_UI {
 public:
-    RML_UI_Context();
-    ~RML_UI_Context();
+    RML_UI();
+    ~RML_UI();
 
     // void update();
     void render();
