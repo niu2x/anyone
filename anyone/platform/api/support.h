@@ -41,14 +41,34 @@ protected:
     VertexLayout vertex_layout_;
 };
 
+enum MaterialParamType {
+    TEXTURE,
+    VEC2,
+    VEC3,
+    VEC4,
+};
+
+struct MaterialParamValue {
+    MaterialParamType type;
+    union {
+        int tex_unit;
+        float* args;
+    };
+};
+
+struct MaterialParam {
+    const char* name;
+    MaterialParamValue value;
+};
+
 class Material {
 public:
     Material();
     virtual ~Material();
-    virtual void set_param_texture(const String& name, int tex_unit) = 0;
-    virtual void set_param_vec2(const String& name, float args[]) = 0;
-    virtual void set_param_vec3(const String& name, float args[]) = 0;
-    virtual void set_param_vec4(const String& name, float args[]) = 0;
+    virtual void set_param_texture(const char* name, int tex_unit) = 0;
+    virtual void set_param_vec2(const char* name, float args[]) = 0;
+    virtual void set_param_vec3(const char* name, float args[]) = 0;
+    virtual void set_param_vec4(const char* name, float args[]) = 0;
     virtual void use() = 0;
 };
 
@@ -130,7 +150,11 @@ struct DrawOperation {
     IndiceBuffer* indice_buffer;
     size_t count;
     Texture2D* texture;
+    Texture2D** textures;
+
     Material* material;
+    MaterialParam* material_params;
+    size_t material_params_count;
 };
 
 class RenderAPI {

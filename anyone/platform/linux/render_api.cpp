@@ -7,13 +7,19 @@ namespace anyone {
 // Shader sources
 const char* vertex_source = R"(
     #version 330 core
+    uniform vec2 offset;
+
     layout(location = 0) in vec2 position;
     layout(location = 1) in vec2 uv;
     layout(location = 2) in vec4 color;
     out vec4 v_color;
     out vec2 v_uv;
     void main() {
-        gl_Position = vec4((position+vec2(0.0, 71.0))/256.0*2-vec2(1.0,1.0), 0.0, 1.0);
+        vec2 pos = position;
+        pos += offset;
+        pos.y = 256.0 - pos.y;
+
+        gl_Position = vec4(pos/256.0*2-vec2(1.0,1.0), 0.0, 1.0);
         v_color = color;
         v_uv = uv;
     }
@@ -23,6 +29,8 @@ const char* vertex_source = R"(
 const char* fragment_source = R"(
     #version 330 core
     uniform sampler2D tex;
+    uniform vec2 offset;
+
     in vec2 v_uv;
     in vec4 v_color;
     out vec4 color;
@@ -216,18 +224,50 @@ void OpenGL_API::draw(const DrawOperation& op)
     }
 
     if (op.texture) {
-        op.texture->bind(1);
+        op.texture->bind(0);
     }
 
     if (op.material) {
         op.material->use();
-        op.material->set_param_texture("tex", 1);
+
+        if (op.material_params) {
+            for (size_t i = 0; i < op.material_params_count; i++) {
+                auto* param = &op.material_params[i];
+                switch (param->value.type) {
+                    case MaterialParamType::TEXTURE: {
+                        op.material->set_param_texture(param->name,
+                                                       param->value.tex_unit);
+                        break;
+                    }
+                    case MaterialParamType::VEC2: {
+                        op.material->set_param_vec2(param->name,
+                                                    param->value.args);
+                        // LOG("set vec2 %s %f %f",
+                        //     param->name,
+                        //     param->value.args[0],
+                        //     param->value.args[1]);
+                        break;
+                    }
+                    case MaterialParamType::VEC3: {
+                        op.material->set_param_vec3(param->name,
+                                                    param->value.args);
+                        break;
+                    }
+                    case MaterialParamType::VEC4: {
+                        op.material->set_param_vec4(param->name,
+                                                    param->value.args);
+                        break;
+                    }
+                }
+            }
+        }
+        // op.material->set_param_texture("tex", 1);
     }
 
     // auto location = glGetUniformLocation(program, "tex");
-    LOG("op.count %d", op.count);
-    LOG("op.material %p", op.material);
-    LOG("op.texture %p", op.texture);
+    // LOG("op.count %d", op.count);
+    // LOG("op.material %p", op.material);
+    // LOG("op.texture %p", op.texture);
     // glUniform1i(location, 1);
 
     glDrawElements(GL_TRIANGLES, op.count, GL_UNSIGNED_SHORT, (void*)0);
@@ -295,29 +335,31 @@ bool GL_Material::compile_program(const char* vertex, const char* fragment)
     return program_ != 0;
 }
 
-void GL_Material::set_param_texture(const String& name, int tex_unit)
+void GL_Material::set_param_texture(const char* name, int tex_unit)
 {
-    auto location = glGetUniformLocation(program_, name.c_str());
-    NX_ASSERT(location >= 0, "invalid uniform: %s", name.c_str())
+    auto location = glGetUniformLocation(program_, name);
+    NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform1i(location, tex_unit);
+    // LOG("set tex %s:%d %d", name, location, tex_unit);
 }
-void GL_Material::set_param_vec2(const String& name, float args[])
+void GL_Material::set_param_vec2(const char* name, float args[])
 {
-    auto location = glGetUniformLocation(program_, name.c_str());
-    NX_ASSERT(location >= 0, "invalid uniform: %s", name.c_str())
-    glUniform2fv(location, 2, args);
+    auto location = glGetUniformLocation(program_, name);
+    NX_ASSERT(location >= 0, "invalid uniform: %s", name);
+    glUniform2fv(location, 1, args);
+    // LOG("set vec2 %s:%d %f %f", name, location, args[0], args[1]);
 }
-void GL_Material::set_param_vec3(const String& name, float args[])
+void GL_Material::set_param_vec3(const char* name, float args[])
 {
-    auto location = glGetUniformLocation(program_, name.c_str());
-    NX_ASSERT(location >= 0, "invalid uniform: %s", name.c_str())
-    glUniform3fv(location, 3, args);
+    auto location = glGetUniformLocation(program_, name);
+    NX_ASSERT(location >= 0, "invalid uniform: %s", name);
+    glUniform3fv(location, 1, args);
 }
-void GL_Material::set_param_vec4(const String& name, float args[])
+void GL_Material::set_param_vec4(const char* name, float args[])
 {
-    auto location = glGetUniformLocation(program_, name.c_str());
-    NX_ASSERT(location >= 0, "invalid uniform: %s", name.c_str())
-    glUniform4fv(location, 4, args);
+    auto location = glGetUniformLocation(program_, name);
+    NX_ASSERT(location >= 0, "invalid uniform: %s", name);
+    glUniform4fv(location, 1, args);
 }
 void GL_Material::use() { glUseProgram(program_); }
 

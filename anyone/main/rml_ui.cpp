@@ -11,7 +11,8 @@ const char* demo = R"RAW(
      <link type="text/rcss" href="test.rcss"/>
 </head>
 <body>
-    <p>0</p>
+    <p>Hello, niu2x</p>
+    <p>Hello, niu2x</p>
 
 </body>
 </rml>
@@ -120,16 +121,16 @@ MyRenderInterface::CompileGeometry(Span<const Vertex> vertices,
         buf[i].a = vertices[i].colour[3];
         buf[i].u = vertices[i].tex_coord[0];
         buf[i].v = vertices[i].tex_coord[1];
-        LOG("create vbo %d %f %f %f %f %x %x %x %x",
-            i,
-            buf[i].x,
-            buf[i].y,
-            vertices[i].tex_coord[0],
-            vertices[i].tex_coord[1],
-            vertices[i].colour[0],
-            vertices[i].colour[1],
-            vertices[i].colour[2],
-            vertices[i].colour[3]);
+        // LOG("create vbo %d %f %f %f %f %x %x %x %x",
+        //     i,
+        //     buf[i].x,
+        //     buf[i].y,
+        //     vertices[i].tex_coord[0],
+        //     vertices[i].tex_coord[1],
+        //     vertices[i].colour[0],
+        //     vertices[i].colour[1],
+        //     vertices[i].colour[2],
+        //     vertices[i].colour[3]);
     }
 
     vbo->set_vertex_layout({
@@ -138,7 +139,7 @@ MyRenderInterface::CompileGeometry(Span<const Vertex> vertices,
         VertexAttr::COLOR_BYTE_RGBA,
     });
 
-    LOG("create vbo %d", vertices.size());
+    // LOG("create vbo %d", vertices.size());
 
     vbo->apply();
     vbo->free_cpu_buffer();
@@ -148,7 +149,7 @@ MyRenderInterface::CompileGeometry(Span<const Vertex> vertices,
     auto indice_buf = veo->get_cpu_buffer();
     for (int i = 0; i < indices.size(); i++) {
         indice_buf[i] = indices[i];
-        LOG("create veo %d %d", i, indice_buf[i]);
+        // LOG("create veo %d %d", i, indice_buf[i]);
     }
     veo->apply();
     veo->free_cpu_buffer();
@@ -157,7 +158,7 @@ MyRenderInterface::CompileGeometry(Span<const Vertex> vertices,
     container->vbo = vbo;
     container->veo = veo;
 
-    LOG("create veo %d", indices.size());
+    // LOG("create veo %d", indices.size());
     return (uintptr_t)container;
 }
 
@@ -165,16 +166,29 @@ void MyRenderInterface::RenderGeometry(CompiledGeometryHandle geometry,
                                        Vector2f translation,
                                        TextureHandle texture)
 {
+    float offset[2] = { translation[0], translation[1] };
+    MaterialParam params[3] = {
+        { .name = "tex",
+          .value = { MaterialParamType::TEXTURE, { .tex_unit = 0 } } },
+        { .name = "offset",
+          .value = { MaterialParamType::VEC2, { .args = offset } } },
+        { .name = "tex",
+          .value = { MaterialParamType::TEXTURE, { .tex_unit = 0 } } },
+    };
 
     auto container = (VertexIndiceBuffer*)geometry;
-    GET_RENDER_API()->draw({
+    GET_RENDER_API()->draw(DrawOperation {
         .polygon_mode = PolygonMode::FILL,
         .vertex_buffer = container->vbo,
         .indice_buffer = container->veo,
         .count = container->veo->get_indice_count(),
         .texture = (Texture2D*)texture,
+        .textures = nullptr,
         .material = material_,
+        .material_params = params,
+        .material_params_count = 2,
     });
+
     // LOG("draw %d %f %f",
     //     container->veo->get_indice_count(),
     //     translation[0],
@@ -193,7 +207,7 @@ void MyRenderInterface::ReleaseGeometry(CompiledGeometryHandle geometry)
 TextureHandle MyRenderInterface::LoadTexture(Vector2i& texture_dimensions,
                                              const String& source)
 {
-    LOG("LoadTexture %s", source.c_str());
+    // LOG("LoadTexture %s", source.c_str());
     return 0;
 }
 

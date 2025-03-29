@@ -43,10 +43,10 @@ class GL_Material : public Material {
 public:
     GL_Material();
     ~GL_Material();
-    void set_param_texture(const String& name, int tex_unit) override;
-    void set_param_vec2(const String& name, float args[]) override;
-    void set_param_vec3(const String& name, float args[]) override;
-    void set_param_vec4(const String& name, float args[]) override;
+    void set_param_texture(const char* name, int tex_unit) override;
+    void set_param_vec2(const char* name, float args[]) override;
+    void set_param_vec3(const char* name, float args[]) override;
+    void set_param_vec4(const char* name, float args[]) override;
     void use() override;
 
     bool compile_program(const char* vertex, const char* fragment);
