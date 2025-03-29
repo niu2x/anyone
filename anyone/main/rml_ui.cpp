@@ -18,10 +18,37 @@ const char* demo = R"RAW(
 
 )RAW";
 
+// const char* material_source = R"RAW(
+// uniform vec2 translation;
+// vertex {
+//     input 0 vec2 vertex;
+//     input 1 vec2 uv;
+//     input 2 vec4 color;
+
+//     vec4 main() {
+
+//     }
+
+// }
+
+// fragment {
+//     vec4 main() {
+
+//     }
+// }
+
+// )RAW";
+
 namespace anyone {
 
-RML_UI_Context::RML_UI_Context() : context_(nullptr), document_(nullptr)
+RML_UI_Context::RML_UI_Context()
+: context_(nullptr)
+, document_(nullptr)
+, rml_ui_material_(nullptr)
 {
+    rml_ui_material_ = GET_RENDER_API()->create_rml_ui_material();
+    render_impl_.set_material(rml_ui_material_);
+
     Rml::SetRenderInterface(&render_impl_);
     Rml::SetSystemInterface(&system_impl_);
     Rml::Initialise();
@@ -40,6 +67,8 @@ RML_UI_Context::RML_UI_Context() : context_(nullptr), document_(nullptr)
 
 RML_UI_Context::~RML_UI_Context()
 {
+    GET_RENDER_API()->destroy_material(rml_ui_material_);
+
     if (document_) {
         document_->Close();
         document_ = nullptr;
@@ -63,7 +92,7 @@ void RML_UI_Context::render()
 
 namespace anyone::rml_ui {
 
-MyRenderInterface::MyRenderInterface() { }
+MyRenderInterface::MyRenderInterface() : material_(nullptr) { }
 MyRenderInterface::~MyRenderInterface() { }
 
 MySystemInterface::MySystemInterface() { }
@@ -85,18 +114,22 @@ MyRenderInterface::CompileGeometry(Span<const Vertex> vertices,
     for (int i = 0; i < vertices.size(); i++) {
         buf[i].x = vertices[i].position[0];
         buf[i].y = vertices[i].position[1];
-        buf[i].r = vertices[i].colour[0] * 255;
-        buf[i].g = vertices[i].colour[1] * 255;
-        buf[i].b = vertices[i].colour[2] * 255;
-        buf[i].a = vertices[i].colour[3] * 255;
+        buf[i].r = vertices[i].colour[0];
+        buf[i].g = vertices[i].colour[1];
+        buf[i].b = vertices[i].colour[2];
+        buf[i].a = vertices[i].colour[3];
         buf[i].u = vertices[i].tex_coord[0];
         buf[i].v = vertices[i].tex_coord[1];
-        LOG("create vbo %d %f %f %f %f",
+        LOG("create vbo %d %f %f %f %f %x %x %x %x",
             i,
             buf[i].x,
             buf[i].y,
             vertices[i].tex_coord[0],
-            vertices[i].tex_coord[1]);
+            vertices[i].tex_coord[1],
+            vertices[i].colour[0],
+            vertices[i].colour[1],
+            vertices[i].colour[2],
+            vertices[i].colour[3]);
     }
 
     vbo->set_vertex_layout({
@@ -140,6 +173,7 @@ void MyRenderInterface::RenderGeometry(CompiledGeometryHandle geometry,
         .indice_buffer = container->veo,
         .count = container->veo->get_indice_count(),
         .texture = (Texture2D*)texture,
+        .material = material_,
     });
     // LOG("draw %d %f %f",
     //     container->veo->get_indice_count(),

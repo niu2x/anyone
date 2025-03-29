@@ -1,6 +1,8 @@
 #pragma once
 #include <RmlUi/Core.h>
 
+#include "platform/api/support.h"
+
 namespace anyone::rml_ui {
 
 using namespace Rml;
@@ -25,6 +27,11 @@ public:
     void ReleaseTexture(TextureHandle texture) override;
     void EnableScissorRegion(bool enable) override;
     void SetScissorRegion(Rectanglei region) override;
+
+    void set_material(Material* m) { material_ = m; }
+
+private:
+    Material* material_;
 };
 
 class MySystemInterface : public Rml::SystemInterface {
@@ -50,6 +57,7 @@ private:
     rml_ui::MySystemInterface system_impl_;
     Rml::Context* context_;
     Rml::ElementDocument* document_;
+    Material* rml_ui_material_;
 };
 
 } // namespace anyone

@@ -48,4 +48,7 @@ void Texture2D::alloc_cpu_buffer(int w, int h)
 
 void Texture2D::free_cpu_buffer() { cpu_buffer_.clear(); }
 
+Material::~Material() { }
+Material::Material() { }
+
 } // namespace anyone

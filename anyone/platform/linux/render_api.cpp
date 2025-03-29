@@ -27,7 +27,7 @@ const char* fragment_source = R"(
     in vec4 v_color;
     out vec4 color;
     void main() {
-        color = texture(tex, v_uv);
+        color = texture(tex, v_uv) * v_color;
     }
 )";
 
@@ -81,14 +81,6 @@ GLuint compile_program(GLuint shaders[], int nr)
     return name;
 }
 
-GLuint get_program()
-{
-    GLuint shaders[2];
-    shaders[0] = compile_shader(GL_VERTEX_SHADER, vertex_source);
-    shaders[1] = compile_shader(GL_FRAGMENT_SHADER, fragment_source);
-    return compile_program(shaders, 2);
-}
-
 OpenGL_API::OpenGL_API() { }
 OpenGL_API::~OpenGL_API() { }
 
@@ -98,6 +90,15 @@ void OpenGL_API::set_clear_color(const Color& color)
 {
     glClearColor(color.r, color.g, color.b, color.a);
 }
+
+Material* OpenGL_API::create_rml_ui_material()
+{
+    auto m = new GL_Material;
+    bool succ = m->compile_program(vertex_source, fragment_source);
+    NX_ASSERT(succ, "create_rml_ui_material fail");
+    return m;
+}
+void OpenGL_API::destroy_material(Material* m) { delete m; }
 
 VertexBuffer* OpenGL_API::create_vertex_buffer() { return new GL_VertexBuffer; }
 
@@ -119,7 +120,7 @@ struct AttrDesc {
 const AttrDesc attrs_desc[] = {
     { 3, GL_FLOAT, false },
     { 2, GL_FLOAT, false },
-    { 4, GL_BYTE, true },
+    { 4, GL_UNSIGNED_BYTE, true },
     { 2, GL_FLOAT, false },
 };
 
@@ -140,6 +141,7 @@ size_t gl_sizeof(GLenum type)
 {
     switch (type) {
         case GL_BYTE:
+        case GL_UNSIGNED_BYTE:
             return 1;
         case GL_FLOAT:
             return 4;
@@ -195,8 +197,6 @@ void GL_IndiceBuffer::bind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, name_); }
 
 void OpenGL_API::draw(const DrawOperation& op)
 {
-    static GLuint program = get_program();
-
     op.vertex_buffer->bind();
     op.indice_buffer->bind();
 
@@ -215,15 +215,20 @@ void OpenGL_API::draw(const DrawOperation& op)
         }
     }
 
-    // if (op.texture) {
-    op.texture->bind(1);
-    // }
+    if (op.texture) {
+        op.texture->bind(1);
+    }
 
-    glUseProgram(program);
+    if (op.material) {
+        op.material->use();
+        op.material->set_param_texture("tex", 1);
+    }
 
-    auto location = glGetUniformLocation(program, "tex");
-    // LOG("location %d", location);
-    glUniform1i(location, 1);
+    // auto location = glGetUniformLocation(program, "tex");
+    LOG("op.count %d", op.count);
+    LOG("op.material %p", op.material);
+    LOG("op.texture %p", op.texture);
+    // glUniform1i(location, 1);
 
     glDrawElements(GL_TRIANGLES, op.count, GL_UNSIGNED_SHORT, (void*)0);
 }
@@ -262,5 +267,58 @@ void GL_Texture2D::bind(int tex_unit)
     glActiveTexture(GL_TEXTURE0 + tex_unit);
     glBindTexture(GL_TEXTURE_2D, name_);
 }
+
+GL_Material::GL_Material() : program_(0) { }
+GL_Material::~GL_Material()
+{
+    if (program_)
+        glDeleteProgram(program_);
+}
+
+bool GL_Material::compile_program(const char* vertex, const char* fragment)
+{
+
+    GLuint shaders[2] = { 0, 0 };
+    shaders[0] = compile_shader(GL_VERTEX_SHADER, vertex);
+    shaders[1] = compile_shader(GL_FRAGMENT_SHADER, fragment);
+
+    if (shaders[0] && shaders[1]) {
+        program_ = anyone::compile_program(shaders, 2);
+    }
+
+    if (shaders[0])
+        glDeleteShader(shaders[0]);
+
+    if (shaders[1])
+        glDeleteShader(shaders[1]);
+
+    return program_ != 0;
+}
+
+void GL_Material::set_param_texture(const String& name, int tex_unit)
+{
+    auto location = glGetUniformLocation(program_, name.c_str());
+    NX_ASSERT(location >= 0, "invalid uniform: %s", name.c_str())
+    glUniform1i(location, tex_unit);
+}
+void GL_Material::set_param_vec2(const String& name, float args[])
+{
+    auto location = glGetUniformLocation(program_, name.c_str());
+    NX_ASSERT(location >= 0, "invalid uniform: %s", name.c_str())
+    glUniform2fv(location, 2, args);
+}
+void GL_Material::set_param_vec3(const String& name, float args[])
+{
+    auto location = glGetUniformLocation(program_, name.c_str());
+    NX_ASSERT(location >= 0, "invalid uniform: %s", name.c_str())
+    glUniform3fv(location, 3, args);
+}
+void GL_Material::set_param_vec4(const String& name, float args[])
+{
+    auto location = glGetUniformLocation(program_, name.c_str());
+    NX_ASSERT(location >= 0, "invalid uniform: %s", name.c_str())
+    glUniform4fv(location, 4, args);
+}
+void GL_Material::use() { glUseProgram(program_); }
 
 } // namespace anyone

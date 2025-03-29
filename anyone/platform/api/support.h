@@ -41,6 +41,17 @@ protected:
     VertexLayout vertex_layout_;
 };
 
+class Material {
+public:
+    Material();
+    virtual ~Material();
+    virtual void set_param_texture(const String& name, int tex_unit) = 0;
+    virtual void set_param_vec2(const String& name, float args[]) = 0;
+    virtual void set_param_vec3(const String& name, float args[]) = 0;
+    virtual void set_param_vec4(const String& name, float args[]) = 0;
+    virtual void use() = 0;
+};
+
 class IndiceBuffer {
 public:
     IndiceBuffer();
@@ -119,7 +130,7 @@ struct DrawOperation {
     IndiceBuffer* indice_buffer;
     size_t count;
     Texture2D* texture;
-    // Material* material;
+    Material* material;
 };
 
 class RenderAPI {
@@ -134,6 +145,9 @@ public:
     virtual Texture2D* create_texture_2d() = 0;
     virtual void destroy_texture_2d(Texture2D* vbo) = 0;
     virtual void draw(const DrawOperation& operation) = 0;
+
+    virtual Material* create_rml_ui_material() = 0;
+    virtual void destroy_material(Material* vbo) = 0;
 };
 
 class PlatformSupport {

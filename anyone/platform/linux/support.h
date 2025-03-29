@@ -39,6 +39,22 @@ private:
     GLuint name_;
 };
 
+class GL_Material : public Material {
+public:
+    GL_Material();
+    ~GL_Material();
+    void set_param_texture(const String& name, int tex_unit) override;
+    void set_param_vec2(const String& name, float args[]) override;
+    void set_param_vec3(const String& name, float args[]) override;
+    void set_param_vec4(const String& name, float args[]) override;
+    void use() override;
+
+    bool compile_program(const char* vertex, const char* fragment);
+
+private:
+    GLuint program_;
+};
+
 class OpenGL_API : public RenderAPI {
 public:
     OpenGL_API();
@@ -56,6 +72,9 @@ public:
 
     Texture2D* create_texture_2d() override;
     void destroy_texture_2d(Texture2D* vbo) override;
+
+    Material* create_rml_ui_material() override;
+    void destroy_material(Material* vbo) override;
 };
 
 class PlatformLinux : public PlatformSupport {
