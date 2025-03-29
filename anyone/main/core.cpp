@@ -51,33 +51,32 @@ void Core::set_startup_config(const StartupConfig& config)
 
 void Core::notify_render_api_ready()
 {
+    notify_framebuffer_size_changed();
+    notify_dpi_changed();
+
     render_api_->set_clear_color(Color::BLUE);
     rml_ui_context_ = std::make_unique<RML_UI_Context>();
 }
 
-void Core::update() { rml_ui_context_->update(); }
+void Core::update() { }
 
 void Core::render()
 {
     render_api_->clear();
     rml_ui_context_->render();
-
-    // glViewport(0, 0, framebuffer_width_, framebuffer_height_);
     // dbg_printf(0, 0, "FPS: %.2f", frame_stats_.avg_fps);
     // dbg_text_->render();
 }
 
-void Core::notify_framebuffer_size_changed(int width, int height)
+void Core::notify_framebuffer_size_changed()
 {
-    framebuffer_size_ = { width, height };
-    // fire_framebuffer_size_changed();
+    framebuffer_size_ = platform_support_->get_framebuffer_size();
+    if (rml_ui_context_) {
+        rml_ui_context_->notify_framebuffer_size_changed();
+    }
 }
 
-void Core::notify_dpi_changed(float hdpi, float vdpi)
-{
-    dpi_.hori = hdpi;
-    dpi_.vert = vdpi;
-}
+void Core::notify_dpi_changed() { dpi_ = platform_support_->get_dpi(); }
 
 void Core::set_platform_support(PlatformSupport* p)
 {

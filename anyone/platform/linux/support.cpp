@@ -8,26 +8,8 @@ namespace anyone {
 
 void handle_window_size_changed(anyone::Core* core, SDL_Window* window)
 {
-    int framebuffer_width, framebuffer_height;
-    SDL_GL_GetDrawableSize(window, &framebuffer_width, &framebuffer_height);
-    core->notify_framebuffer_size_changed(framebuffer_width,
-                                          framebuffer_height);
-
-    float ddpi, hdpi, vdpi;
-    int display_index = SDL_GetWindowDisplayIndex(window);
-    if (display_index < 0) {
-        return;
-    }
-
-    // 获取显示器的 DPI 信息
-    if (SDL_GetDisplayDPI(display_index, &ddpi, &hdpi, &vdpi) != 0) {
-        return;
-    }
-    // printf("Display DPI: diagonal=%f, horizontal=%f, vertical=%f\n",
-    //        ddpi,
-    //        hdpi,
-    //        vdpi);
-    core->notify_dpi_changed(hdpi, vdpi);
+    core->notify_framebuffer_size_changed();
+    core->notify_dpi_changed();
 }
 
 PlatformLinux::PlatformLinux() : native_window_(nullptr), window_flags_(0) { }
@@ -68,19 +50,43 @@ void PlatformLinux::init_window()
 
     window_flags_ = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
     native_window_ = SDL_CreateWindow(
-        "Anyone Game", 0, 0, 256, 256, window_flags_);
+        "Anyone Game", 0, 0, 512, 256, window_flags_);
 
     gl_context_ = SDL_GL_CreateContext(native_window_);
     SDL_GL_MakeCurrent(native_window_, gl_context_);
     SDL_GL_SetSwapInterval(1);
     gladLoadGL();
 }
+
 void PlatformLinux::swap_buffers()
 {
     if (native_window_) {
         SDL_GL_SwapWindow(native_window_);
     }
 }
+
+DPI PlatformLinux::get_dpi() const
+{
+    float ddpi, hdpi, vdpi;
+    int display_index = SDL_GetWindowDisplayIndex(native_window_);
+    if (display_index < 0) {
+        NX_PANIC("no display_index");
+    }
+
+    // 获取显示器的 DPI 信息
+    if (SDL_GetDisplayDPI(display_index, &ddpi, &hdpi, &vdpi) != 0) {
+        NX_PANIC("get dpi fail");
+    }
+    return { hdpi, vdpi };
+}
+
+IntSize PlatformLinux::get_framebuffer_size() const
+{
+    int w, h;
+    SDL_GL_GetDrawableSize(native_window_, &w, &h);
+    return { w, h };
+}
+
 bool PlatformLinux::poll_events()
 {
     bool running = true;
@@ -104,6 +110,8 @@ bool PlatformLinux::poll_events()
                 switch (event.window.event) {
                     case SDL_WINDOWEVENT_RESIZED:
                     case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                        auto size = get_framebuffer_size();
+                        glViewport(0, 0, size.width, size.height);
                         handle_window_size_changed(GET_CORE(), native_window_);
                         break;
                     }

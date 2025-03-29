@@ -5,6 +5,15 @@
 
 namespace anyone {
 
+struct DPI {
+    float hori;
+    float vert;
+};
+
+struct IntSize {
+    int width, height;
+};
+
 enum class VertexAttr {
     POSITION_XYZ,
     POSITION_XY,
@@ -172,6 +181,7 @@ public:
 
     virtual Material* create_rml_ui_material() = 0;
     virtual void destroy_material(Material* vbo) = 0;
+    // virtual set_viewport(int x, int y, int w, int h) = 0;
 };
 
 class PlatformSupport {
@@ -179,6 +189,8 @@ public:
     virtual ~PlatformSupport() = 0;
 
     virtual void init_window() = 0;
+    virtual IntSize get_framebuffer_size() const = 0;
+    virtual DPI get_dpi() const = 0;
     virtual void swap_buffers() = 0;
     virtual bool poll_events() = 0;
 

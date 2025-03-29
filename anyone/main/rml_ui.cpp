@@ -1,6 +1,5 @@
 #include "rml_ui.h"
 #include "base/type.h"
-#include "main/core.h"
 #include <RmlUi/Debugger.h>
 #include "embed/default_ttf.h"
 
@@ -11,9 +10,10 @@ const char* demo = R"RAW(
      <link type="text/rcss" href="test.rcss"/>
 </head>
 <body>
-    <p>Hello, niu2x</p>
-    <p>Hello, niu2x</p>
-
+    <p>niu2x,hello</p>
+    <p>niu2x,hello</p>
+    <p>niu2x,hello</p>
+    <p>niu2x,hello</p>
 </body>
 </rml>
 
@@ -46,15 +46,20 @@ RML_UI_Context::RML_UI_Context()
 : context_(nullptr)
 , document_(nullptr)
 , rml_ui_material_(nullptr)
+, canvas_size_ { 0, 0 }
 {
+    canvas_size_ = GET_CORE()->get_framebuffer_size();
+
     rml_ui_material_ = GET_RENDER_API()->create_rml_ui_material();
     render_impl_.set_material(rml_ui_material_);
+    render_impl_.set_canvas_size(canvas_size_);
 
     Rml::SetRenderInterface(&render_impl_);
     Rml::SetSystemInterface(&system_impl_);
     Rml::Initialise();
 
-    context_ = Rml::CreateContext("main", Rml::Vector2i(256, 256));
+    context_ = Rml::CreateContext(
+        "main", Rml::Vector2i(canvas_size_.width, canvas_size_.height));
     // Rml::Debugger::Initialise(context_);
     Rml::LoadFontFace({ default_ttf, default_ttf_length },
                       "default",
@@ -63,6 +68,9 @@ RML_UI_Context::RML_UI_Context()
     document_ = context_->LoadDocumentFromMemory(demo);
     if (document_)
         document_->Show();
+
+    context_->Update();
+
     NX_ASSERT(document_, "no document");
 }
 
@@ -78,15 +86,21 @@ RML_UI_Context::~RML_UI_Context()
     Rml::Shutdown();
 }
 
-void RML_UI_Context::update()
+void RML_UI_Context::notify_framebuffer_size_changed()
 {
-    if (context_)
-        context_->Update();
+    canvas_size_ = GET_CORE()->get_framebuffer_size();
+    render_impl_.set_canvas_size(canvas_size_);
+
+    context_->SetDimensions(
+        Rml::Vector2i(canvas_size_.width, canvas_size_.height));
+
+    context_->Update();
 }
+
 void RML_UI_Context::render()
 {
-    if (context_)
-        context_->Render();
+    // context_->Update();
+    context_->Render();
 }
 
 } // namespace anyone
@@ -167,13 +181,14 @@ void MyRenderInterface::RenderGeometry(CompiledGeometryHandle geometry,
                                        TextureHandle texture)
 {
     float offset[2] = { translation[0], translation[1] };
+
     MaterialParam params[3] = {
         { .name = "tex",
           .value = { MaterialParamType::TEXTURE, { .tex_unit = 0 } } },
         { .name = "offset",
           .value = { MaterialParamType::VEC2, { .args = offset } } },
-        { .name = "tex",
-          .value = { MaterialParamType::TEXTURE, { .tex_unit = 0 } } },
+        { .name = "canvas_size",
+          .value = { MaterialParamType::VEC2, { .args = canvas_size_ } } },
     };
 
     auto container = (VertexIndiceBuffer*)geometry;
@@ -186,7 +201,7 @@ void MyRenderInterface::RenderGeometry(CompiledGeometryHandle geometry,
         .textures = nullptr,
         .material = material_,
         .material_params = params,
-        .material_params_count = 2,
+        .material_params_count = 3,
     });
 
     // LOG("draw %d %f %f",

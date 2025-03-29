@@ -8,6 +8,7 @@ namespace anyone {
 const char* vertex_source = R"(
     #version 330 core
     uniform vec2 offset;
+    uniform vec2 canvas_size;
 
     layout(location = 0) in vec2 position;
     layout(location = 1) in vec2 uv;
@@ -17,9 +18,8 @@ const char* vertex_source = R"(
     void main() {
         vec2 pos = position;
         pos += offset;
-        pos.y = 256.0 - pos.y;
-
-        gl_Position = vec4(pos/256.0*2-vec2(1.0,1.0), 0.0, 1.0);
+        pos.y = canvas_size.y - pos.y;
+        gl_Position = vec4(pos/canvas_size*2-vec2(1.0,1.0), 0.0, 1.0);
         v_color = color;
         v_uv = uv;
     }
@@ -29,7 +29,6 @@ const char* vertex_source = R"(
 const char* fragment_source = R"(
     #version 330 core
     uniform sampler2D tex;
-    uniform vec2 offset;
 
     in vec2 v_uv;
     in vec4 v_color;
@@ -92,7 +91,11 @@ GLuint compile_program(GLuint shaders[], int nr)
 OpenGL_API::OpenGL_API() { }
 OpenGL_API::~OpenGL_API() { }
 
-void OpenGL_API::clear() { glClear(GL_COLOR_BUFFER_BIT); }
+void OpenGL_API::clear()
+{
+    // glViewport(0, 0, framebuffer_width_, framebuffer_height_);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
 
 void OpenGL_API::set_clear_color(const Color& color)
 {

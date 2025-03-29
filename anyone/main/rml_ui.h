@@ -2,6 +2,7 @@
 #include <RmlUi/Core.h>
 
 #include "platform/api/support.h"
+#include "main/core.h"
 
 namespace anyone::rml_ui {
 
@@ -29,9 +30,15 @@ public:
     void SetScissorRegion(Rectanglei region) override;
 
     void set_material(Material* m) { material_ = m; }
+    void set_canvas_size(const IntSize& s)
+    {
+        canvas_size_[0] = s.width;
+        canvas_size_[1] = s.height;
+    }
 
 private:
     Material* material_;
+    float canvas_size_[2];
 };
 
 class MySystemInterface : public Rml::SystemInterface {
@@ -49,8 +56,9 @@ public:
     RML_UI_Context();
     ~RML_UI_Context();
 
-    void update();
+    // void update();
     void render();
+    void notify_framebuffer_size_changed();
 
 private:
     rml_ui::MyRenderInterface render_impl_;
@@ -58,6 +66,7 @@ private:
     Rml::Context* context_;
     Rml::ElementDocument* document_;
     Material* rml_ui_material_;
+    IntSize canvas_size_;
 };
 
 } // namespace anyone

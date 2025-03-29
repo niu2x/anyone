@@ -22,15 +22,6 @@ class RML_UI_Context;
 // class GL_Texture2D;
 // class DebugText;
 
-struct DPI {
-    float hori;
-    float vert;
-};
-
-struct IntSize {
-    int width, height;
-};
-
 // struct FramebufferSize {
 //     int width;
 //     int height;
@@ -66,17 +57,14 @@ public:
     // void dbg_printf(int x, int y, const char* xx, ...);
     // FreeTypeLibrary* get_ft_library() const { return ft_library_.get(); }
 
-    void notify_dpi_changed(float hdpi, float vdpi);
-    void notify_framebuffer_size_changed(int width, int height);
+    void notify_dpi_changed();
+    void notify_framebuffer_size_changed();
     void notify_keyboard_event(const KeyboardEvent& event);
 
     // void add_framebuffer_size_listener(FramebufferSizeListener* l);
     // void remove_framebuffer_size_listener(FramebufferSizeListener* l);
 
-    // FramebufferSize get_framebuffer_size() const
-    // {
-    //     return { framebuffer_width_, framebuffer_height_ };
-    // }
+    const IntSize& get_framebuffer_size() const { return framebuffer_size_; }
 
 private:
     // void fire_framebuffer_size_changed();

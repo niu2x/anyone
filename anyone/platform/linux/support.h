@@ -83,6 +83,9 @@ public:
     ~PlatformLinux();
 
     void init_window() override;
+    IntSize get_framebuffer_size() const override;
+    DPI get_dpi() const override;
+
     void log(const char* fmt, ...) override;
     void set_full_screen(bool full_screen) override;
 
