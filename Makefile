@@ -13,6 +13,7 @@ build:
 	cmake -S anyone -B build/anyone -DCMAKE_BUILD_TYPE=Debug \
 									-Dnx_DIR=$(PWD)/dist/lib/cmake/niu2x \
 									-DRmlUi_DIR=$(PWD)/dist/lib/cmake/RmlUi \
+									-Dlibzip_DIR=$(PWD)/dist/lib/cmake/libzip/ \
 									-Dfreetype_DIR=$(PWD)/dist/lib/cmake/freetype
 	cmake --build build/anyone -j 2
 
