@@ -8,6 +8,7 @@ target_sources(anyone_main PRIVATE
 	# ${src_files}
 	rml_ui.cpp
 	core.cpp
+	archive.cpp
 	color.cpp
 	export_lua.cpp
 	embed/default_ttf.cpp

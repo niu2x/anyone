@@ -227,4 +227,7 @@ private:
     int next_pos_;
 };
 
+// using nx::UniquePtr;
+// using nx::ByteBuffer;
+
 } // namespace anyone

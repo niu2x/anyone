@@ -170,13 +170,13 @@ void RML_UI::setup()
 {
     render_impl_ = new MyRenderInterface;
     system_impl_ = new MySystemInterface;
-    file_impl_ = new MyFileInterface;
+    // file_impl_ = new MyFileInterface;
     rml_ui_material_ = GET_RENDER_API()->create_rml_ui_material();
     render_impl_->set_material(rml_ui_material_);
 
     Rml::SetRenderInterface(render_impl_);
     Rml::SetSystemInterface(system_impl_);
-    Rml::SetFileInterface(file_impl_);
+    // Rml::SetFileInterface(file_impl_);
     Rml::Initialise();
 
     Rml::LoadFontFace({ default_ttf, default_ttf_length },
@@ -190,7 +190,7 @@ void RML_UI::cleanup()
     GET_RENDER_API()->destroy_material(rml_ui_material_);
     delete system_impl_;
     delete render_impl_;
-    delete file_impl_;
+    // delete file_impl_;
 }
 
 RML_UI::RML_UI()
