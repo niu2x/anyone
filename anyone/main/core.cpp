@@ -16,7 +16,7 @@ namespace anyone {
 Core::Core()
 : platform_support_(nullptr)
 , render_api_(nullptr)
-
+,builtin_archive_(nullptr)
 , debug_layer_(nullptr)
 
 , project_dir_(std::nullopt)
@@ -25,6 +25,7 @@ Core::Core()
 , lua_(nullptr)
 
 {
+    // builtin_archive_ = 
     lua_ = luaL_newstate();
 }
 

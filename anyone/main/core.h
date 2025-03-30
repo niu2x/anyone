@@ -80,6 +80,7 @@ private:
 
     PlatformSupport* platform_support_;
     RenderAPI* render_api_;
+    UniquePtr<Archive> builtin_archive_;
     // UniquePtr<FreeTypeLibrary> ft_library_;
 
     UniquePtr<RML_UI> debug_layer_;
