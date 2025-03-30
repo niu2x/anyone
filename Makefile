@@ -28,8 +28,15 @@ update-nx:
 	cd nx && git fetch --all && git checkout origin/develop
 	git add nx
 
-update-builtin:
-	echo "update-builtin"
+builtin.zip:
+	rm -f ./builtin.zip;
+	cd anyone/builtin && zip -r ../../builtin.zip ./*
 
-.PHONY: build
+builtin: builtin.zip
+	bin2cpp builtin.zip builtin cpp
+	mv builtin.h ./anyone/main/embed/
+	mv builtin.cpp ./anyone/main/embed/
+	rm -f builtin.zip
+
+.PHONY: build builtin.zip
 

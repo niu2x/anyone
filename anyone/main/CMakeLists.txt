@@ -12,6 +12,7 @@ target_sources(anyone_main PRIVATE
 	color.cpp
 	export_lua.cpp
 	embed/default_ttf.cpp
+	embed/builtin.cpp
 )
 
 target_include_directories(anyone_main PUBLIC
