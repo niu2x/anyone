@@ -1,7 +1,15 @@
 build:
 	./tools/build_cmake_project.sh RmlUi
 	./tools/build_cmake_project.sh freetype
-	./tools/build_cmake_project.sh nx -DNX_STATIC=ON
+	./tools/build_cmake_project.sh libzip -DENABLE_OPENSSL=OFF \
+											-DBUILD_TOOLS=OFF \
+											-DBUILD_REGRESS=OFF \
+											-DBUILD_OSSFUZZ=OFF \
+											-DBUILD_EXAMPLES=OFF \
+											-DBUILD_DOC=OFF
+	./tools/build_cmake_project.sh nx -DNX_STATIC=ON \
+										-DNX_BUILD_LIBZIP=ON \
+										-Dlibzip_DIR=$(PWD)/dist/lib/cmake/libzip/
 	cmake -S anyone -B build/anyone -DCMAKE_BUILD_TYPE=Debug \
 									-Dnx_DIR=$(PWD)/dist/lib/cmake/niu2x \
 									-DRmlUi_DIR=$(PWD)/dist/lib/cmake/RmlUi \
@@ -18,6 +26,9 @@ tolua++:
 update-nx:
 	cd nx && git fetch --all && git checkout origin/develop
 	git add nx
+
+update-builtin:
+	echo "update-builtin"
 
 .PHONY: build
 
