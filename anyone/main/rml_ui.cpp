@@ -9,14 +9,7 @@ const char* demo = R"RAW(
      <link type="text/rcss" href="test.rcss"/>
 </head>
 <body>
- <label><input type="checkbox" value="pizza"/> Pizza</label>
-
-<div class="left">
-    <input type="checkbox" value="pasta" id="pasta"/>
-</div>
-<div class="right">
-    <label for="pasta">Pasta</label>
-</div>
+    Pasta
 </body>
 </rml>
 
@@ -26,14 +19,14 @@ namespace anyone {
 
 rml_ui::MyRenderInterface* RML_UI::render_impl_ = nullptr;
 rml_ui::MySystemInterface* RML_UI::system_impl_ = nullptr;
-Material* MySystemInterface::rml_ui_material_ = nullptr;
+Material* RML_UI::rml_ui_material_ = nullptr;
 
 void RML_UI::setup()
 {
-    render_impl_ = new MyRenderInterface;
-    system_impl_ = new MySystemInterface;
+    render_impl_ = new rml_ui::MyRenderInterface;
+    system_impl_ = new rml_ui::MySystemInterface;
     rml_ui_material_ = GET_RENDER_API()->create_rml_ui_material();
-    render_impl_.set_material(rml_ui_material_);
+    render_impl_->set_material(rml_ui_material_);
 
     Rml::SetRenderInterface(render_impl_);
     Rml::SetSystemInterface(system_impl_);
@@ -55,11 +48,10 @@ void RML_UI::cleanup()
 RML_UI::RML_UI()
 : context_(nullptr)
 , document_(nullptr)
-, rml_ui_material_(nullptr)
+// , rml_ui_material_(nullptr)
 , canvas_size_ { 0, 0 }
 {
     canvas_size_ = GET_CORE()->get_framebuffer_size();
-    // render_impl_.set_canvas_size(canvas_size_);
     context_ = Rml::CreateContext(
         "main", Rml::Vector2i(canvas_size_.width, canvas_size_.height));
 
@@ -85,7 +77,6 @@ RML_UI::~RML_UI()
 void RML_UI::notify_framebuffer_size_changed()
 {
     canvas_size_ = GET_CORE()->get_framebuffer_size();
-    // render_impl_.set_canvas_size(canvas_size_);
 
     context_->SetDimensions(
         Rml::Vector2i(canvas_size_.width, canvas_size_.height));
@@ -96,7 +87,11 @@ void RML_UI::notify_framebuffer_size_changed()
     context_->Update();
 }
 
-void RML_UI::render() { context_->Render(); }
+void RML_UI::render()
+{
+    render_impl_->set_canvas_size(canvas_size_);
+    context_->Render();
+}
 
 } // namespace anyone
 
