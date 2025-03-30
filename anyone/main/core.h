@@ -75,11 +75,14 @@ private:
     void update();
     void render();
 
+    void setup_after_render_api_ready();
+    void cleanup_before_render_api_gone();
+
     PlatformSupport* platform_support_;
     RenderAPI* render_api_;
     // UniquePtr<FreeTypeLibrary> ft_library_;
 
-    UniquePtr<RML_UI> rml_ui_;
+    UniquePtr<RML_UI> debug_layer_;
 
     Optional<String> project_dir_;
     DPI dpi_;

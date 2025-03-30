@@ -17,7 +17,7 @@ Core::Core()
 : platform_support_(nullptr)
 , render_api_(nullptr)
 
-, rml_ui_(nullptr)
+, debug_layer_(nullptr)
 
 , project_dir_(std::nullopt)
 , dpi_ { 90, 90 }
@@ -32,7 +32,7 @@ Core::~Core()
 {
     lua_close(lua_);
 
-    rml_ui_.reset();
+    cleanup_before_render_api_gone();
 
     render_api_ = nullptr;
     platform_support_ = nullptr;
@@ -51,9 +51,20 @@ void Core::notify_render_api_ready()
 {
     notify_framebuffer_size_changed();
     notify_dpi_changed();
+    setup_after_render_api_ready();
+}
 
+void Core::setup_after_render_api_ready()
+{
     render_api_->set_clear_color(Color::BLUE);
-    rml_ui_ = std::make_unique<RML_UI>();
+    RML_UI::setup();
+    debug_layer_ = std::make_unique<RML_UI>();
+}
+
+void Core::cleanup_before_render_api_gone()
+{
+    debug_layer_.reset();
+    RML_UI::cleanup();
 }
 
 void Core::update() { }
@@ -61,7 +72,7 @@ void Core::update() { }
 void Core::render()
 {
     render_api_->clear();
-    rml_ui_->render();
+    debug_layer_->render();
     // dbg_printf(0, 0, "FPS: %.2f", frame_stats_.avg_fps);
     // dbg_text_->render();
 }
@@ -69,8 +80,8 @@ void Core::render()
 void Core::notify_framebuffer_size_changed()
 {
     framebuffer_size_ = platform_support_->get_framebuffer_size();
-    if (rml_ui_) {
-        rml_ui_->notify_framebuffer_size_changed();
+    if (debug_layer_) {
+        debug_layer_->notify_framebuffer_size_changed();
     }
 }
 

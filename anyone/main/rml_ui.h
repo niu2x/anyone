@@ -55,17 +55,20 @@ class RML_UI {
 public:
     RML_UI();
     ~RML_UI();
-
     // void update();
     void render();
     void notify_framebuffer_size_changed();
 
+    static void setup();
+    static void cleanup();
+
 private:
-    rml_ui::MyRenderInterface render_impl_;
-    rml_ui::MySystemInterface system_impl_;
+    static rml_ui::MyRenderInterface* render_impl_;
+    static rml_ui::MySystemInterface* system_impl_;
+    static Material* rml_ui_material_;
+
     Rml::Context* context_;
     Rml::ElementDocument* document_;
-    Material* rml_ui_material_;
     IntSize canvas_size_;
 };
 

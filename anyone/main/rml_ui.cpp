@@ -24,6 +24,34 @@ const char* demo = R"RAW(
 
 namespace anyone {
 
+rml_ui::MyRenderInterface* RML_UI::render_impl_ = nullptr;
+rml_ui::MySystemInterface* RML_UI::system_impl_ = nullptr;
+Material* MySystemInterface::rml_ui_material_ = nullptr;
+
+void RML_UI::setup()
+{
+    render_impl_ = new MyRenderInterface;
+    system_impl_ = new MySystemInterface;
+    rml_ui_material_ = GET_RENDER_API()->create_rml_ui_material();
+    render_impl_.set_material(rml_ui_material_);
+
+    Rml::SetRenderInterface(render_impl_);
+    Rml::SetSystemInterface(system_impl_);
+    Rml::Initialise();
+
+    Rml::LoadFontFace({ default_ttf, default_ttf_length },
+                      "default",
+                      Rml::Style::FontStyle::Normal);
+}
+
+void RML_UI::cleanup()
+{
+    Rml::Shutdown();
+    GET_RENDER_API()->destroy_material(rml_ui_material_);
+    delete system_impl_;
+    delete render_impl_;
+}
+
 RML_UI::RML_UI()
 : context_(nullptr)
 , document_(nullptr)
@@ -31,22 +59,11 @@ RML_UI::RML_UI()
 , canvas_size_ { 0, 0 }
 {
     canvas_size_ = GET_CORE()->get_framebuffer_size();
-
-    rml_ui_material_ = GET_RENDER_API()->create_rml_ui_material();
-    render_impl_.set_material(rml_ui_material_);
-    render_impl_.set_canvas_size(canvas_size_);
-
-    Rml::SetRenderInterface(&render_impl_);
-    Rml::SetSystemInterface(&system_impl_);
-    Rml::Initialise();
-
+    // render_impl_.set_canvas_size(canvas_size_);
     context_ = Rml::CreateContext(
         "main", Rml::Vector2i(canvas_size_.width, canvas_size_.height));
-    Rml::Debugger::Initialise(context_);
-    Rml::LoadFontFace({ default_ttf, default_ttf_length },
-                      "default",
-                      Rml::Style::FontStyle::Normal);
 
+    // Rml::Debugger::Initialise(context_);
     document_ = context_->LoadDocumentFromMemory(demo);
     if (document_)
         document_->Show();
@@ -58,20 +75,17 @@ RML_UI::RML_UI()
 
 RML_UI::~RML_UI()
 {
-    GET_RENDER_API()->destroy_material(rml_ui_material_);
-
     if (document_) {
         document_->Close();
         document_ = nullptr;
     }
     Rml::RemoveContext("main");
-    Rml::Shutdown();
 }
 
 void RML_UI::notify_framebuffer_size_changed()
 {
     canvas_size_ = GET_CORE()->get_framebuffer_size();
-    render_impl_.set_canvas_size(canvas_size_);
+    // render_impl_.set_canvas_size(canvas_size_);
 
     context_->SetDimensions(
         Rml::Vector2i(canvas_size_.width, canvas_size_.height));
