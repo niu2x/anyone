@@ -28,13 +28,16 @@ class RML_UI;
 //     int height;
 // };
 
-// struct FrameStats {
-//     TimePoint frame_start;
-//     TimePoint frame_stop;
-//     LatestCache<TimeDuration, 8> duration_cache;
-//     TimeDuration avg_duration;
-//     TimeDuration avg_fps;
-// };
+struct FrameStats {
+    TimePoint frame_start;
+    TimePoint frame_stop;
+    LatestCache<TimeDuration, 8> duration_cache;
+    TimeDuration avg_duration;
+    TimeDuration avg_fps;
+
+    void frame_begin();
+    void frame_end();
+};
 
 struct StartupConfig {
     PlatformSupport* platform_support;
@@ -101,7 +104,7 @@ private:
     void init_lua();
     // void run_project();
 
-    // FrameStats frame_stats_;
+    FrameStats frame_stats_;
 
     void notify_render_api_ready();
 };

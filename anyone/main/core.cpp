@@ -71,7 +71,7 @@ void Core::setup_after_render_api_ready()
     auto element = debug_layer_->get_document()->QuerySelector("#fps");
     element->SetInnerRML("50");
     debug_layer_->update();
-    
+
     lua_ = luaL_newstate();
 }
 
@@ -157,16 +157,10 @@ int Core::load_lua()
 
 void Core::kick_one_frame()
 {
-    // frame_stats_.frame_start = time_now();
-
+    frame_stats_.frame_begin();
     render();
     update();
-
-    // frame_stats_.frame_stop = time_now();
-    // frame_stats_.duration_cache.push_back(
-    //     time_diff(frame_stats_.frame_start, frame_stats_.frame_stop));
-    // frame_stats_.avg_duration = frame_stats_.duration_cache.get_avg();
-    // frame_stats_.avg_fps = 1000 / frame_stats_.avg_duration;
+    frame_stats_.frame_end();
 }
 
 void Core::init_lua()
@@ -266,4 +260,15 @@ void Core::notify_keyboard_event(const KeyboardEvent& event)
     }
 }
 
+void FrameStats::frame_begin() { this->frame_start = time_now(); }
+void FrameStats::frame_end()
+{
+    this->frame_stop = time_now();
+
+    auto cost = time_diff(this->frame_start, this->frame_stop);
+    this->duration_cache.push_back(cost);
+
+    this->avg_duration = this->duration_cache.get_avg();
+    this->avg_fps = 1000 / this->avg_duration;
+}
 } // namespace anyone
