@@ -2,11 +2,12 @@
 
 #include "platform/api/support.h"
 #include "main/core.h"
+#include <RmlUi/Core.h>
 
-namespace Rml {
-class Context;
-class ElementDocument;
-}; // namespace Rml
+// namespace Rml {
+// class Context;
+// class ElementDocument;
+// }; // namespace Rml
 
 namespace anyone {
 
@@ -22,7 +23,9 @@ public:
     static void cleanup();
 
     void load_document(const String& uri);
-
+    void update();
+    
+    Rml::ElementDocument*  get_document() const {return document_;}
 private:
     Rml::Context* context_;
     Rml::ElementDocument* document_;

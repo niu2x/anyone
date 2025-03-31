@@ -1,7 +1,6 @@
 #include "rml_ui.h"
 #include "base/type.h"
 #include <RmlUi/Debugger.h>
-#include <RmlUi/Core.h>
 #include "embed/default_ttf.h"
 
 // const char* demo = R"RAW(
@@ -355,6 +354,10 @@ void RML_UI::render()
 {
     render_impl_->set_canvas_size(canvas_size_);
     context_->Render();
+}
+
+void RML_UI::update() {
+    context_->Update();
 }
 
 } // namespace anyone
