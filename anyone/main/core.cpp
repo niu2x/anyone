@@ -68,10 +68,7 @@ void Core::setup_after_render_api_ready()
     debug_layer_ = std::make_unique<RML_UI>();
 
     debug_layer_->load_document("builtin:///layout/debug.rml");
-    auto element = debug_layer_->get_document()->QuerySelector("#fps");
-    element->SetInnerRML("50");
-    debug_layer_->update();
-
+    
     lua_ = luaL_newstate();
 }
 
@@ -161,6 +158,13 @@ void Core::kick_one_frame()
     render();
     update();
     frame_stats_.frame_end();
+
+    auto element = debug_layer_->get_document()->QuerySelector("#fps");
+    char tmp[128];
+    sprintf(tmp, "%.2f", frame_stats_.avg_fps);
+    element->SetInnerRML(tmp);
+    debug_layer_->update();
+
 }
 
 void Core::init_lua()
