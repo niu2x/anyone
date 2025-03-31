@@ -1,4 +1,4 @@
-build: builtin
+build: embed
 	./tools/build_cmake_project.sh RmlUi
 	./tools/build_cmake_project.sh freetype
 	./tools/build_cmake_project.sh libzip -DENABLE_OPENSSL=OFF \
@@ -45,5 +45,5 @@ embed_font:
 
 embed: embed_builtin embed_font
 
-.PHONY: build builtin.zip embed_builtin
+.PHONY: build builtin.zip embed_builtin embed_font
 
