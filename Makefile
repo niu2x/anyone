@@ -38,7 +38,12 @@ embed_builtin: builtin.zip
 	mv builtin.cpp ./anyone/main/embed/
 	rm -f builtin.zip
 
-embed: embed_builtin
+embed_font:
+	bin2cpp SpaceMono-Regular.ttf SpaceMono_Regular cpp
+	mv SpaceMono_Regular.h ./anyone/main/embed/
+	mv SpaceMono_Regular.cpp ./anyone/main/embed/
+
+embed: embed_builtin embed_font
 
 .PHONY: build builtin.zip embed_builtin
 

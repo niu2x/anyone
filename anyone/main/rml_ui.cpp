@@ -1,7 +1,7 @@
 #include "rml_ui.h"
 #include "base/type.h"
 #include <RmlUi/Debugger.h>
-#include "embed/default_ttf.h"
+#include "embed/SpaceMono_Regular.h"
 
 // const char* demo = R"RAW(
 // <rml>
@@ -287,8 +287,8 @@ void RML_UI::setup()
     Rml::SetFileInterface(file_impl_);
     Rml::Initialise();
 
-    Rml::LoadFontFace({ default_ttf, default_ttf_length },
-                      "default",
+    Rml::LoadFontFace({ SpaceMono_Regular, SpaceMono_Regular_length },
+                      "SpaceMono",
                       Rml::Style::FontStyle::Normal);
 }
 

@@ -11,7 +11,7 @@ target_sources(anyone_main PRIVATE
 	archive.cpp
 	color.cpp
 	export_lua.cpp
-	embed/default_ttf.cpp
+	embed/SpaceMono_Regular.cpp
 	embed/builtin.cpp
 )
 

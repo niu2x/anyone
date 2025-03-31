@@ -1,8 +1,10 @@
-#include "default_ttf.h"
-#define BYTES(a,b,c,d,e,f,g,h) 0x##a,0x##b,0x##c,0x##d,0x##e,0x##f,0x##g,0x##h,
+#include"SpaceMono_Regular.h"
 
-size_t default_ttf_length = 0x18010;
-uint8_t default_ttf[] = {
+#define BYTES(a,b,c,d,e,f,g,h) 0x##a,0x##b,0x##c,0x##d,0x##e,0x##f,0x##g,0x##h,
+unsigned long SpaceMono_Regular_length = 0x18010;
+
+
+unsigned char SpaceMono_Regular[] = {
 BYTES(0,1,0,0,0,11,1,0)BYTES(0,4,0,10,47,44,45
 ,46)BYTES(5a,8,5c,da,0,0,3,70)BYTES(0,0,1,c8,47,50
 ,4f,53)BYTES(9f,6c,7a,a,0,0,52,38)BYTES(0,0,18,70,47
