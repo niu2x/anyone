@@ -30,13 +30,15 @@ update-nx:
 
 builtin.zip:
 	rm -f ./builtin.zip;
-	cd anyone/builtin && zip -r ../../builtin.zip ./*
+	cd builtin && zip -r ../builtin.zip ./*
 
-builtin: builtin.zip
+embed_builtin: builtin.zip
 	bin2cpp builtin.zip builtin cpp
 	mv builtin.h ./anyone/main/embed/
 	mv builtin.cpp ./anyone/main/embed/
 	rm -f builtin.zip
 
-.PHONY: build builtin.zip
+embed: embed_builtin
+
+.PHONY: build builtin.zip embed_builtin
 
