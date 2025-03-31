@@ -3,7 +3,9 @@ $#include "platform/api/support.h"
 
 namespace anyone {
 
-class PlatformSupport {}
+class PlatformSupport {
+	void set_full_screen(bool);
+}
 
 class Core {
 	static Core* get_singleton_ptr();

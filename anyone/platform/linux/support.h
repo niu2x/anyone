@@ -88,6 +88,7 @@ public:
 
     void log(const char* fmt, ...) override;
     void set_full_screen(bool full_screen) override;
+    bool is_full_screen() const override;
 
     void swap_buffers() override;
     bool poll_events() override;

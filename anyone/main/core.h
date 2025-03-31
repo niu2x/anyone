@@ -52,7 +52,7 @@ public:
     void set_startup_config(const StartupConfig& config);
     void kick_one_frame();
 
-    // void start_game();
+    void start_game();
 
     PlatformSupport* get_platform_support() const { return platform_support_; }
     const DPI& get_dpi() const { return dpi_; }

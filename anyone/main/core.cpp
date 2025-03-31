@@ -70,6 +70,7 @@ void Core::setup_after_render_api_ready()
     debug_layer_->load_document("builtin:///layout/debug.rml");
     
     lua_ = luaL_newstate();
+    init_lua();
 }
 
 void Core::cleanup_before_render_api_gone()
@@ -207,27 +208,15 @@ void Core::init_lua()
 //     ss << entry;
 //     ss << "'";
 
-//     if (luaL_dostring(lua_, ss.str().c_str())) {
-//         const char* error_msg = lua_tolstring(lua_, -1, nullptr);
-//         LOG("lua error: %s", error_msg);
-//     }
 // }
 
-// void Core::start_game()
-// {
-//     check_gl_version();
-//     set_global_gl_state();
-
-//     ft_library_ = std::make_unique<FreeTypeLibrary>();
-//     dbg_font_ = std::make_unique<Font>(512, 512, 32);
-//     dbg_font_->build_ascii_chars(default_ttf, default_ttf_length);
-
-//     dbg_text_ = std::make_unique<DebugText>(dbg_font_.get());
-
-//     init_lua();
-
-//     run_project();
-// }
+void Core::start_game()
+{
+    if (luaL_dostring(lua_, "require 'entry'")) {
+        const char* error_msg = lua_tolstring(lua_, -1, nullptr);
+        LOG("lua error: %s", error_msg);
+    }
+}
 
 // void Core::dbg_printf(int x, int y, const char* fmt, ...)
 // {
@@ -257,9 +246,8 @@ void Core::notify_keyboard_event(const KeyboardEvent& event)
 {
     if (event.type == KeyboardEventType::PRESS) {
         if (event.key_code == KEY_F) {
-            static bool full_screen = false;
-            full_screen = !full_screen;
-            platform_support_->set_full_screen(full_screen);
+            bool full_screen = platform_support_->is_full_screen();
+            platform_support_->set_full_screen(!full_screen);
         }
     }
 }

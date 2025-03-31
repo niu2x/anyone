@@ -37,11 +37,16 @@ void PlatformLinux::log(const char* fmt, ...)
 void PlatformLinux::set_full_screen(bool full_screen)
 {
     if (full_screen) {
-        SDL_SetWindowFullscreen(native_window_,
-                                window_flags_ | SDL_WINDOW_FULLSCREEN_DESKTOP);
+        SDL_SetWindowFullscreen(native_window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
     } else {
-        SDL_SetWindowFullscreen(native_window_, window_flags_);
+        SDL_SetWindowFullscreen(native_window_, 0);
     }
+}
+
+bool PlatformLinux::is_full_screen() const
+{
+    return SDL_GetWindowFlags(native_window_)
+           & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
 
 void PlatformLinux::init_window()

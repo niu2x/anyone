@@ -19,6 +19,7 @@ static void run(StartupConfig& config)
 
     Core core;
     core.set_startup_config(config);
+    core.start_game();
 
     while (platform_support->poll_events()) {
         core.kick_one_frame();
