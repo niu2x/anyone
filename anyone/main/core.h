@@ -67,6 +67,8 @@ public:
 
     const IntSize& get_framebuffer_size() const { return framebuffer_size_; }
 
+    UniquePtr<Read> open_builtin_file(const String& path);
+
 private:
     // void fire_framebuffer_size_changed();
 

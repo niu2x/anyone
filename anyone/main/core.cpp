@@ -4,6 +4,7 @@
 // #include "ttf.h"
 // #include "dbg_text.h"
 // #include "embed/default_ttf.h"
+#include "embed/builtin.h"
 #include "3rd/nlohmann/json.hpp"
 #include <sstream>
 
@@ -25,21 +26,26 @@ Core::Core()
 , lua_(nullptr)
 
 {
-    // builtin_archive_ = 
-    lua_ = luaL_newstate();
+    builtin_archive_ = nx::fs::create_zip_archive_from_memory(builtin,
+                                                              builtin_length);
 }
 
 Core::~Core()
 {
-    lua_close(lua_);
-
     cleanup_before_render_api_gone();
-
     render_api_ = nullptr;
     platform_support_ = nullptr;
+
+    builtin_archive_.reset();
+
     // dbg_text_.reset();
     // dbg_font_.reset();
     // ft_library_.reset();
+}
+
+UniquePtr<Read> Core::open_builtin_file(const String& path)
+{
+    return builtin_archive_->open(path);
 }
 
 void Core::set_startup_config(const StartupConfig& config)
@@ -60,10 +66,12 @@ void Core::setup_after_render_api_ready()
     render_api_->set_clear_color(Color::BLUE);
     RML_UI::setup();
     debug_layer_ = std::make_unique<RML_UI>();
+    lua_ = luaL_newstate();
 }
 
 void Core::cleanup_before_render_api_gone()
 {
+    lua_close(lua_);
     debug_layer_.reset();
     RML_UI::cleanup();
 }

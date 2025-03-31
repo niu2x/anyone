@@ -7,7 +7,7 @@
 const char* demo = R"RAW(
 <rml>
 <head>
-     <link type="text/rcss" href="builtin:///test.rcss"/>
+     <link type="text/rcss" href="builtin:///style/basic.rcss"/>
 </head>
 <body>
     Pasta
@@ -155,10 +155,119 @@ private:
     float canvas_size_[2];
 };
 
+class FileAdapter {
+public:
+    explicit FileAdapter(nx::UniquePtr<Read> reader) : position_(0)
+    {
+        auto ret = reader->read_all();
+
+        if (std::holds_alternative<IO_Error>(ret)) {
+            return;
+        }
+
+        buffer_ = std::get<ByteBuffer>(std::move(ret));
+    }
+    ~FileAdapter() { }
+
+    size_t read(void* buffer, size_t size)
+    {
+        size = std::min(size, buffer_.size() - position_);
+
+        memcpy(buffer, buffer_.data() + position_, size);
+        position_ += size;
+
+        return size;
+    }
+
+    bool seek(long offset, int origin)
+    {
+        if (origin == SEEK_SET) {
+            position_ = offset;
+            return true;
+        } else if (origin == SEEK_CUR) {
+            position_ += offset;
+            return true;
+        } else if (origin == SEEK_END) {
+            position_ = buffer_.size() + offset;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    size_t tell() const { return position_; }
+
+private:
+    ByteBuffer buffer_;
+    off_t position_;
+};
+
 class MyFileInterface : public FileInterface {
 public:
     MyFileInterface() { }
     ~MyFileInterface() { }
+
+    /// Opens a file.
+    /// @param path The path to the file to open.
+    /// @return A valid file handle, or nullptr on failure
+    FileHandle Open(const String& path) override
+    {
+        if (strncmp("builtin://", path.c_str(), 10) == 0) {
+            auto reader = GET_CORE()->open_builtin_file(path.substr(10));
+            if (reader) {
+                auto adapter = new FileAdapter(std::move(reader));
+                return (uintptr_t)adapter;
+            }
+        }
+        return 0;
+    }
+    /// Closes a previously opened file.
+    /// @param file The file handle previously opened through Open().
+    void Close(FileHandle file) override
+    {
+        auto adapter = (FileAdapter*)file;
+        if (adapter)
+            delete adapter;
+    }
+
+    /// Reads data from a previously opened file.
+    /// @param buffer The buffer to be read into.
+    /// @param size The number of bytes to read into the buffer.
+    /// @param file The handle of the file.
+    /// @return The total number of bytes read into the buffer.
+    size_t Read(void* buffer, size_t size, FileHandle file) override
+    {
+        auto adapter = (FileAdapter*)file;
+        if (adapter) {
+            return adapter->read(buffer, size);
+        }
+        return 0;
+    }
+    /// Seeks to a point in a previously opened file.
+    /// @param file The handle of the file to seek.
+    /// @param offset The number of bytes to seek.
+    /// @param origin One of either SEEK_SET (seek from the beginning of the
+    /// file), SEEK_END (seek from the end of the file) or SEEK_CUR (seek from
+    /// the current file position).
+    /// @return True if the operation completed successfully, false otherwise.
+    bool Seek(FileHandle file, long offset, int origin) override
+    {
+        auto adapter = (FileAdapter*)file;
+        if (adapter) {
+            return adapter->seek(offset, origin);
+        }
+        return false;
+    }
+    /// Returns the current position of the file pointer.
+    /// @param file The handle of the file to be queried.
+    /// @return The number of bytes from the origin of the file.
+    size_t Tell(FileHandle file) override
+    {
+        auto adapter = (FileAdapter*)file;
+        if (adapter) {
+            return adapter->tell();
+        }
+        return 0;
+    }
 };
 
 MyRenderInterface* render_impl_ = nullptr;
@@ -170,13 +279,13 @@ void RML_UI::setup()
 {
     render_impl_ = new MyRenderInterface;
     system_impl_ = new MySystemInterface;
-    // file_impl_ = new MyFileInterface;
+    file_impl_ = new MyFileInterface;
     rml_ui_material_ = GET_RENDER_API()->create_rml_ui_material();
     render_impl_->set_material(rml_ui_material_);
 
     Rml::SetRenderInterface(render_impl_);
     Rml::SetSystemInterface(system_impl_);
-    // Rml::SetFileInterface(file_impl_);
+    Rml::SetFileInterface(file_impl_);
     Rml::Initialise();
 
     Rml::LoadFontFace({ default_ttf, default_ttf_length },

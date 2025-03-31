@@ -1,4 +1,4 @@
-build:
+build: builtin
 	./tools/build_cmake_project.sh RmlUi
 	./tools/build_cmake_project.sh freetype
 	./tools/build_cmake_project.sh libzip -DENABLE_OPENSSL=OFF \
