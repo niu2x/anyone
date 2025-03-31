@@ -21,6 +21,8 @@ public:
     static void setup();
     static void cleanup();
 
+    void load_document(const String& uri);
+
 private:
     Rml::Context* context_;
     Rml::ElementDocument* document_;

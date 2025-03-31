@@ -1,0 +1,8 @@
+<rml>
+	<head>
+		<link type="text/rcss" href="builtin:///style/basic.rcss"/>
+	</head>
+	<body>
+		<p> FPS: <span>60</span> </p>
+ 	</body>
+</rml>

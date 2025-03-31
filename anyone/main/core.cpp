@@ -66,6 +66,7 @@ void Core::setup_after_render_api_ready()
     render_api_->set_clear_color(Color::BLUE);
     RML_UI::setup();
     debug_layer_ = std::make_unique<RML_UI>();
+    debug_layer_->load_document("builtin:///layout/debug.rml");
     lua_ = luaL_newstate();
 }
 

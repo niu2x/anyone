@@ -4,17 +4,17 @@
 #include <RmlUi/Core.h>
 #include "embed/default_ttf.h"
 
-const char* demo = R"RAW(
-<rml>
-<head>
-     <link type="text/rcss" href="builtin:///style/basic.rcss"/>
-</head>
-<body>
-    Pasta
-</body>
-</rml>
+// const char* demo = R"RAW(
+// <rml>
+// <head>
+//      <link type="text/rcss" href="builtin:///style/basic.rcss"/>
+// </head>
+// <body>
+//     Pasta
+// </body>
+// </rml>
 
-)RAW";
+// )RAW";
 
 namespace anyone {
 
@@ -313,13 +313,20 @@ RML_UI::RML_UI()
         "main", Rml::Vector2i(canvas_size_.width, canvas_size_.height));
 
     // Rml::Debugger::Initialise(context_);
-    document_ = context_->LoadDocumentFromMemory(demo);
-    if (document_)
-        document_->Show();
+    // document_ = context_->LoadDocumentFromMemory(demo);
+    // if (document_)
+    // document_->Show();
     auto dpi = GET_CORE()->get_dpi();
     context_->SetDensityIndependentPixelRatio(dpi.vert / 72.0);
     context_->Update();
-    NX_ASSERT(document_, "no document");
+}
+
+void RML_UI::load_document(const String& uri)
+{
+    NX_ASSERT(!document_, "already exist document");
+    document_ = context_->LoadDocument(uri);
+    if (document_)
+        document_->Show();
 }
 
 RML_UI::~RML_UI()
