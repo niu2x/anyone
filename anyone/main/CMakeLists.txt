@@ -11,6 +11,9 @@ target_sources(anyone_main PRIVATE
 	archive.cpp
 	color.cpp
 	export_lua.cpp
+	render_system.cpp
+	mesh.cpp
+	mesh_manager.cpp
 	embed/SpaceMono_Regular.cpp
 	embed/builtin.cpp
 )

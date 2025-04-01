@@ -2,6 +2,7 @@
 #include "base/type.h"
 #include <RmlUi/Debugger.h>
 #include "embed/SpaceMono_Regular.h"
+#include "main/core.h"
 
 // const char* demo = R"RAW(
 // <rml>

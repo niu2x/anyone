@@ -15,6 +15,8 @@ extern "C" {
 namespace anyone {
 
 class PlatformSupport;
+class MeshManager;
+class RenderSystem;
 class RML_UI;
 
 struct StartupConfig {
@@ -68,6 +70,8 @@ private:
     // UniquePtr<FreeTypeLibrary> ft_library_;
 
     UniquePtr<RML_UI> debug_layer_;
+    UniquePtr<RenderSystem> render_system_;
+    UniquePtr<MeshManager> mesh_manager_;
 
     Optional<String> project_dir_;
     DPI dpi_;

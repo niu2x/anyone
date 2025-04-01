@@ -1,12 +1,9 @@
 #include "core.h"
+#include "render_system.h"
 #include "rml_ui.h"
-// #include "gl.h"
-// #include "ttf.h"
-// #include "dbg_text.h"
-// #include "embed/default_ttf.h"
+#include "mesh_manager.h"
 #include "embed/builtin.h"
 #include "3rd/nlohmann/json.hpp"
-#include <sstream>
 
 using json = nlohmann::json;
 
@@ -17,9 +14,10 @@ namespace anyone {
 Core::Core()
 : platform_support_(nullptr)
 , render_api_(nullptr)
-,builtin_archive_(nullptr)
+, builtin_archive_(nullptr)
 , debug_layer_(nullptr)
-
+, render_system_(nullptr)
+, mesh_manager_(nullptr)
 , project_dir_(std::nullopt)
 , dpi_ { 90, 90 }
 , framebuffer_size_ { 1, 1 }
@@ -66,6 +64,9 @@ void Core::setup_after_render_api_ready()
     render_api_->set_frame_stats(&frame_stats_);
     render_api_->set_clear_color(Color::BLUE);
 
+    render_system_ = std::make_unique<RenderSystem>(render_api_);
+    mesh_manager_ = std::make_unique<MeshManager>();
+
     RML_UI::setup();
     debug_layer_ = std::make_unique<RML_UI>();
 
@@ -80,6 +81,8 @@ void Core::cleanup_before_render_api_gone()
     lua_close(lua_);
     debug_layer_.reset();
     RML_UI::cleanup();
+    mesh_manager_.reset();
+    render_system_.reset();
 }
 
 void Core::update() { }

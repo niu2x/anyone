@@ -1,7 +1,6 @@
 #pragma once
 
 #include "platform/api/support.h"
-#include "main/core.h"
 #include <RmlUi/Core.h>
 
 // namespace Rml {
