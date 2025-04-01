@@ -13,6 +13,7 @@ target_sources(anyone_main PRIVATE
 	render_system.cpp
 	mesh.cpp
 	camera.cpp
+	material.cpp
 	mesh_manager.cpp
 
 	embed/SpaceMono_Regular.cpp

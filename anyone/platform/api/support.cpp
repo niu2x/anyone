@@ -59,12 +59,6 @@ void Texture2D::alloc_cpu_buffer(int w, int h)
 
 void Texture2D::free_cpu_buffer() { cpu_buffer_.clear(); }
 
-Material::~Material() { }
-
-Material::Material() : blend_type_(BlendType::NONE) { }
-
-void Material::use(RenderAPI* api) { api->set_blend_type(blend_type_); }
-
 Program::Program() { }
 
 Program::~Program() { }
