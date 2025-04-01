@@ -29,6 +29,23 @@ bool Mesh::load_from_file(const String& name)
         return false;
     }
 
+    {
+        auto root_node = scene->mRootNode;
+
+        auto mesh_list = scene->mMeshes;
+        auto mesh_num = scene->mNumMeshes;
+
+        auto skeleton_num = scene->mNumSkeletons;
+        auto skeleton_list = scene->mSkeletons;
+
+        auto animation_list = scene->mAnimations;
+        auto animation_num = scene->mNumAnimations;
+
+        LOG("mesh_num %d", mesh_num);
+        LOG("skeleton_num %d", skeleton_num);
+        LOG("animation_num %d", animation_num);
+    }
+
     // We're done. Everything will be cleaned up by the importer destructor
 
     return true;
