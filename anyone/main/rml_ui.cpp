@@ -212,7 +212,7 @@ public:
     FileHandle Open(const String& path) override
     {
         if (strncmp("builtin://", path.c_str(), 10) == 0) {
-            auto reader = GET_CORE()->open_builtin_file(path.substr(10));
+            auto reader = GET_CORE()->read_builtin_file(path.substr(10));
             if (reader) {
                 auto adapter = new FileAdapter(std::move(reader));
                 return (uintptr_t)adapter;

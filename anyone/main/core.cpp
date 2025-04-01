@@ -3,6 +3,7 @@
 #include "rml_ui.h"
 #include "mesh_manager.h"
 #include "embed/builtin.h"
+#include "url-parser/url.hpp"
 #include "3rd/nlohmann/json.hpp"
 
 using json = nlohmann::json;
@@ -41,9 +42,50 @@ Core::~Core()
     // ft_library_.reset();
 }
 
-UniquePtr<Read> Core::open_builtin_file(const String& path)
+UniquePtr<Read> Core::read_builtin_file(const String& path)
 {
     return builtin_archive_->open(path);
+}
+
+UniquePtr<Read> Core::read_file_system_file(const String& path)
+{
+    auto file = std::make_unique<nx::fs::File>(path);
+    if (file->open_read()) {
+        return file;
+    }
+    return nullptr;
+}
+
+UniquePtr<Read> Core::read_file(const String& file_uri)
+{
+    try {
+        Url u1(file_uri);
+        auto scheme = u1.scheme();
+        auto path = u1.path();
+        if (scheme == "file") {
+            return read_file_system_file(path);
+        } else if (scheme == "builtin") {
+            return read_builtin_file(path);
+        } else {
+            return nullptr;
+        }
+    } catch (...) {
+        LOG("url parse error: %s\n", file_uri.c_str());
+        return nullptr;
+    }
+}
+
+Optional<ByteBuffer> Core::read_file_data(const String& path)
+{
+    auto reader = read_file(path);
+    if (reader == nullptr)
+        return std::nullopt;
+
+    auto ret = reader->read_all();
+    if (std::holds_alternative<IO_Error>(ret)) {
+        return std::nullopt;
+    }
+    return std::get<ByteBuffer>(std::move(ret));
 }
 
 void Core::set_startup_config(const StartupConfig& config)

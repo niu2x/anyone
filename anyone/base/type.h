@@ -22,6 +22,9 @@ namespace anyone {
 
 using namespace nx;
 
+template <class K, class V>
+using Map = std::map<K, V>;
+
 template <class T>
 class Singleton {
 public:

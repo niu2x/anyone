@@ -15,8 +15,11 @@ target_sources(anyone_main PRIVATE
 	mesh.cpp
 	camera.cpp
 	mesh_manager.cpp
+
 	embed/SpaceMono_Regular.cpp
 	embed/builtin.cpp
+
+	url-parser/url.cpp
 )
 
 target_include_directories(anyone_main PUBLIC

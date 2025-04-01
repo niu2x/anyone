@@ -1,7 +1,15 @@
+$#include "main/mesh_manager.h"
+$#include "main/mesh.h"
 $#include "main/core.h"
 $#include "platform/api/support.h"
 
 namespace anyone {
+
+class Mesh {}
+
+class MeshManager {
+    Mesh* load_mesh(const char* name, const char* path);
+}
 
 class PlatformSupport {
 	void set_full_screen(bool);
@@ -10,6 +18,7 @@ class PlatformSupport {
 class Core {
 	static Core* get_singleton_ptr();
 	PlatformSupport* get_platform_support();
+	MeshManager* get_mesh_manager();
 
 };
 
