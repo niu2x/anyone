@@ -10,3 +10,6 @@
 [submodule "libzip"]
 	path = libzip
 	url = https://github.com/nih-at/libzip
+[submodule "assimp"]
+	path = assimp
+	url = git@github.com:assimp/assimp.git

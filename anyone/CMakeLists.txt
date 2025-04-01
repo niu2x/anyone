@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
 project ( Anyone VERSION "1.0.2" LANGUAGES CXX C )
 
 find_package(nx REQUIRED)
+find_package(assimp REQUIRED)
 find_package(freetype REQUIRED)
 find_package(RmlUi REQUIRED)
 
