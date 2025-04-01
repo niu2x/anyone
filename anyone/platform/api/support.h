@@ -81,6 +81,12 @@ struct MaterialParam {
     MaterialParamValue value;
 };
 
+enum class BlendType {
+    NONE,
+    // ADD,
+    NORMAL,
+};
+
 class Material {
 public:
     Material();
@@ -89,7 +95,12 @@ public:
     virtual void set_param_vec2(const char* name, float args[]) = 0;
     virtual void set_param_vec3(const char* name, float args[]) = 0;
     virtual void set_param_vec4(const char* name, float args[]) = 0;
-    virtual void use() = 0;
+    virtual void use();
+
+    void set_blend_type(BlendType b) { blend_type_ = b; }
+
+private:
+    BlendType blend_type_;
 };
 
 class IndiceBuffer {
@@ -192,7 +203,7 @@ public:
     virtual void draw(const DrawOperation& operation);
     virtual Material* create_rml_ui_material() = 0;
     virtual void destroy_material(Material* vbo) = 0;
-    // virtual set_viewport(int x, int y, int w, int h) = 0;
+    virtual void set_blend_type(BlendType b) = 0;
 
     void set_frame_stats(FrameStats* stats) { frame_stats_ = stats; }
 

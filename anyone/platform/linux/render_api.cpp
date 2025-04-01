@@ -107,6 +107,7 @@ Material* OpenGL_API::create_rml_ui_material()
     auto m = new GL_Material;
     bool succ = m->compile_program(vertex_source, fragment_source);
     NX_ASSERT(succ, "create_rml_ui_material fail");
+    m->set_blend_type(BlendType::NORMAL);
     return m;
 }
 void OpenGL_API::destroy_material(Material* m) { delete m; }
@@ -122,6 +123,28 @@ void OpenGL_API::destroy_texture_2d(Texture2D* tex) { delete tex; }
 IndiceBuffer* OpenGL_API::create_indice_buffer() { return new GL_IndiceBuffer; }
 
 void OpenGL_API::destroy_indice_buffer(IndiceBuffer* veo) { delete veo; }
+
+void OpenGL_API::set_blend_type(BlendType b)
+{
+    switch (b) {
+        case BlendType::NONE: {
+            glDisable(GL_BLEND);
+            break;
+        }
+
+        // case BlendType::ADD: {
+        //     glEnable(GL_BLEND);
+            // glBlendFunc(GL_ONE, GL_ONE);
+        //     break;
+        // }
+
+        case BlendType::NORMAL: {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            break;
+        }
+    }
+}
 
 struct AttrDesc {
     int num_component;
@@ -343,29 +366,33 @@ bool GL_Material::compile_program(const char* vertex, const char* fragment)
 void GL_Material::set_param_texture(const char* name, int tex_unit)
 {
     auto location = glGetUniformLocation(program_, name);
-    NX_ASSERT(location >= 0, "invalid uniform: %s", name);
+    // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform1i(location, tex_unit);
     // LOG("set tex %s:%d %d", name, location, tex_unit);
 }
 void GL_Material::set_param_vec2(const char* name, float args[])
 {
     auto location = glGetUniformLocation(program_, name);
-    NX_ASSERT(location >= 0, "invalid uniform: %s", name);
+    // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform2fv(location, 1, args);
     // LOG("set vec2 %s:%d %f %f", name, location, args[0], args[1]);
 }
 void GL_Material::set_param_vec3(const char* name, float args[])
 {
     auto location = glGetUniformLocation(program_, name);
-    NX_ASSERT(location >= 0, "invalid uniform: %s", name);
+    // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform3fv(location, 1, args);
 }
 void GL_Material::set_param_vec4(const char* name, float args[])
 {
     auto location = glGetUniformLocation(program_, name);
-    NX_ASSERT(location >= 0, "invalid uniform: %s", name);
+    // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform4fv(location, 1, args);
 }
-void GL_Material::use() { glUseProgram(program_); }
+void GL_Material::use()
+{
+    Material::use();
+    glUseProgram(program_);
+}
 
 } // namespace anyone

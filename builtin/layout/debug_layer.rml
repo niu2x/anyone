@@ -2,6 +2,12 @@
 	<head>
 		<link type="text/rcss" href="builtin:///style/rml.rcss"/>
 		<link type="text/rcss" href="builtin:///style/default.rcss"/>
+
+		<style>
+		p {
+			color: white;
+		}
+		</style>
 	</head>
 	<body>
 		<p> FPS: <span id="fps">0</span> </p>

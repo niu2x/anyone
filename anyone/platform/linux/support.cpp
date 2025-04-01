@@ -53,6 +53,8 @@ void PlatformLinux::init_window()
 {
     NX_ASSERT(native_window_ == nullptr, "Already exist native_window_");
 
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 4);
+
     window_flags_ = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
     native_window_ = SDL_CreateWindow(
         "Anyone Game", 0, 0, 512, 256, window_flags_);
@@ -62,7 +64,7 @@ void PlatformLinux::init_window()
     SDL_GL_SetSwapInterval(1);
     gladLoadGL();
 
-    glDisable(GL_MULTISAMPLE);
+    glEnable(GL_MULTISAMPLE);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_STENCIL_TEST);
     glDisable(GL_BLEND);

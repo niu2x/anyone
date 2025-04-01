@@ -104,7 +104,7 @@ void Core::notify_render_api_ready()
 void Core::setup_after_render_api_ready()
 {
     render_api_->set_frame_stats(&frame_stats_);
-    render_api_->set_clear_color(Color::BLUE);
+    render_api_->set_clear_color({0.3, 0.3, 0.3, 0.3});
 
     render_system_ = std::make_unique<RenderSystem>(render_api_);
     mesh_manager_ = std::make_unique<MeshManager>();

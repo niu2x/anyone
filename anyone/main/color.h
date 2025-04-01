@@ -8,6 +8,7 @@ struct Color {
     float r, g, b, a;
 
     static const Color BLUE;
+    static const Color WHITE;
 };
 
 } // namespace anyone

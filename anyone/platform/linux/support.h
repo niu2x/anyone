@@ -75,6 +75,8 @@ public:
 
     Material* create_rml_ui_material() override;
     void destroy_material(Material* vbo) override;
+
+    void set_blend_type(BlendType b) override;
 };
 
 class PlatformLinux : public PlatformSupport {

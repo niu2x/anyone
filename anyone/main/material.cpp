@@ -2,7 +2,7 @@
 
 namespace anyone {
 
-Material::Material() : program_(nullptr) { }
+Material::Material() : program_(nullptr), blend_(BlendType::NONE) { }
 
 Material::~Material() { SAFE_RELEASE(program_); }
 
@@ -25,6 +25,8 @@ void Material::use()
         }
         program_->set_uniform(u.second);
     }
+
+    GET_RENDER_API()->set_blend_type(blend_);
 }
 
 void Material::compile()
