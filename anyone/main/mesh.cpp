@@ -44,6 +44,8 @@ bool Mesh::load_from_file(const String& name)
         LOG("mesh_num %d", mesh_num);
         LOG("skeleton_num %d", skeleton_num);
         LOG("animation_num %d", animation_num);
+
+        
     }
 
     // We're done. Everything will be cleaned up by the importer destructor
