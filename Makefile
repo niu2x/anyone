@@ -1,4 +1,4 @@
-build: embed tolua++
+build: embed
 	./tools/build_cmake_project.sh assimp -DASSIMP_BUILD_TESTS=OFF
 	./tools/build_cmake_project.sh kazmath -DKAZMATH_BUILD_TESTS=OFF \
 											-DKAZMATH_BUILD_LUA_WRAPPER=OFF \

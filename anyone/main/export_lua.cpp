@@ -1,8 +1,7 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Tue Apr  1 18:05:58 2025.
+** Generated automatically by tolua++-1.0.93 on Tue Apr  1 18:13:11 2025.
 */
-
 
 #include "stdlib.h"
 #include "string.h"
