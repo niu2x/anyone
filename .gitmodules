@@ -12,7 +12,7 @@
 	url = https://github.com/nih-at/libzip
 [submodule "assimp"]
 	path = assimp
-	url = git@github.com:assimp/assimp.git
+	url = https://gitee.com/github-transport/assimp
 [submodule "kazmath"]
 	path = kazmath
 	url = git@github.com:Kazade/kazmath.git
