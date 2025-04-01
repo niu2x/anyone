@@ -47,7 +47,7 @@ public:
     void set_param_vec2(const char* name, float args[]) override;
     void set_param_vec3(const char* name, float args[]) override;
     void set_param_vec4(const char* name, float args[]) override;
-    void use() override;
+    void use(RenderAPI* api) override;
 
     bool compile_program(const char* vertex, const char* fragment);
 

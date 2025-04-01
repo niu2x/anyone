@@ -9,7 +9,6 @@ target_sources(anyone_main PRIVATE
 	rml_ui.cpp
 	core.cpp
 	archive.cpp
-	color.cpp
 	export_lua.cpp
 	render_system.cpp
 	mesh.cpp

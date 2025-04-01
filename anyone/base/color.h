@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base/type.h"
+#include "type.h"
 
 namespace anyone {
 

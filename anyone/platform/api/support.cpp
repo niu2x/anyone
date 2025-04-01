@@ -1,4 +1,4 @@
-#include "main/core.h"
+// #include "main/core.h"
 #include "support.h"
 
 namespace anyone {
@@ -63,6 +63,6 @@ Material::~Material() { }
 
 Material::Material() : blend_type_(BlendType::NONE) { }
 
-void Material::use() { GET_RENDER_API()->set_blend_type(blend_type_); }
+void Material::use(RenderAPI* api) { api->set_blend_type(blend_type_); }
 
 } // namespace anyone

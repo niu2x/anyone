@@ -256,7 +256,7 @@ void OpenGL_API::draw(const DrawOperation& op)
     }
 
     if (op.material) {
-        op.material->use();
+        op.material->use(this);
 
         if (op.material_params) {
             for (size_t i = 0; i < op.material_params_count; i++) {
@@ -389,9 +389,9 @@ void GL_Material::set_param_vec4(const char* name, float args[])
     // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform4fv(location, 1, args);
 }
-void GL_Material::use()
+void GL_Material::use(RenderAPI* api)
 {
-    Material::use();
+    Material::use(api);
     glUseProgram(program_);
 }
 
