@@ -16,28 +16,6 @@ namespace anyone {
 
 class PlatformSupport;
 class RML_UI;
-// class Font;
-// class FreeTypeLibrary;
-// class GL_Program;
-// class GL_VertexBuffer;
-// class GL_Texture2D;
-// class DebugText;
-
-// struct FramebufferSize {
-//     int width;
-//     int height;
-// };
-
-struct FrameStats {
-    TimePoint frame_start;
-    TimePoint frame_stop;
-    LatestCache<TimeDuration, 8> duration_cache;
-    TimeDuration avg_duration;
-    TimeDuration avg_fps;
-
-    void frame_begin();
-    void frame_end();
-};
 
 struct StartupConfig {
     PlatformSupport* platform_support;

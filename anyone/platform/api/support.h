@@ -5,6 +5,17 @@
 
 namespace anyone {
 
+struct FrameStats {
+    TimePoint frame_start;
+    TimePoint frame_stop;
+    LatestCache<TimeDuration, 8> duration_cache;
+    TimeDuration avg_duration;
+    TimeDuration avg_fps;
+    size_t draw_call;
+    void frame_begin();
+    void frame_end();
+};
+
 struct DPI {
     float hori;
     float vert;
@@ -168,6 +179,7 @@ struct DrawOperation {
 
 class RenderAPI {
 public:
+    RenderAPI();
     virtual ~RenderAPI() = 0;
     virtual void clear() = 0;
     virtual void set_clear_color(const Color& color) = 0;
@@ -177,11 +189,15 @@ public:
     virtual void destroy_indice_buffer(IndiceBuffer* vbo) = 0;
     virtual Texture2D* create_texture_2d() = 0;
     virtual void destroy_texture_2d(Texture2D* vbo) = 0;
-    virtual void draw(const DrawOperation& operation) = 0;
-
+    virtual void draw(const DrawOperation& operation);
     virtual Material* create_rml_ui_material() = 0;
     virtual void destroy_material(Material* vbo) = 0;
     // virtual set_viewport(int x, int y, int w, int h) = 0;
+
+    void set_frame_stats(FrameStats* stats) { frame_stats_ = stats; }
+
+private:
+    FrameStats* frame_stats_;
 };
 
 class PlatformSupport {

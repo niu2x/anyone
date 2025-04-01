@@ -208,6 +208,8 @@ void GL_IndiceBuffer::bind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, name_); }
 
 void OpenGL_API::draw(const DrawOperation& op)
 {
+    RenderAPI::draw(op);
+
     op.vertex_buffer->bind();
     op.indice_buffer->bind();
 

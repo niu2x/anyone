@@ -4,6 +4,16 @@ namespace anyone {
 
 PlatformSupport::~PlatformSupport() { }
 
+void RenderAPI::draw(const DrawOperation& op)
+{
+    (void)op;
+    frame_stats_->draw_call++;
+}
+
+FrameStats init_frame_stats;
+
+RenderAPI::RenderAPI() : frame_stats_(&init_frame_stats) { }
+
 RenderAPI::~RenderAPI() { }
 
 VertexBuffer::VertexBuffer() : buf_size_(0) { }

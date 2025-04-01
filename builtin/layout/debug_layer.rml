@@ -1,0 +1,10 @@
+<rml>
+	<head>
+		<link type="text/rcss" href="builtin:///style/rml.rcss"/>
+		<link type="text/rcss" href="builtin:///style/default.rcss"/>
+	</head>
+	<body>
+		<p> FPS: <span id="fps">0</span> </p>
+		<p> DrawCall: <span id="draw_call">0</span> </p>
+ 	</body>
+</rml>

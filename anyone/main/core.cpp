@@ -63,12 +63,14 @@ void Core::notify_render_api_ready()
 
 void Core::setup_after_render_api_ready()
 {
+    render_api_->set_frame_stats(&frame_stats_);
     render_api_->set_clear_color(Color::BLUE);
+
     RML_UI::setup();
     debug_layer_ = std::make_unique<RML_UI>();
 
-    debug_layer_->load_document("builtin:///layout/debug.rml");
-    
+    debug_layer_->load_document("builtin:///layout/debug_layer.rml");
+
     lua_ = luaL_newstate();
     init_lua();
 }
@@ -156,14 +158,25 @@ int Core::load_lua()
 void Core::kick_one_frame()
 {
     frame_stats_.frame_begin();
+
     render();
     update();
+
     frame_stats_.frame_end();
 
-    auto element = debug_layer_->get_document()->QuerySelector("#fps");
     char tmp[128];
-    sprintf(tmp, "%.2f", frame_stats_.avg_fps);
-    element->SetInnerRML(tmp);
+    {
+        auto element = debug_layer_->get_document()->QuerySelector("#fps");
+        sprintf(tmp, "%.2f", frame_stats_.avg_fps);
+        element->SetInnerRML(tmp);
+    }
+    {
+        auto element = debug_layer_->get_document()->QuerySelector(
+            "#draw_call");
+
+        sprintf(tmp, "%lu", frame_stats_.draw_call);
+        element->SetInnerRML(tmp);
+    }
     debug_layer_->update();
 
 }
@@ -252,7 +265,12 @@ void Core::notify_keyboard_event(const KeyboardEvent& event)
     }
 }
 
-void FrameStats::frame_begin() { this->frame_start = time_now(); }
+void FrameStats::frame_begin()
+{
+    this->frame_start = time_now();
+    this->draw_call = 0;
+}
+
 void FrameStats::frame_end()
 {
     this->frame_stop = time_now();
