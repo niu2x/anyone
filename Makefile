@@ -1,5 +1,10 @@
 build: embed
 	./tools/build_cmake_project.sh assimp -DASSIMP_BUILD_TESTS=OFF
+	./tools/build_cmake_project.sh kazmath -DKAZMATH_BUILD_TESTS=OFF \
+											-DKAZMATH_BUILD_LUA_WRAPPER=OFF \
+											-DKAZMATH_BUILD_JNI_WRAPPER=OFF \
+											-DKAZMATH_BUILD_GL_UTILS=OFF \
+											-DCMAKE_INSTALL_PREFIX=$(PWD)/dist
 	./tools/build_cmake_project.sh RmlUi
 	./tools/build_cmake_project.sh freetype
 	./tools/build_cmake_project.sh libzip -DENABLE_OPENSSL=OFF \

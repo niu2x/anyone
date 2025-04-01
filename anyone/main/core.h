@@ -37,6 +37,8 @@ public:
     PlatformSupport* get_platform_support() const { return platform_support_; }
     const DPI& get_dpi() const { return dpi_; }
     RenderAPI* get_render_api() const { return render_api_; }
+    MeshManager* get_mesh_manager() const { return mesh_manager_.get(); }
+    RenderSystem* get_render_system() const { return render_system_.get(); }
 
     // void dbg_printf(int x, int y, const char* xx, ...);
     // FreeTypeLibrary* get_ft_library() const { return ft_library_.get(); }
