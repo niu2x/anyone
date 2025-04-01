@@ -61,24 +61,24 @@ protected:
     VertexLayout vertex_layout_;
 };
 
-enum MaterialParamType {
+enum ProgramParamType {
     TEXTURE,
     VEC2,
     VEC3,
     VEC4,
 };
 
-struct MaterialParamValue {
-    MaterialParamType type;
+struct ProgramParamValue {
+    ProgramParamType type;
     union {
         int tex_unit;
         float* args;
     };
 };
 
-struct MaterialParam {
+struct ProgramParam {
     const char* name;
-    MaterialParamValue value;
+    ProgramParamValue value;
 };
 
 enum class BlendType {
@@ -169,6 +169,18 @@ protected:
 //     TRIANGLE,
 // };
 
+class Program {
+public:
+    Program();
+    virtual ~Program();
+    virtual void use() = 0;
+
+    virtual void set_param_texture(const char* name, int tex_unit) = 0;
+    virtual void set_param_vec2(const char* name, float args[]) = 0;
+    virtual void set_param_vec3(const char* name, float args[]) = 0;
+    virtual void set_param_vec4(const char* name, float args[]) = 0;
+};
+
 enum class PolygonMode {
     POINT,
     LINE,
@@ -185,9 +197,9 @@ struct DrawOperation {
     Texture2D* texture;
     Texture2D** textures;
 
-    Material* material;
-    MaterialParam* material_params;
-    size_t material_params_count;
+    Program* program;
+    ProgramParam* program_params;
+    size_t program_params_count;
 };
 
 class RenderAPI {
@@ -203,8 +215,8 @@ public:
     virtual Texture2D* create_texture_2d() = 0;
     virtual void destroy_texture_2d(Texture2D* vbo) = 0;
     virtual void draw(const DrawOperation& operation);
-    virtual Material* create_rml_ui_material() = 0;
-    virtual void destroy_material(Material* vbo) = 0;
+    virtual Program* create_rml_ui_program() = 0;
+    virtual void destroy_program(Program* vbo) = 0;
     virtual void set_blend_type(BlendType b) = 0;
 
     void set_frame_stats(FrameStats* stats) { frame_stats_ = stats; }

@@ -39,16 +39,15 @@ private:
     GLuint name_;
 };
 
-class GL_Material : public Material {
+class GL_Program : public Program {
 public:
-    GL_Material();
-    ~GL_Material();
+    GL_Program();
+    ~GL_Program();
     void set_param_texture(const char* name, int tex_unit) override;
     void set_param_vec2(const char* name, float args[]) override;
     void set_param_vec3(const char* name, float args[]) override;
     void set_param_vec4(const char* name, float args[]) override;
-    void use(RenderAPI* api) override;
-
+    void use() override;
     bool compile_program(const char* vertex, const char* fragment);
 
 private:
@@ -73,8 +72,8 @@ public:
     Texture2D* create_texture_2d() override;
     void destroy_texture_2d(Texture2D* vbo) override;
 
-    Material* create_rml_ui_material() override;
-    void destroy_material(Material* vbo) override;
+    Program* create_rml_ui_program() override;
+    void destroy_program(Program* vbo) override;
 
     void set_blend_type(BlendType b) override;
 };

@@ -65,4 +65,8 @@ Material::Material() : blend_type_(BlendType::NONE) { }
 
 void Material::use(RenderAPI* api) { api->set_blend_type(blend_type_); }
 
+Program::Program() { }
+
+Program::~Program() { }
+
 } // namespace anyone

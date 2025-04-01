@@ -34,7 +34,7 @@ struct GPU_Vertex {
 
 class MyRenderInterface : public Rml::RenderInterface {
 public:
-    MyRenderInterface() : material_(nullptr) { }
+    MyRenderInterface() : program_(nullptr) { }
     ~MyRenderInterface() { }
     CompiledGeometryHandle CompileGeometry(Span<const Vertex> vertices,
                                            Span<const int> indices) override
@@ -86,13 +86,13 @@ public:
 
         float offset[2] = { translation[0], translation[1] };
 
-        MaterialParam params[3] = {
+        ProgramParam params[3] = {
             { .name = "tex",
-              .value = { MaterialParamType::TEXTURE, { .tex_unit = 0 } } },
+              .value = { ProgramParamType::TEXTURE, { .tex_unit = 0 } } },
             { .name = "offset",
-              .value = { MaterialParamType::VEC2, { .args = offset } } },
+              .value = { ProgramParamType::VEC2, { .args = offset } } },
             { .name = "canvas_size",
-              .value = { MaterialParamType::VEC2, { .args = canvas_size_ } } },
+              .value = { ProgramParamType::VEC2, { .args = canvas_size_ } } },
         };
 
         auto container = (VertexIndiceBuffer*)geometry;
@@ -103,9 +103,9 @@ public:
             .count = container->veo->get_indice_count(),
             .texture = (Texture2D*)texture,
             .textures = nullptr,
-            .material = material_,
-            .material_params = params,
-            .material_params_count = 3,
+            .program = program_,
+            .program_params = params,
+            .program_params_count = 3,
         });
     }
 
@@ -143,7 +143,7 @@ public:
     void EnableScissorRegion(bool enable) override { }
     void SetScissorRegion(Rectanglei region) override { }
 
-    void set_material(Material* m) { material_ = m; }
+    void set_program(Program* m) { program_ = m; }
     void set_canvas_size(const IntSize& s)
     {
         canvas_size_[0] = s.width;
@@ -151,7 +151,7 @@ public:
     }
 
 private:
-    Material* material_;
+    Program* program_;
     float canvas_size_[2];
 };
 
@@ -273,15 +273,15 @@ public:
 MyRenderInterface* render_impl_ = nullptr;
 MySystemInterface* system_impl_ = nullptr;
 MyFileInterface* file_impl_ = nullptr;
-Material* rml_ui_material_ = nullptr;
+Program* rml_ui_program_ = nullptr;
 
 void RML_UI::setup()
 {
     render_impl_ = new MyRenderInterface;
     system_impl_ = new MySystemInterface;
     file_impl_ = new MyFileInterface;
-    rml_ui_material_ = GET_RENDER_API()->create_rml_ui_material();
-    render_impl_->set_material(rml_ui_material_);
+    rml_ui_program_ = GET_RENDER_API()->create_rml_ui_program();
+    render_impl_->set_program(rml_ui_program_);
 
     Rml::SetRenderInterface(render_impl_);
     Rml::SetSystemInterface(system_impl_);
@@ -296,7 +296,7 @@ void RML_UI::setup()
 void RML_UI::cleanup()
 {
     Rml::Shutdown();
-    GET_RENDER_API()->destroy_material(rml_ui_material_);
+    GET_RENDER_API()->destroy_program(rml_ui_program_);
     delete system_impl_;
     delete render_impl_;
     // delete file_impl_;
@@ -305,7 +305,7 @@ void RML_UI::cleanup()
 RML_UI::RML_UI()
 : context_(nullptr)
 , document_(nullptr)
-// , rml_ui_material_(nullptr)
+// , rml_ui_program_(nullptr)
 , canvas_size_ { 0, 0 }
 {
     canvas_size_ = GET_CORE()->get_framebuffer_size();
