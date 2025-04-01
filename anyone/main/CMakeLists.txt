@@ -13,6 +13,7 @@ target_sources(anyone_main PRIVATE
 	export_lua.cpp
 	render_system.cpp
 	mesh.cpp
+	camera.cpp
 	mesh_manager.cpp
 	embed/SpaceMono_Regular.cpp
 	embed/builtin.cpp
@@ -20,6 +21,7 @@ target_sources(anyone_main PRIVATE
 
 target_include_directories(anyone_main PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
+	${BUILDING_DIST}/include
 )
 
 target_link_libraries(anyone_main PUBLIC 
@@ -30,6 +32,11 @@ target_link_libraries(anyone_main PUBLIC
 	assimp::assimp
 	freetype
 	tolua
+	kazmath
+)
+
+target_link_directories(anyone_main PUBLIC
+	${BUILDING_DIST}/lib
 )
 
 anyone_init_cxx_target(anyone_main)

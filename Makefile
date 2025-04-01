@@ -17,6 +17,7 @@ build: embed
 										-DNX_BUILD_LIBZIP=ON \
 										-Dlibzip_DIR=$(PWD)/dist/lib/cmake/libzip/
 	cmake -S anyone -B build/anyone -DCMAKE_BUILD_TYPE=Debug \
+									-DBUILDING_DIST=$(PWD)/dist \
 									-Dnx_DIR=$(PWD)/dist/lib/cmake/niu2x \
 									-DRmlUi_DIR=$(PWD)/dist/lib/cmake/RmlUi \
 									-Dlibzip_DIR=$(PWD)/dist/lib/cmake/libzip/ \
