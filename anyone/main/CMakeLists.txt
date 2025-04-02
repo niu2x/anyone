@@ -11,10 +11,10 @@ target_sources(anyone_main PRIVATE
 	archive.cpp
 	export_lua.cpp
 	render_system.cpp
-	mesh.cpp
+	model.cpp
 	camera.cpp
 	material.cpp
-	mesh_manager.cpp
+	model_manager.cpp
 
 	embed/SpaceMono_Regular.cpp
 	embed/builtin.cpp

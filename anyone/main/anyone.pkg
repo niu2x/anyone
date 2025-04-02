@@ -1,14 +1,14 @@
-$#include "main/mesh_manager.h"
-$#include "main/mesh.h"
+$#include "main/model_manager.h"
+$#include "main/model.h"
 $#include "main/core.h"
 $#include "platform/api/support.h"
 
 namespace anyone {
 
-class Mesh {}
+class Model {}
 
-class MeshManager {
-    Mesh* load_mesh(const char* name, const char* path);
+class ModelManager {
+    Model* load_model(const char* name, const char* path);
 }
 
 class PlatformSupport {
@@ -18,7 +18,7 @@ class PlatformSupport {
 class Core {
 	static Core* get_singleton_ptr();
 	PlatformSupport* get_platform_support();
-	MeshManager* get_mesh_manager();
+	ModelManager* get_model_manager();
 
 };
 

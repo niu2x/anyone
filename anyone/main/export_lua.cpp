@@ -1,6 +1,6 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Tue Apr  1 18:13:11 2025.
+** Generated automatically by tolua++-1.0.93 on Thu Apr  3 00:12:19 2025.
 */
 
 #include "stdlib.h"
@@ -14,53 +14,53 @@
 /* Exported function */
 TOLUA_API int  tolua_anyone_open (lua_State* tolua_S);
 
-#include "main/mesh_manager.h"
-#include "main/mesh.h"
+#include "main/model_manager.h"
+#include "main/model.h"
 #include "main/core.h"
 #include "platform/api/support.h"
 
 /* function to register type */
 static void tolua_reg_types (lua_State* tolua_S)
 {
- tolua_usertype(tolua_S,"anyone::Mesh");
- tolua_usertype(tolua_S,"anyone::PlatformSupport");
- tolua_usertype(tolua_S,"anyone::MeshManager");
- tolua_usertype(tolua_S,"anyone::Core");
+    tolua_usertype(tolua_S, "anyone::Model");
+    tolua_usertype(tolua_S, "anyone::Core");
+    tolua_usertype(tolua_S, "anyone::PlatformSupport");
+    tolua_usertype(tolua_S, "anyone::ModelManager");
 }
 
-/* method: load_mesh of class  anyone::MeshManager */
-#ifndef TOLUA_DISABLE_tolua_anyone_anyone_MeshManager_load_mesh00
-static int tolua_anyone_anyone_MeshManager_load_mesh00(lua_State* tolua_S)
+/* method: load_model of class  anyone::ModelManager */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_ModelManager_load_model00
+static int tolua_anyone_anyone_ModelManager_load_model00(lua_State* tolua_S)
 {
 #ifndef TOLUA_RELEASE
  tolua_Error tolua_err;
- if (
-     !tolua_isusertype(tolua_S,1,"anyone::MeshManager",0,&tolua_err) ||
-     !tolua_isstring(tolua_S,2,0,&tolua_err) ||
-     !tolua_isstring(tolua_S,3,0,&tolua_err) ||
-     !tolua_isnoobj(tolua_S,4,&tolua_err)
- )
-  goto tolua_lerror;
+ if (!tolua_isusertype(tolua_S, 1, "anyone::ModelManager", 0, &tolua_err)
+     || !tolua_isstring(tolua_S, 2, 0, &tolua_err)
+     || !tolua_isstring(tolua_S, 3, 0, &tolua_err)
+     || !tolua_isnoobj(tolua_S, 4, &tolua_err))
+     goto tolua_lerror;
  else
 #endif
  {
-  anyone::MeshManager* self = (anyone::MeshManager*)  tolua_tousertype(tolua_S,1,0);
-  const char* name = ((const char*)  tolua_tostring(tolua_S,2,0));
-  const char* path = ((const char*)  tolua_tostring(tolua_S,3,0));
+     anyone::ModelManager* self = (anyone::ModelManager*)tolua_tousertype(
+         tolua_S, 1, 0);
+     const char* name = ((const char*)tolua_tostring(tolua_S, 2, 0));
+     const char* path = ((const char*)tolua_tostring(tolua_S, 3, 0));
 #ifndef TOLUA_RELEASE
-  if (!self) tolua_error(tolua_S,"invalid 'self' in function 'load_mesh'", NULL);
+     if (!self)
+         tolua_error(tolua_S, "invalid 'self' in function 'load_model'", NULL);
 #endif
   {
-   anyone::Mesh* tolua_ret = (anyone::Mesh*)  self->load_mesh(name,path);
-    tolua_pushusertype(tolua_S,(void*)tolua_ret,"anyone::Mesh");
+      anyone::Model* tolua_ret = (anyone::Model*)self->load_model(name, path);
+      tolua_pushusertype(tolua_S, (void*)tolua_ret, "anyone::Model");
   }
  }
  return 1;
 #ifndef TOLUA_RELEASE
  tolua_lerror:
- tolua_error(tolua_S,"#ferror in function 'load_mesh'.",&tolua_err);
- return 0;
-#endif
+     tolua_error(tolua_S, "#ferror in function 'load_model'.", &tolua_err);
+     return 0;
+    #endif
 }
 #endif //#ifndef TOLUA_DISABLE
 
@@ -157,9 +157,9 @@ static int tolua_anyone_anyone_Core_get_platform_support00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
-/* method: get_mesh_manager of class  anyone::Core */
-#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Core_get_mesh_manager00
-static int tolua_anyone_anyone_Core_get_mesh_manager00(lua_State* tolua_S)
+/* method: get_model_manager of class  anyone::Core */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Core_get_model_manager00
+static int tolua_anyone_anyone_Core_get_model_manager00(lua_State* tolua_S)
 {
 #ifndef TOLUA_RELEASE
  tolua_Error tolua_err;
@@ -173,19 +173,23 @@ static int tolua_anyone_anyone_Core_get_mesh_manager00(lua_State* tolua_S)
  {
   anyone::Core* self = (anyone::Core*)  tolua_tousertype(tolua_S,1,0);
 #ifndef TOLUA_RELEASE
-  if (!self) tolua_error(tolua_S,"invalid 'self' in function 'get_mesh_manager'", NULL);
+  if (!self)
+      tolua_error(
+          tolua_S, "invalid 'self' in function 'get_model_manager'", NULL);
 #endif
   {
-   anyone::MeshManager* tolua_ret = (anyone::MeshManager*)  self->get_mesh_manager();
-    tolua_pushusertype(tolua_S,(void*)tolua_ret,"anyone::MeshManager");
+      anyone::ModelManager* tolua_ret = (anyone::ModelManager*)
+                                            self->get_model_manager();
+      tolua_pushusertype(tolua_S, (void*)tolua_ret, "anyone::ModelManager");
   }
  }
  return 1;
 #ifndef TOLUA_RELEASE
  tolua_lerror:
- tolua_error(tolua_S,"#ferror in function 'get_mesh_manager'.",&tolua_err);
- return 0;
-#endif
+     tolua_error(
+         tolua_S, "#ferror in function 'get_model_manager'.", &tolua_err);
+     return 0;
+    #endif
 }
 #endif //#ifndef TOLUA_DISABLE
 
@@ -198,23 +202,32 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
  tolua_beginmodule(tolua_S,NULL);
   tolua_module(tolua_S,"anyone",0);
   tolua_beginmodule(tolua_S,"anyone");
-   tolua_cclass(tolua_S,"Mesh","anyone::Mesh","",NULL);
-   tolua_beginmodule(tolua_S,"Mesh");
-   tolua_endmodule(tolua_S);
-   tolua_cclass(tolua_S,"MeshManager","anyone::MeshManager","",NULL);
-   tolua_beginmodule(tolua_S,"MeshManager");
-    tolua_function(tolua_S,"load_mesh",tolua_anyone_anyone_MeshManager_load_mesh00);
-   tolua_endmodule(tolua_S);
-   tolua_cclass(tolua_S,"PlatformSupport","anyone::PlatformSupport","",NULL);
-   tolua_beginmodule(tolua_S,"PlatformSupport");
-    tolua_function(tolua_S,"set_full_screen",tolua_anyone_anyone_PlatformSupport_set_full_screen00);
-   tolua_endmodule(tolua_S);
-   tolua_cclass(tolua_S,"Core","anyone::Core","",NULL);
-   tolua_beginmodule(tolua_S,"Core");
-    tolua_function(tolua_S,"get_singleton_ptr",tolua_anyone_anyone_Core_get_singleton_ptr00);
-    tolua_function(tolua_S,"get_platform_support",tolua_anyone_anyone_Core_get_platform_support00);
-    tolua_function(tolua_S,"get_mesh_manager",tolua_anyone_anyone_Core_get_mesh_manager00);
-   tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "Model", "anyone::Model", "", NULL);
+  tolua_beginmodule(tolua_S, "Model");
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "ModelManager", "anyone::ModelManager", "", NULL);
+  tolua_beginmodule(tolua_S, "ModelManager");
+  tolua_function(
+      tolua_S, "load_model", tolua_anyone_anyone_ModelManager_load_model00);
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "PlatformSupport", "anyone::PlatformSupport", "", NULL);
+  tolua_beginmodule(tolua_S, "PlatformSupport");
+  tolua_function(tolua_S,
+                 "set_full_screen",
+                 tolua_anyone_anyone_PlatformSupport_set_full_screen00);
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "Core", "anyone::Core", "", NULL);
+  tolua_beginmodule(tolua_S, "Core");
+  tolua_function(tolua_S,
+                 "get_singleton_ptr",
+                 tolua_anyone_anyone_Core_get_singleton_ptr00);
+  tolua_function(tolua_S,
+                 "get_platform_support",
+                 tolua_anyone_anyone_Core_get_platform_support00);
+  tolua_function(tolua_S,
+                 "get_model_manager",
+                 tolua_anyone_anyone_Core_get_model_manager00);
+  tolua_endmodule(tolua_S);
   tolua_endmodule(tolua_S);
  tolua_endmodule(tolua_S);
  return 1;

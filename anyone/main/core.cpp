@@ -1,7 +1,7 @@
 #include "core.h"
 #include "render_system.h"
 #include "rml_ui.h"
-#include "mesh_manager.h"
+#include "model_manager.h"
 #include "embed/builtin.h"
 #include "url-parser/url.hpp"
 #include "3rd/nlohmann/json.hpp"
@@ -18,7 +18,7 @@ Core::Core()
 , builtin_archive_(nullptr)
 , debug_layer_(nullptr)
 , render_system_(nullptr)
-, mesh_manager_(nullptr)
+, model_manager_(nullptr)
 , project_dir_(std::nullopt)
 , dpi_ { 90, 90 }
 , framebuffer_size_ { 1, 1 }
@@ -102,7 +102,7 @@ void Core::setup_after_render_api_ready()
     render_api_->set_clear_color({0.3, 0.3, 0.3, 0.3});
 
     render_system_ = std::make_unique<RenderSystem>(render_api_);
-    mesh_manager_ = std::make_unique<MeshManager>();
+    model_manager_ = std::make_unique<ModelManager>();
 
     RML_UI::setup();
     debug_layer_ = std::make_unique<RML_UI>();
@@ -118,7 +118,7 @@ void Core::cleanup_before_render_api_gone()
     lua_close(lua_);
     debug_layer_.reset();
     RML_UI::cleanup();
-    mesh_manager_.reset();
+    model_manager_.reset();
     render_system_.reset();
 }
 

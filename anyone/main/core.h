@@ -15,7 +15,7 @@ extern "C" {
 namespace anyone {
 
 class PlatformSupport;
-class MeshManager;
+class ModelManager;
 class RenderSystem;
 class RML_UI;
 
@@ -37,7 +37,7 @@ public:
     PlatformSupport* get_platform_support() const { return platform_support_; }
     const DPI& get_dpi() const { return dpi_; }
     RenderAPI* get_render_api() const { return render_api_; }
-    MeshManager* get_mesh_manager() const { return mesh_manager_.get(); }
+    ModelManager* get_model_manager() const { return model_manager_.get(); }
     RenderSystem* get_render_system() const { return render_system_.get(); }
 
     // void dbg_printf(int x, int y, const char* xx, ...);
@@ -76,7 +76,7 @@ private:
 
     UniquePtr<RML_UI> debug_layer_;
     UniquePtr<RenderSystem> render_system_;
-    UniquePtr<MeshManager> mesh_manager_;
+    UniquePtr<ModelManager> model_manager_;
 
     Optional<String> project_dir_;
     DPI dpi_;

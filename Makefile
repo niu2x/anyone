@@ -1,13 +1,11 @@
 build:
-	./tools/build_cmake_project.sh assimp -DASSIMP_BUILD_TESTS=OFF \
-											-DZLIB_ROOT=$(PWD)/dist
+	./tools/build_cmake_project.sh RmlUi
+	./tools/build_cmake_project.sh zlib -DZLIB_BUILD_STATIC=OFF
 	./tools/build_cmake_project.sh kazmath -DKAZMATH_BUILD_TESTS=OFF \
 											-DKAZMATH_BUILD_LUA_WRAPPER=OFF \
 											-DKAZMATH_BUILD_JNI_WRAPPER=OFF \
 											-DKAZMATH_BUILD_GL_UTILS=OFF \
 											-DCMAKE_INSTALL_PREFIX=$(PWD)/dist
-	./tools/build_cmake_project.sh RmlUi
-	./tools/build_cmake_project.sh zlib
 	./tools/build_cmake_project.sh libzip -DENABLE_OPENSSL=OFF \
 											-DBUILD_TOOLS=OFF \
 											-DZLIB_ROOT=$(PWD)/dist \
@@ -15,6 +13,9 @@ build:
 											-DBUILD_OSSFUZZ=OFF \
 											-DBUILD_EXAMPLES=OFF \
 											-DBUILD_DOC=OFF
+	./tools/build_cmake_project.sh assimp -DASSIMP_BUILD_TESTS=OFF \
+											-DZLIB_DIR=$(PWD)/dist \
+											-DZLIB_ROOT=$(PWD)/dist
 	./tools/build_cmake_project.sh nx -DNX_STATIC=ON \
 										-DNX_BUILD_LIBZIP=ON \
 										-Dlibzip_DIR=$(PWD)/dist/lib/cmake/libzip/
