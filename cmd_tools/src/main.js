@@ -83,7 +83,11 @@ program.command("run")
     }
     const worker = spawn(anyone_rt,
       ['--project', dir], {
-        env: {DYLD_LIBRARY_PATH: anyone_lib_dir}
+        env: {
+          ...process.env,
+          DYLD_LIBRARY_PATH: anyone_lib_dir,
+          LD_LIBRARY_PATH: anyone_lib_dir,
+        }
       });
     await waitWork(worker);
   })
