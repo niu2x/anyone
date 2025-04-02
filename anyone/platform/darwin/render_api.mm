@@ -21,7 +21,7 @@ void Metal_API::clear() {
 void Metal_API::set_clear_color(const Color& color)
 {
     Metal_IMPL* impl = (__bridge Metal_IMPL*)pimp_;
-    // [impl set_clear_color: color];
+    impl.clear_color = MTLClearColorMake(color.r, color.g, color.b, color.a);
 }
 
 // VertexBuffer* Metal_API::create_vertex_buffer() { return nullptr; }

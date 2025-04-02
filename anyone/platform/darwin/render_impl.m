@@ -13,7 +13,7 @@
 }
 
 - (void) clear {
-	MTLClearColor color = MTLClearColorMake(1, 0, 0, 1);
+	MTLClearColor color = self.clear_color;
 	id<CAMetalDrawable> surface = [self.swap_chain nextDrawable];
     MTLRenderPassDescriptor *pass = [MTLRenderPassDescriptor renderPassDescriptor];
     pass.colorAttachments[0].clearColor = color;

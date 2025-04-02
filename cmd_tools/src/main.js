@@ -23,6 +23,7 @@ const __filename = fileURLToPath(
   import.meta.url);
 const __dirname = dirname(__filename);
 const anyone_rt = path.join(__dirname, "../../build/anyone/entry/anyone_rt")
+const anyone_lib_dir = path.join(__dirname, "../../dist/lib")
 
 function waitWork(worker) {
   return new Promise((resolve, reject) => {
@@ -81,7 +82,9 @@ program.command("run")
       dir = "./"
     }
     const worker = spawn(anyone_rt,
-      ['--project', dir]);
+      ['--project', dir], {
+        env: {DYLD_LIBRARY_PATH: anyone_lib_dir}
+      });
     await waitWork(worker);
   })
 
