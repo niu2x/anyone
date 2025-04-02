@@ -24,20 +24,24 @@ void Metal_API::set_clear_color(const Color& color)
     // [impl set_clear_color: color];
 }
 
-VertexBuffer* Metal_API::create_vertex_buffer() { return nullptr; }
-void Metal_API::destroy_vertex_buffer(VertexBuffer* vbo) { }
+// VertexBuffer* Metal_API::create_vertex_buffer() { return nullptr; }
 
-IndiceBuffer* Metal_API::create_indice_buffer() { return nullptr; }
-void Metal_API::destroy_indice_buffer(IndiceBuffer* vbo) { }
+// void Metal_API::destroy_vertex_buffer(VertexBuffer* vbo) { }
 
-Texture2D* Metal_API::create_texture_2d() { return nullptr; }
-void Metal_API::destroy_texture_2d(Texture2D* vbo) { }
+// IndiceBuffer* Metal_API::create_indice_buffer() { return nullptr; }
 
-void Metal_API::draw(const DrawOperation& operation) { }
+// void Metal_API::destroy_indice_buffer(IndiceBuffer* vbo) { }
 
-Program* Metal_API::create_rml_ui_program() { return nullptr; }
-void Metal_API::destroy_program(Program* vbo) { }
+// Texture2D* Metal_API::create_texture_2d() { return nullptr; }
 
-void Metal_API::set_blend_type(BlendType b) { }
+// void Metal_API::destroy_texture_2d(Texture2D* vbo) { }
+
+// void Metal_API::draw(const DrawOperation& operation) { }
+
+// Program* Metal_API::create_rml_ui_program() { return nullptr; }
+
+// void Metal_API::destroy_program(Program* vbo) { }
+
+// void Metal_API::set_blend_type(BlendType b) { }
 
 } // namespace anyone

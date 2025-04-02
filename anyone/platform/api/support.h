@@ -190,18 +190,19 @@ class RenderAPI {
 public:
     RenderAPI();
     virtual ~RenderAPI() = 0;
-    virtual void clear() = 0;
-    virtual void set_clear_color(const Color& color) = 0;
-    virtual VertexBuffer* create_vertex_buffer() = 0;
-    virtual void destroy_vertex_buffer(VertexBuffer* vbo) = 0;
-    virtual IndiceBuffer* create_indice_buffer() = 0;
-    virtual void destroy_indice_buffer(IndiceBuffer* vbo) = 0;
-    virtual Texture2D* create_texture_2d() = 0;
-    virtual void destroy_texture_2d(Texture2D* vbo) = 0;
+
+    virtual void clear();
+    virtual void set_clear_color(const Color& color);
+    virtual VertexBuffer* create_vertex_buffer();
+    virtual void destroy_vertex_buffer(VertexBuffer* vbo);
+    virtual IndiceBuffer* create_indice_buffer();
+    virtual void destroy_indice_buffer(IndiceBuffer* vbo);
+    virtual Texture2D* create_texture_2d();
+    virtual void destroy_texture_2d(Texture2D* vbo);
     virtual void draw(const DrawOperation& operation);
-    virtual Program* create_rml_ui_program() = 0;
-    virtual void destroy_program(Program* vbo) = 0;
-    virtual void set_blend_type(BlendType b) = 0;
+    virtual Program* create_rml_ui_program();
+    virtual void destroy_program(Program* vbo);
+    virtual void set_blend_type(BlendType b);
 
     void set_frame_stats(FrameStats* stats) { frame_stats_ = stats; }
 
