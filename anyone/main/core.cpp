@@ -34,12 +34,7 @@ Core::~Core()
     cleanup_before_render_api_gone();
     render_api_ = nullptr;
     platform_support_ = nullptr;
-
     builtin_archive_.reset();
-
-    // dbg_text_.reset();
-    // dbg_font_.reset();
-    // ft_library_.reset();
 }
 
 UniquePtr<Read> Core::read_builtin_file(const String& path)
@@ -133,8 +128,6 @@ void Core::render()
 {
     render_api_->clear();
     debug_layer_->render();
-    // dbg_printf(0, 0, "FPS: %.2f", frame_stats_.avg_fps);
-    // dbg_text_->render();
 }
 
 void Core::notify_framebuffer_size_changed()

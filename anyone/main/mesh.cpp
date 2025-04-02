@@ -9,9 +9,21 @@ namespace anyone {
 Mesh::Mesh(const String& name) : name_(name) { }
 Mesh::~Mesh() { }
 
-bool Mesh::load_from_file(const String& name)
+std::string get_file_extension(const String& filename)
 {
-    auto maybe_data = GET_CORE()->read_file_data(name);
+    // 找到最后一个点的位置
+    size_t dot_position = filename.find_last_of('.');
+    // 如果找不到点或点在字符串的开头（隐藏文件），返回空字符串
+    if (dot_position == std::string::npos || dot_position == 0) {
+        return "";
+    }
+    // 提取并返回扩展名
+    return filename.substr(dot_position + 1);
+}
+
+bool Mesh::load_from_file(const String& path)
+{
+    auto maybe_data = GET_CORE()->read_file_data(path);
     if (!maybe_data)
         return false;
 
@@ -21,11 +33,16 @@ bool Mesh::load_from_file(const String& name)
                         | aiProcess_JoinIdenticalVertices
                         | aiProcess_SortByPType;
 
+    auto hint = get_file_extension(path);
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFileFromMemory(
-        data.data(), data.size(), flags);
+        data.data(), data.size(), flags, hint.c_str());
 
     if (nullptr == scene) {
+        LOG("assimp load fail: %s, data_size: %lu, msg: %s",
+            path.c_str(),
+            data.size(),
+            importer.GetErrorString());
         return false;
     }
 
