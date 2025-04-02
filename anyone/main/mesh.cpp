@@ -62,7 +62,13 @@ bool Mesh::load_from_file(const String& path)
         LOG("skeleton_num %d", skeleton_num);
         LOG("animation_num %d", animation_num);
 
-        
+        for(unsigned int i = 0; i < mesh_num; i ++){
+            auto mesh = mesh_list[i];
+            auto num_vertices = mesh->mNumVertices;
+            auto num_faces = mesh->mNumFaces;
+            auto primitive_types = mesh->mPrimitiveTypes;
+            LOG("mesh %d: num_vertices: %d, num_faces %d, primitive_types: %x", i, num_vertices, num_faces, primitive_types);
+        }
     }
 
     // We're done. Everything will be cleaned up by the importer destructor
