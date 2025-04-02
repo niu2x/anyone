@@ -12,7 +12,12 @@ void handle_window_size_changed(anyone::Core* core, SDL_Window* window)
     core->notify_dpi_changed();
 }
 
-PlatformLinux::PlatformLinux() : native_window_(nullptr), window_flags_(0) { }
+PlatformLinux::PlatformLinux()
+: native_window_(nullptr)
+, window_flags_(0)
+, running_(true)
+{
+}
 
 PlatformLinux::~PlatformLinux()
 {
@@ -109,7 +114,6 @@ IntSize PlatformLinux::get_framebuffer_size() const
 
 bool PlatformLinux::poll_events()
 {
-    bool running = true;
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -122,7 +126,7 @@ bool PlatformLinux::poll_events()
                 break;
             }
             case SDL_QUIT: {
-                running = false;
+                running_ = false;
                 break;
             }
 
@@ -140,7 +144,9 @@ bool PlatformLinux::poll_events()
             }
         }
     }
-    return running;
+    return running_;
 }
+
+void PlatformLinux::exit() { running_ = false; }
 
 } // namespace anyone

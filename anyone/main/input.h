@@ -32,6 +32,7 @@ enum {
     KEY_X,
     KEY_Y,
     KEY_Z,
+    KEY_ESCAPE,
 };
 
 enum class KeyboardEventType {

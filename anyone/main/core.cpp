@@ -306,6 +306,8 @@ void Core::notify_keyboard_event(const KeyboardEvent& event)
         if (event.key_code == KEY_F) {
             bool full_screen = platform_support_->is_full_screen();
             platform_support_->set_full_screen(!full_screen);
+        } else if (event.key_code == KEY_ESCAPE) {
+            platform_support_->exit();
         }
     }
 }

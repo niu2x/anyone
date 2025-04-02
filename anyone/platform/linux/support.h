@@ -96,11 +96,14 @@ public:
 
     RenderAPI* get_render_api() override { return &render_api_; }
 
+    void exit() override;
+
 private:
     SDL_Window* native_window_;
     SDL_GLContext gl_context_;
     uint32_t window_flags_;
     OpenGL_API render_api_;
+    bool running_;
 };
 
 } // namespace anyone

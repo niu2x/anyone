@@ -226,6 +226,8 @@ public:
     virtual bool is_full_screen() const = 0;
 
     virtual RenderAPI* get_render_api() = 0;
+
+    virtual void exit() = 0;
 };
 
 } // namespace anyone
