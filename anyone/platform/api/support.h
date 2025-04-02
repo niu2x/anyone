@@ -178,12 +178,12 @@ struct DrawOperation {
     VertexBuffer* vertex_buffer;
     IndiceBuffer* indice_buffer;
     size_t count;
-    Texture2D* texture;
-    Texture2D** textures;
 
-    Program* program;
-    ProgramParam* program_params;
-    size_t program_params_count;
+    // Texture2D* texture;
+    // Texture2D** textures;
+    // Program* program;
+    // ProgramParam* program_params;
+    // size_t program_params_count;
 };
 
 class RenderAPI {

@@ -251,46 +251,46 @@ void OpenGL_API::draw(const DrawOperation& op)
         }
     }
 
-    if (op.texture) {
-        op.texture->bind(0);
-    }
+    // if (op.texture) {
+    //     op.texture->bind(0);
+    // }
 
-    if (op.program) {
-        op.program->use();
+    // if (op.program) {
+    //     op.program->use();
 
-        if (op.program_params) {
-            for (size_t i = 0; i < op.program_params_count; i++) {
-                auto* param = &op.program_params[i];
-                switch (param->value.type) {
-                    case ProgramParamType::TEXTURE: {
-                        op.program->set_param_texture(param->name,
-                                                      param->value.tex_unit);
-                        break;
-                    }
-                    case ProgramParamType::VEC2: {
-                        op.program->set_param_vec2(param->name,
-                                                   param->value.args);
-                        // LOG("set vec2 %s %f %f",
-                        //     param->name,
-                        //     param->value.args[0],
-                        //     param->value.args[1]);
-                        break;
-                    }
-                    case ProgramParamType::VEC3: {
-                        op.program->set_param_vec3(param->name,
-                                                   param->value.args);
-                        break;
-                    }
-                    case ProgramParamType::VEC4: {
-                        op.program->set_param_vec4(param->name,
-                                                   param->value.args);
-                        break;
-                    }
-                }
-            }
-        }
-        // op.program->set_param_texture("tex", 1);
-    }
+    //     if (op.program_params) {
+    //         for (size_t i = 0; i < op.program_params_count; i++) {
+    //             auto* param = &op.program_params[i];
+    //             switch (param->value.type) {
+    //                 case ProgramParamType::TEXTURE: {
+    //                     op.program->set_param_texture(param->name,
+    //                                                   param->value.tex_unit);
+    //                     break;
+    //                 }
+    //                 case ProgramParamType::VEC2: {
+    //                     op.program->set_param_vec2(param->name,
+    //                                                param->value.args);
+    //                     // LOG("set vec2 %s %f %f",
+    //                     //     param->name,
+    //                     //     param->value.args[0],
+    //                     //     param->value.args[1]);
+    //                     break;
+    //                 }
+    //                 case ProgramParamType::VEC3: {
+    //                     op.program->set_param_vec3(param->name,
+    //                                                param->value.args);
+    //                     break;
+    //                 }
+    //                 case ProgramParamType::VEC4: {
+    //                     op.program->set_param_vec4(param->name,
+    //                                                param->value.args);
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     // op.program->set_param_texture("tex", 1);
+    // }
 
     // auto location = glGetUniformLocation(program, "tex");
     // LOG("op.count %d", op.count);

@@ -86,26 +86,36 @@ public:
 
         float offset[2] = { translation[0], translation[1] };
 
-        ProgramParam params[3] = {
-            { .name = "tex",
-              .value = { ProgramParamType::TEXTURE, { .tex_unit = 0 } } },
-            { .name = "offset",
-              .value = { ProgramParamType::VEC2, { .args = offset } } },
-            { .name = "canvas_size",
-              .value = { ProgramParamType::VEC2, { .args = canvas_size_ } } },
-        };
+        // ProgramParam params[3] = {
+        //     { .name = "tex",
+        //       .value = { ProgramParamType::TEXTURE, { .tex_unit = 0 } } },
+        //     { .name = "offset",
+        //       .value = { ProgramParamType::VEC2, { .args = offset } } },
+        //     { .name = "canvas_size",
+        //       .value = { ProgramParamType::VEC2, { .args = canvas_size_ } }
+        //       },
+        // };
 
         auto container = (VertexIndiceBuffer*)geometry;
+
+        ((Texture2D*)texture)->bind(0);
+        program_->use();
+        program_->set_param_texture("tex", 0);
+        program_->set_param_vec2("offset", offset);
+        program_->set_param_vec2("canvas_size", canvas_size_);
+
+        GET_RENDER_API()->set_blend_type(BlendType::NORMAL);
+
         GET_RENDER_API()->draw(DrawOperation {
             .polygon_mode = PolygonMode::FILL,
             .vertex_buffer = container->vbo,
             .indice_buffer = container->veo,
             .count = container->veo->get_indice_count(),
-            .texture = (Texture2D*)texture,
-            .textures = nullptr,
-            .program = program_,
-            .program_params = params,
-            .program_params_count = 3,
+            // .texture = (Texture2D*)texture,
+            // .textures = nullptr,
+            // .program = program_,
+            // .program_params = params,
+            // .program_params_count = 3,
         });
     }
 
