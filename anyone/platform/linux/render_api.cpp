@@ -298,7 +298,9 @@ void OpenGL_API::draw(const DrawOperation& op)
     // LOG("op.texture %p", op.texture);
     // glUniform1i(location, 1);
 
-    glDrawElements(GL_TRIANGLES, op.count, GL_UNSIGNED_SHORT, (void*)0);
+    static GLuint primitives[] = { GL_POINTS, GL_LINES, GL_TRIANGLES };
+    auto prim = primitives[(int)op.primitive];
+    glDrawElements(prim, op.count, GL_UNSIGNED_SHORT, (void*)0);
 }
 
 GL_Texture2D::GL_Texture2D() : name_(0) { glGenTextures(1, &name_); }

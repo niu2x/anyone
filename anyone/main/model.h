@@ -16,6 +16,7 @@ public:
 private:
     VertexBuffer* vbo_;
     IndiceBuffer* veo_;
+    PrimitiveType primitive_;
 };
 
 class Model {

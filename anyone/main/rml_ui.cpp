@@ -107,15 +107,11 @@ public:
         GET_RENDER_API()->set_blend_type(BlendType::NORMAL);
 
         GET_RENDER_API()->draw(DrawOperation {
+            .primitive = PrimitiveType::TRIANGLE,
             .polygon_mode = PolygonMode::FILL,
             .vertex_buffer = container->vbo,
             .indice_buffer = container->veo,
             .count = container->veo->get_indice_count(),
-            // .texture = (Texture2D*)texture,
-            // .textures = nullptr,
-            // .program = program_,
-            // .program_params = params,
-            // .program_params_count = 3,
         });
     }
 

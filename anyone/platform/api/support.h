@@ -147,11 +147,11 @@ protected:
 //     POINT_LIST,
 // };
 
-// enum class DrawPrimitive {
-//     POINT,
-//     LINE,
-//     TRIANGLE,
-// };
+enum class PrimitiveType {
+    POINT,
+    LINE,
+    TRIANGLE,
+};
 
 class Program {
 public:
@@ -172,7 +172,7 @@ enum class PolygonMode {
 };
 
 struct DrawOperation {
-    // DrawPrimitive primitive;
+    PrimitiveType primitive;
     // VertexStrategy strategy;
     PolygonMode polygon_mode;
     VertexBuffer* vertex_buffer;

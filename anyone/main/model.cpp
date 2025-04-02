@@ -77,7 +77,7 @@ bool Model::load_from_file(const String& path)
     return true;
 }
 
-Mesh::Mesh() : vbo_(nullptr), veo_(nullptr)
+Mesh::Mesh() : vbo_(nullptr), veo_(nullptr), primitive_(PrimitiveType::POINT)
 {
     auto api = GET_RENDER_API();
     vbo_ = api->create_vertex_buffer();
@@ -101,6 +101,22 @@ bool Mesh::load(aiMesh* ai_mesh)
         num_faces,
         primitive_types);
 
+    unsigned int expect_indice_num = 0;
+
+    if (primitive_types == aiPrimitiveType_POINT) {
+        primitive_ = PrimitiveType::POINT;
+        expect_indice_num = 1;
+    } else if (primitive_types == aiPrimitiveType_LINE) {
+        primitive_ = PrimitiveType::LINE;
+        expect_indice_num = 2;
+    } else if (primitive_types | aiPrimitiveType_TRIANGLE) {
+        primitive_ = PrimitiveType::TRIANGLE;
+        expect_indice_num = 3;
+    } else {
+        LOG("Mesh::load fail, unsupport primitive_types: %x", primitive_types);
+        return false;
+    }
+
     struct GPU_Vertex {
         float x, y, z;
     };
@@ -117,18 +133,23 @@ bool Mesh::load(aiMesh* ai_mesh)
 
     vbo_->set_vertex_layout({ VertexAttr::POSITION_XYZ });
 
-    veo_->alloc_cpu_buffer(num_faces * 3);
+    veo_->alloc_cpu_buffer(num_faces * expect_indice_num);
     auto indices = veo_->get_cpu_buffer();
     size_t indices_index = 0;
 
     for (unsigned int i = 0; i < num_faces; i++) {
         auto face = ai_mesh->mFaces[i];
-        NX_ASSERT(face.mNumIndices == 3, "face.mNumIndices must be 3");
+        NX_ASSERT(face.mNumIndices == expect_indice_num,
+                  "face.mNumIndices(%d) must be %d",
+                  face.mNumIndices,
+                  expect_indice_num);
         // LOG("face %u, mNumIndices %u", i, face.mNumIndices);
-        indices[indices_index++] = face.mIndices[0];
-        indices[indices_index++] = face.mIndices[1];
-        indices[indices_index++] = face.mIndices[2];
+        for (unsigned int j = 0; j < expect_indice_num; j++) {
+            indices[indices_index++] = face.mIndices[j];
+        }
     }
+
+    NX_ASSERT(indices_index == num_faces * expect_indice_num, "");
 
     veo_->apply();
     veo_->free_cpu_buffer();
