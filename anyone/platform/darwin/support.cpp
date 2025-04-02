@@ -32,10 +32,9 @@ void PlatformDarwin::log(const char* fmt, ...)
 void PlatformDarwin::set_full_screen(bool full_screen)
 {
     if (full_screen) {
-        SDL_SetWindowFullscreen(native_window_,
-                                window_flags_ | SDL_WINDOW_FULLSCREEN_DESKTOP);
+        SDL_SetWindowFullscreen(native_window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
     } else {
-        SDL_SetWindowFullscreen(native_window_, window_flags_);
+        SDL_SetWindowFullscreen(native_window_, 0);
     }
 }
 
@@ -87,6 +86,32 @@ bool PlatformDarwin::poll_events()
         }
     }
     return running;
+}
+
+IntSize PlatformDarwin::get_framebuffer_size() const
+{
+    int w, h;
+    SDL_GL_GetDrawableSize(native_window_, &w, &h);
+    return { w, h };
+}
+DPI PlatformDarwin::get_dpi() const
+{
+    float ddpi, hdpi, vdpi;
+    int display_index = SDL_GetWindowDisplayIndex(native_window_);
+    if (display_index < 0) {
+        NX_PANIC("no display_index");
+    }
+
+    // 获取显示器的 DPI 信息
+    if (SDL_GetDisplayDPI(display_index, &ddpi, &hdpi, &vdpi) != 0) {
+        NX_PANIC("get dpi fail");
+    }
+    return { hdpi, vdpi };
+}
+bool PlatformDarwin::is_full_screen() const
+{
+    return SDL_GetWindowFlags(native_window_)
+           & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
 
 } // namespace anyone
