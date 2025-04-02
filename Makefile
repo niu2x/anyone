@@ -1,5 +1,6 @@
 build:
-	./tools/build_cmake_project.sh assimp -DASSIMP_BUILD_TESTS=OFF
+	./tools/build_cmake_project.sh assimp -DASSIMP_BUILD_TESTS=OFF \
+											-DZLIB_ROOT=$(PWD)/dist
 	./tools/build_cmake_project.sh kazmath -DKAZMATH_BUILD_TESTS=OFF \
 											-DKAZMATH_BUILD_LUA_WRAPPER=OFF \
 											-DKAZMATH_BUILD_JNI_WRAPPER=OFF \
