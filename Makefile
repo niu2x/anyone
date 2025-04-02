@@ -6,9 +6,10 @@ build:
 											-DKAZMATH_BUILD_GL_UTILS=OFF \
 											-DCMAKE_INSTALL_PREFIX=$(PWD)/dist
 	./tools/build_cmake_project.sh RmlUi
-	./tools/build_cmake_project.sh freetype
+	./tools/build_cmake_project.sh zlib
 	./tools/build_cmake_project.sh libzip -DENABLE_OPENSSL=OFF \
 											-DBUILD_TOOLS=OFF \
+											-DZLIB_ROOT=$(PWD)/dist \
 											-DBUILD_REGRESS=OFF \
 											-DBUILD_OSSFUZZ=OFF \
 											-DBUILD_EXAMPLES=OFF \

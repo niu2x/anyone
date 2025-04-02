@@ -171,7 +171,7 @@ public:
 
     size_t read(void* buffer, size_t size)
     {
-        size = std::min(size, buffer_.size() - position_);
+        size = std::min(size, (size_t)(buffer_.size() - position_));
 
         memcpy(buffer, buffer_.data() + position_, size);
         position_ += size;

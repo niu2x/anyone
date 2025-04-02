@@ -33,7 +33,7 @@ target_link_libraries(anyone_main PUBLIC
 	anyone_platform_api
 	RmlUi::RmlUi
 	assimp::assimp
-	freetype
+	# freetype
 	tolua
 	kazmath
 )
