@@ -21,6 +21,9 @@ public:
     void set_near_clip(float a);
     void set_far_clip(float a);
 
+    void transform_vp(const kmVec3* in, kmVec4* out) const;
+    void transform_vp(const kmVec4* in, kmVec4* out) const;
+
 private:
     kmVec3 eye_;
     kmVec3 look_;

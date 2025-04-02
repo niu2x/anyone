@@ -41,4 +41,19 @@ void Camera::set_near_clip(float a) { near_clip_ = a; }
 
 void Camera::set_far_clip(float a) { far_clip_ = a; }
 
+void Camera::transform_vp(const kmVec3* in, kmVec4* out) const
+{
+    kmVec4 tmp { in->x, in->y, in->z, 1 };
+    transform_vp(&tmp, out);
+}
+
+void Camera::transform_vp(const kmVec4* in, kmVec4* out) const
+{
+    auto view = get_view_matrix();
+    auto proj = get_proj_matrix();
+    kmVec4 tmp;
+    kmVec4Transform(&tmp, in, &view);
+    kmVec4Transform(out, &tmp, &proj);
+}
+
 } // namespace anyone
