@@ -1,6 +1,6 @@
 #include "core.h"
 #include "render_system.h"
-#include "camera.h"
+#include "model.h"
 #include "rml_ui.h"
 #include "model_manager.h"
 #include "embed/builtin.h"
@@ -28,6 +28,14 @@ Core::Core()
 {
     builtin_archive_ = nx::fs::create_zip_archive_from_memory(builtin,
                                                               builtin_length);
+
+    camera_.set_eye(5000, 5000, 5000);
+    camera_.look_at(0, 0, 0);
+    camera_.set_up(0, 0, 1);
+    camera_.set_aspect(1);
+    camera_.set_fov(60);
+    camera_.set_near_clip(0.1);
+    camera_.set_far_clip(10000000);
 }
 
 Core::~Core()
@@ -110,6 +118,8 @@ void Core::setup_after_render_api_ready()
 
     debug_layer_->load_document("builtin:///layout/debug_layer.rml");
 
+    Model::setup();
+
     lua_ = luaL_newstate();
     init_lua();
 }
@@ -117,6 +127,7 @@ void Core::setup_after_render_api_ready()
 void Core::cleanup_before_render_api_gone()
 {
     lua_close(lua_);
+    Model::cleanup();
     debug_layer_.reset();
     RML_UI::cleanup();
     model_manager_.reset();
@@ -128,6 +139,12 @@ void Core::update() { }
 void Core::render()
 {
     render_api_->clear();
+
+    auto model = model_manager_->get_model("model:test");
+    if (model) {
+        render_system_->draw_model(model, &camera_);
+    }
+
     debug_layer_->render();
 }
 
@@ -231,15 +248,6 @@ void Core::init_lua()
     luaL_dostring(lua_, R"RAW(
         package.searchers = {__native_lua_loader}
     )RAW");
-
-    // Camera camera;
-    // camera.set_eye(100, 100, 100);
-    // camera.look_at(0, 0, 0);
-    // camera.set_up(0, 0, 1);
-    // camera.set_aspect(1);
-    // camera.set_fov(60);
-    // camera.set_near_clip(5);
-    // camera.set_far_clip(10000);
 
     // kmVec3 pos { 97.11324865405187, 97.11324865405187, 97.11324865405187 };
     // kmVec4 ndc_pos;

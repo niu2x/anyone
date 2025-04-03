@@ -101,6 +101,15 @@ bool Mesh::load(aiMesh* ai_mesh)
         num_faces,
         primitive_types);
 
+    // LOG("mesh AABB: %f %f %f, %f %f %f"
+    //     , ai_mesh->mAABB.mMin.x
+    //     , ai_mesh->mAABB.mMin.y
+    //     , ai_mesh->mAABB.mMin.z
+    //     , ai_mesh->mAABB.mMax.x
+    //     , ai_mesh->mAABB.mMax.y
+    //     , ai_mesh->mAABB.mMax.z
+    // );
+
     unsigned int expect_indice_num = 0;
 
     if (primitive_types == aiPrimitiveType_POINT) {
@@ -156,5 +165,36 @@ bool Mesh::load(aiMesh* ai_mesh)
 
     return true;
 }
+
+void Model::draw(const Camera* camera)
+{
+    for (auto& mesh : meshes_) {
+        auto vbo = mesh->get_vbo();
+        auto veo = mesh->get_veo();
+
+        program_->use();
+
+        auto view = camera->get_view_matrix();
+        auto proj = camera->get_proj_matrix();
+
+        program_->set_param_mat4("view", view.mat);
+        program_->set_param_mat4("proj", proj.mat);
+
+        GET_RENDER_API()->set_blend_type(BlendType::NORMAL);
+        GET_RENDER_API()->draw(DrawOperation {
+            .primitive = PrimitiveType::TRIANGLE,
+            .polygon_mode = PolygonMode::FILL,
+            .vertex_buffer = vbo,
+            .indice_buffer = veo,
+            .count = veo->get_indice_count(),
+        });
+    }
+}
+
+Program* Model::program_ = nullptr;
+
+void Model::setup() { program_ = GET_RENDER_API()->create_model_program(); }
+
+void Model::cleanup() { GET_RENDER_API()->destroy_program(program_); }
 
 } // namespace anyone

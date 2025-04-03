@@ -19,4 +19,13 @@ Model* ModelManager::load_model(const String& name, const String& path)
     return model;
 }
 
+Model* ModelManager::get_model(const String& name) const
+{
+    auto it = model_cache_.find(name);
+    if (it != model_cache_.end()) {
+        return it->second;
+    }
+    return nullptr;
+}
+
 } // namespace anyone

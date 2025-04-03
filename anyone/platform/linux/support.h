@@ -47,6 +47,7 @@ public:
     void set_param_vec2(const char* name, float args[]) override;
     void set_param_vec3(const char* name, float args[]) override;
     void set_param_vec4(const char* name, float args[]) override;
+    void set_param_mat4(const char* name, float args[]) override;
     void use() override;
     bool compile_program(const char* vertex, const char* fragment);
 
@@ -73,6 +74,7 @@ public:
     void destroy_texture_2d(Texture2D* vbo) override;
 
     Program* create_rml_ui_program() override;
+    Program* create_model_program() override;
     void destroy_program(Program* vbo) override;
 
     void set_blend_type(BlendType b) override;

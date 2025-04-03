@@ -4,40 +4,6 @@
 
 namespace anyone {
 
-// Shader sources
-const char* vertex_source = R"(
-    #version 330 core
-    uniform vec2 offset;
-    uniform vec2 canvas_size;
-
-    layout(location = 0) in vec2 position;
-    layout(location = 1) in vec2 uv;
-    layout(location = 2) in vec4 color;
-    out vec4 v_color;
-    out vec2 v_uv;
-    void main() {
-        vec2 pos = position;
-        pos += offset;
-        pos.y = canvas_size.y - pos.y;
-        gl_Position = vec4(pos/canvas_size*2-vec2(1.0,1.0), 0.0, 1.0);
-        v_color = color;
-        v_uv = uv;
-    }
-
-)";
-
-const char* fragment_source = R"(
-    #version 330 core
-    uniform sampler2D tex;
-
-    in vec2 v_uv;
-    in vec4 v_color;
-    out vec4 color;
-    void main() {
-        color = texture(tex, v_uv) * v_color;
-    }
-)";
-
 GLuint compile_shader(GLenum shader_type, const char* source)
 {
     GLuint shader = glCreateShader(shader_type);
@@ -104,12 +70,80 @@ void OpenGL_API::set_clear_color(const Color& color)
 
 Program* OpenGL_API::create_rml_ui_program()
 {
+
+    // Shader sources
+    const char* vertex_source = R"(
+    #version 330 core
+    uniform vec2 offset;
+    uniform vec2 canvas_size;
+
+    layout(location = 0) in vec2 position;
+    layout(location = 1) in vec2 uv;
+    layout(location = 2) in vec4 color;
+    out vec4 v_color;
+    out vec2 v_uv;
+    void main() {
+        vec2 pos = position;
+        pos += offset;
+        pos.y = canvas_size.y - pos.y;
+        gl_Position = vec4(pos/canvas_size*2-vec2(1.0,1.0), 0.0, 1.0);
+        v_color = color;
+        v_uv = uv;
+    }
+
+)";
+
+    const char* fragment_source = R"(
+    #version 330 core
+    uniform sampler2D tex;
+
+    in vec2 v_uv;
+    in vec4 v_color;
+    out vec4 color;
+    void main() {
+        color = texture(tex, v_uv) * v_color;
+    }
+)";
+
     auto m = new GL_Program;
     bool succ = m->compile_program(vertex_source, fragment_source);
     NX_ASSERT(succ, "create_rml_ui_program fail");
     // m->set_blend_type(BlendType::NORMAL);
     return m;
 }
+
+Program* OpenGL_API::create_model_program()
+{
+
+    // Shader sources
+    const char* vertex_source = R"(
+    #version 330 core
+
+    uniform vec4 view;
+    uniform vec4 proj;
+
+    layout(location = 0) in vec3 position;
+    void main() {
+        gl_Position = vec4(position, 1.0)*view*proj;
+    }
+
+)";
+
+    const char* fragment_source = R"(
+    #version 330 core
+    out vec4 color;
+    void main() {
+        color = vec4(1.0, 1.0, 1.0, 1.0);
+    }
+)";
+
+    auto m = new GL_Program;
+    bool succ = m->compile_program(vertex_source, fragment_source);
+    NX_ASSERT(succ, "create_model_program fail");
+    // m->set_blend_type(BlendType::NORMAL);
+    return m;
+}
+
 void OpenGL_API::destroy_program(Program* m) { delete m; }
 
 VertexBuffer* OpenGL_API::create_vertex_buffer() { return new GL_VertexBuffer; }
@@ -391,6 +425,14 @@ void GL_Program::set_param_vec4(const char* name, float args[])
     // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform4fv(location, 1, args);
 }
+
+void GL_Program::set_param_mat4(const char* name, float args[])
+{
+    auto location = glGetUniformLocation(program_, name);
+    // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
+    glUniformMatrix4fv(location, 1, GL_TRUE, args);
+}
+
 void GL_Program::use() { glUseProgram(program_); }
 
 } // namespace anyone

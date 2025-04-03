@@ -163,6 +163,7 @@ public:
     virtual void set_param_vec2(const char* name, float args[]) = 0;
     virtual void set_param_vec3(const char* name, float args[]) = 0;
     virtual void set_param_vec4(const char* name, float args[]) = 0;
+    virtual void set_param_mat4(const char* name, float args[]) = 0;
 };
 
 enum class PolygonMode {
@@ -200,6 +201,8 @@ public:
     virtual Texture2D* create_texture_2d();
     virtual void destroy_texture_2d(Texture2D* vbo);
     virtual void draw(const DrawOperation& operation);
+
+    virtual Program* create_model_program();
     virtual Program* create_rml_ui_program();
     virtual void destroy_program(Program* vbo);
     virtual void set_blend_type(BlendType b);

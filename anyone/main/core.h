@@ -10,6 +10,7 @@ extern "C" {
 #include "platform/api/support.h"
 #include "input.h"
 #include "archive.h"
+#include "camera.h"
 // #include "rml_ui.h"
 
 namespace anyone {
@@ -92,6 +93,8 @@ private:
     // void run_project();
 
     FrameStats frame_stats_;
+
+    Camera camera_;
 
     void notify_render_api_ready();
 };

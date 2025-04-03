@@ -52,6 +52,12 @@ public:
         (void)name;
         (void)args;
     }
+
+    void set_param_mat4(const char* name, float args[]) override
+    {
+        (void)name;
+        (void)args;
+    }
 };
 
 PlatformSupport::~PlatformSupport() { }
@@ -89,6 +95,7 @@ Texture2D* RenderAPI::create_texture_2d() { return new DummyTexture2D; }
 void RenderAPI::destroy_texture_2d(Texture2D* tex) { delete tex; }
 
 Program* RenderAPI::create_rml_ui_program() { return new DummyProgram; }
+Program* RenderAPI::create_model_program() { return new DummyProgram; }
 
 void RenderAPI::destroy_program(Program* program) { delete program; }
 
