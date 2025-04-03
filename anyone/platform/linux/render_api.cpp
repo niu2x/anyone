@@ -60,7 +60,7 @@ OpenGL_API::~OpenGL_API() { }
 void OpenGL_API::clear()
 {
     // glViewport(0, 0, framebuffer_width_, framebuffer_height_);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void OpenGL_API::set_clear_color(const Color& color)
@@ -119,8 +119,8 @@ Program* OpenGL_API::create_model_program()
     const char* vertex_source = R"(
     #version 330 core
 
-    uniform vec4 view;
-    uniform vec4 proj;
+    uniform mat4 view;
+    uniform mat4 proj;
 
     layout(location = 0) in vec3 position;
     void main() {

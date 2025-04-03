@@ -136,6 +136,12 @@ bool Mesh::load(aiMesh* ai_mesh)
         vertices[i].x = ai_mesh->mVertices[i].x;
         vertices[i].y = ai_mesh->mVertices[i].y;
         vertices[i].z = ai_mesh->mVertices[i].z;
+
+        //         LOG("mesh AABB: %f %f %f"
+        //     , vertices[i].x
+        //     , vertices[i].y
+        //     , vertices[i].z
+        // );
     }
     vbo_->apply();
     vbo_->free_cpu_buffer();

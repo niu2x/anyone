@@ -29,9 +29,9 @@ Core::Core()
     builtin_archive_ = nx::fs::create_zip_archive_from_memory(builtin,
                                                               builtin_length);
 
-    camera_.set_eye(1000, 1000, 1000);
+    camera_.set_eye(200, 200, 200);
     camera_.look_at(0, 0, 0);
-    camera_.set_up(0, 0, 1);
+    camera_.set_up(0, 1, 0);
     camera_.set_aspect(1);
     camera_.set_fov(60);
     camera_.set_near_clip(0.1);
@@ -140,7 +140,7 @@ void Core::render()
 {
     render_api_->clear();
 
-    auto model = model_manager_->get_model("model:test");
+    auto model = model_manager_->get_model("test");
     if (model) {
         render_system_->draw_model(model, &camera_);
     }
@@ -249,14 +249,14 @@ void Core::init_lua()
         package.searchers = {__native_lua_loader}
     )RAW");
 
-    // kmVec3 pos { 97.11324865405187, 97.11324865405187, 97.11324865405187 };
-    // kmVec4 ndc_pos;
+    kmVec3 pos { 19.495882, 75.971092, 4.264231 };
+    kmVec4 ndc_pos;
 
-    // camera.transform_vp(&pos, &ndc_pos);
-    // LOG("ndc_pos %f %f %f",
-    //     ndc_pos.x / ndc_pos.w,
-    //     ndc_pos.y / ndc_pos.w,
-    //     ndc_pos.z / ndc_pos.w);
+    camera_.transform_vp(&pos, &ndc_pos);
+    LOG("ndc_pos %f %f %f",
+        ndc_pos.x / ndc_pos.w,
+        ndc_pos.y / ndc_pos.w,
+        ndc_pos.z / ndc_pos.w);
 }
 
 // void Core::run_project()
