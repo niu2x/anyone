@@ -206,6 +206,7 @@ public:
     virtual Program* create_rml_ui_program();
     virtual void destroy_program(Program* vbo);
     virtual void set_blend_type(BlendType b);
+    virtual void set_depth_test(bool b);
 
     void set_frame_stats(FrameStats* stats) { frame_stats_ = stats; }
 

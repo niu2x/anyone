@@ -105,6 +105,7 @@ public:
         program_->set_param_vec2("canvas_size", canvas_size_);
 
         GET_RENDER_API()->set_blend_type(BlendType::NORMAL);
+        GET_RENDER_API()->set_depth_test(false);
 
         GET_RENDER_API()->draw(DrawOperation {
             .primitive = PrimitiveType::TRIANGLE,

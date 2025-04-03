@@ -100,6 +100,7 @@ Program* RenderAPI::create_model_program() { return new DummyProgram; }
 void RenderAPI::destroy_program(Program* program) { delete program; }
 
 void RenderAPI::set_blend_type(BlendType b) { (void)b; }
+void RenderAPI::set_depth_test(bool b) { (void)b; }
 
 VertexBuffer::VertexBuffer() : buf_size_(0) { }
 

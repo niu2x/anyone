@@ -174,22 +174,23 @@ bool Mesh::load(aiMesh* ai_mesh)
 
 void Model::draw(const Camera* camera)
 {
+    GET_RENDER_API()->set_depth_test(true);
+    program_->use();
+    GET_RENDER_API()->set_blend_type(BlendType::NORMAL);
+
+    auto view = camera->get_view_matrix();
+    auto proj = camera->get_proj_matrix();
+
+    program_->set_param_mat4("view", view.mat);
+    program_->set_param_mat4("proj", proj.mat);
+
     for (auto& mesh : meshes_) {
         auto vbo = mesh->get_vbo();
         auto veo = mesh->get_veo();
 
-        program_->use();
-
-        auto view = camera->get_view_matrix();
-        auto proj = camera->get_proj_matrix();
-
-        program_->set_param_mat4("view", view.mat);
-        program_->set_param_mat4("proj", proj.mat);
-
-        GET_RENDER_API()->set_blend_type(BlendType::NORMAL);
         GET_RENDER_API()->draw(DrawOperation {
             .primitive = PrimitiveType::TRIANGLE,
-            .polygon_mode = PolygonMode::FILL,
+            .polygon_mode = PolygonMode::LINE,
             .vertex_buffer = vbo,
             .indice_buffer = veo,
             .count = veo->get_indice_count(),

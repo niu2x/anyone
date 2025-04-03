@@ -112,6 +112,16 @@ Program* OpenGL_API::create_rml_ui_program()
     return m;
 }
 
+void OpenGL_API::set_depth_test(bool b)
+{
+    if (b) {
+        glEnable(GL_DEPTH_TEST);
+
+    } else {
+        glDisable(GL_DEPTH_TEST);
+    }
+}
+
 Program* OpenGL_API::create_model_program()
 {
 

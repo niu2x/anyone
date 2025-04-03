@@ -78,6 +78,7 @@ public:
     void destroy_program(Program* vbo) override;
 
     void set_blend_type(BlendType b) override;
+    void set_depth_test(bool b) override;
 };
 
 class PlatformLinux : public PlatformSupport {

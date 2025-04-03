@@ -154,6 +154,8 @@ void Core::notify_framebuffer_size_changed()
     if (debug_layer_) {
         debug_layer_->notify_framebuffer_size_changed();
     }
+    float aspect = (float)framebuffer_size_.width / framebuffer_size_.height;
+    camera_.set_aspect(aspect);
 }
 
 void Core::notify_dpi_changed() { dpi_ = platform_support_->get_dpi(); }
