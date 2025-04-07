@@ -34,10 +34,12 @@ public:
     static void setup();
     static void cleanup();
 
+    struct Node;
+
 private:
     String name_;
     Vector<UniquePtr<Mesh>> meshes_;
-
+    Node* root_node_;
     static Program* program_;
 };
 

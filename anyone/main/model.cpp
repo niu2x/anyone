@@ -70,6 +70,8 @@ bool Model::load_from_file(const String& path)
             mesh->load(ai_mesh);
             meshes_.push_back(std::move(mesh));
         }
+
+        load_node(root_node);
     }
 
     // We're done. Everything will be cleaned up by the importer destructor
