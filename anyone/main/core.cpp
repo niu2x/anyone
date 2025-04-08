@@ -34,8 +34,8 @@ Core::Core()
     camera_.set_up(0, 1, 0);
     camera_.set_aspect(1);
     camera_.set_fov(60);
-    camera_.set_near_clip(0.1);
-    camera_.set_far_clip(10000000);
+    camera_.set_near_clip(1.732);
+    camera_.set_far_clip(1000);
 }
 
 Core::~Core()
@@ -251,7 +251,7 @@ void Core::init_lua()
         package.searchers = {__native_lua_loader}
     )RAW");
 
-    // kmVec3 pos { 19.495882, 75.971092, 4.264231 };
+    // kmVec3 pos { 200+1000, 200+1000, 200+1000 };
     // kmVec4 ndc_pos;
 
     // camera_.transform_vp(&pos, &ndc_pos);

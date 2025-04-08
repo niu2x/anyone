@@ -205,9 +205,11 @@ bool Mesh::load(aiMesh* ai_mesh)
         vertices[i].y = ai_mesh->mVertices[i].y;
         vertices[i].z = ai_mesh->mVertices[i].z;
 
-        vertices[i].nx = ai_mesh->mNormals[i].x;
-        vertices[i].ny = ai_mesh->mNormals[i].y;
-        vertices[i].nz = ai_mesh->mNormals[i].z;
+        if (ai_mesh->mNormals) {
+            vertices[i].nx = ai_mesh->mNormals[i].x;
+            vertices[i].ny = ai_mesh->mNormals[i].y;
+            vertices[i].nz = ai_mesh->mNormals[i].z;
+        }
 
         //         LOG("mesh AABB: %f %f %f"
         //     , vertices[i].x
