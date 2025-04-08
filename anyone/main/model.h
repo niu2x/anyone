@@ -2,6 +2,7 @@
 
 #include "base/type.h"
 #include "platform/api/support.h"
+#include "kazmath/kazmath.h"
 
 class aiMesh;
 
@@ -34,13 +35,19 @@ public:
     static void setup();
     static void cleanup();
 
-    struct Node;
+    struct Node {
+        Vector<Node*> children;
+        Vector<size_t> meshes;
+        kmMat4 transform;
+        Node* parent;
+    };
 
 private:
     String name_;
     Vector<UniquePtr<Mesh>> meshes_;
     Node* root_node_;
     static Program* program_;
+    void destroy_node(Node* node);
 };
 
 } // namespace anyone

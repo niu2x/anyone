@@ -6,9 +6,25 @@
 
 namespace anyone {
 
-Model::Model(const String& name) : name_(name), meshes_ {} { }
+Model::Model(const String& name) : name_(name), meshes_ {}, root_node_(nullptr)
+{
+}
 
-Model::~Model() { meshes_.clear(); }
+Model::~Model()
+{
+    meshes_.clear();
+    destroy_node(root_node_);
+}
+
+void Model::destroy_node(Node* node)
+{
+    if (!node)
+        return;
+    for (auto child : node->children) {
+        destroy_node(node);
+    }
+    delete node;
+}
 
 std::string get_file_extension(const String& filename)
 {
@@ -20,6 +36,52 @@ std::string get_file_extension(const String& filename)
     }
     // 提取并返回扩展名
     return filename.substr(dot_position + 1);
+}
+
+void copy_transform(aiMatrix4x4* in, kmMat4* out)
+{
+    out->mat[0] = in->a1;
+    out->mat[1] = in->a2;
+    out->mat[2] = in->a3;
+    out->mat[3] = in->a4;
+
+    out->mat[4] = in->b1;
+    out->mat[5] = in->b2;
+    out->mat[6] = in->b3;
+    out->mat[7] = in->b4;
+
+    out->mat[8] = in->c1;
+    out->mat[9] = in->c2;
+    out->mat[10] = in->c3;
+    out->mat[11] = in->c4;
+
+    out->mat[12] = in->d1;
+    out->mat[13] = in->d2;
+    out->mat[14] = in->d3;
+    out->mat[15] = in->d4;
+}
+
+Model::Node* load_node(aiNode* ai_node)
+{
+    if (!ai_node)
+        return nullptr;
+
+    auto node = new Model::Node;
+    node->parent = nullptr;
+
+    copy_transform(&ai_node->mTransformation, &node->transform);
+
+    for (unsigned int i = 0; i < ai_node->mNumMeshes; i++) {
+        node->meshes.push_back(ai_node->mMeshes[i]);
+    }
+
+    for (unsigned int i = 0; i < ai_node->mNumChildren; i++) {
+        auto child = load_node(ai_node->mChildren[i]);
+        child->parent = node;
+        node->children.push_back(child);
+    }
+
+    return node;
 }
 
 bool Model::load_from_file(const String& path)
@@ -71,7 +133,7 @@ bool Model::load_from_file(const String& path)
             meshes_.push_back(std::move(mesh));
         }
 
-        load_node(root_node);
+        root_node_ = load_node(root_node);
     }
 
     // We're done. Everything will be cleaned up by the importer destructor
