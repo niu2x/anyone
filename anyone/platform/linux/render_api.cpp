@@ -132,19 +132,34 @@ Program* OpenGL_API::create_model_program()
     uniform mat4 model;
     uniform mat4 view;
     uniform mat4 proj;
+    uniform vec3 light_direction;
 
     layout(location = 0) in vec3 position;
+    layout(location = 1) in vec3 normal;
+
+    out vec3 v_normal;
+
     void main() {
         gl_Position = vec4(position, 1.0)*model*view*proj;
+        v_normal = normal;
     }
 
 )";
 
     const char* fragment_source = R"(
     #version 330 core
+
+    uniform vec3 ambient;
+    uniform vec3 light_direction;
+
+    in vec3 v_normal;
+
     out vec4 color;
     void main() {
-        color = vec4(1.0, 1.0, 1.0, 1.0);
+        vec3 c = ambient;
+        c += max(0.0, dot(v_normal, light_direction));
+        
+        color = vec4(c, 1.0);
     }
 )";
 
@@ -201,6 +216,7 @@ const AttrDesc attrs_desc[] = {
     { 2, GL_FLOAT, false },
     { 4, GL_UNSIGNED_BYTE, true },
     { 2, GL_FLOAT, false },
+    { 3, GL_FLOAT, false },
 };
 
 GL_VertexBuffer::GL_VertexBuffer() : name_(0) { glGenBuffers(1, &name_); }

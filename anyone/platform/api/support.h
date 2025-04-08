@@ -31,6 +31,7 @@ enum class VertexAttr {
     COLOR_BYTE_RGBA,
     // COLOR_RGBA,
     UV,
+    NORMAL,
     COUNT,
 };
 

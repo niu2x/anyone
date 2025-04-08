@@ -94,6 +94,9 @@ bool Model::load_from_file(const String& path)
 
     static auto flags = aiProcess_CalcTangentSpace | aiProcess_Triangulate
                         | aiProcess_JoinIdenticalVertices
+                        | aiProcess_OptimizeMeshes
+                        | aiProcess_OptimizeGraph
+                        | aiProcess_GenNormals
                         | aiProcess_SortByPType;
 
     auto hint = get_file_extension(path);
@@ -160,10 +163,10 @@ bool Mesh::load(aiMesh* ai_mesh)
     auto num_vertices = ai_mesh->mNumVertices;
     auto num_faces = ai_mesh->mNumFaces;
     auto primitive_types = ai_mesh->mPrimitiveTypes;
-    LOG("mesh : num_vertices: %d, num_faces %d, primitive_types: %x",
+    LOG("mesh : num_vertices: %d, num_faces %d, primitive_types: %x, normals: %p",
         num_vertices,
         num_faces,
-        primitive_types);
+        primitive_types, ai_mesh->mNormals);
 
     // LOG("mesh AABB: %f %f %f, %f %f %f"
     //     , ai_mesh->mAABB.mMin.x
@@ -192,6 +195,7 @@ bool Mesh::load(aiMesh* ai_mesh)
 
     struct GPU_Vertex {
         float x, y, z;
+        float nx,ny, nz;
     };
 
     vbo_->alloc_cpu_buffer(sizeof(GPU_Vertex) * num_vertices);
@@ -200,6 +204,10 @@ bool Mesh::load(aiMesh* ai_mesh)
         vertices[i].x = ai_mesh->mVertices[i].x;
         vertices[i].y = ai_mesh->mVertices[i].y;
         vertices[i].z = ai_mesh->mVertices[i].z;
+
+        vertices[i].nx = ai_mesh->mNormals[i].x;
+        vertices[i].ny = ai_mesh->mNormals[i].y;
+        vertices[i].nz = ai_mesh->mNormals[i].z;
 
         //         LOG("mesh AABB: %f %f %f"
         //     , vertices[i].x
@@ -210,7 +218,7 @@ bool Mesh::load(aiMesh* ai_mesh)
     vbo_->apply();
     vbo_->free_cpu_buffer();
 
-    vbo_->set_vertex_layout({ VertexAttr::POSITION_XYZ });
+    vbo_->set_vertex_layout({ VertexAttr::POSITION_XYZ, VertexAttr::NORMAL });
 
     veo_->alloc_cpu_buffer(num_faces * expect_indice_num);
     auto indices = veo_->get_cpu_buffer();
@@ -273,6 +281,10 @@ void Model::draw(const Camera* camera)
     auto view = camera->get_view_matrix();
     auto proj = camera->get_proj_matrix();
 
+    float ambient[] = {0.3, 0.3, 0.3};
+    float light_direction[] = {1/3.0, 1/3.0, 1/3.0};
+    program_->set_param_vec3("ambient", ambient);
+    program_->set_param_vec3("light_direction", light_direction);
     program_->set_param_mat4("view", view.mat);
     program_->set_param_mat4("proj", proj.mat);
 
