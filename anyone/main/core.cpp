@@ -6,6 +6,7 @@
 #include "embed/builtin.h"
 #include "url-parser/url.hpp"
 #include "3rd/nlohmann/json.hpp"
+#include "kazmath/kazmath.h"
 
 using json = nlohmann::json;
 
@@ -142,7 +143,11 @@ void Core::render()
 
     auto model = model_manager_->get_model("test");
     if (model) {
-        render_system_->draw_model(model, &camera_);
+        kmMat4 transform;
+        static float tick = 0;
+        tick += 0.1;
+        kmMat4RotationY(&transform, tick);
+        render_system_->draw_model(model, &camera_, &transform);
     }
 
     debug_layer_->render();

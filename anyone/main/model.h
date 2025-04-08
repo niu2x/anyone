@@ -32,7 +32,7 @@ public:
     Model(const String& name);
     ~Model();
     bool load_from_file(const String& name);
-    void draw(const Camera* camera);
+    void draw(const Camera* camera, const kmMat4* transform);
 
     static void setup();
     static void cleanup();
@@ -50,7 +50,7 @@ private:
     Node* root_node_;
     static Program* program_;
     void destroy_node(Node* node);
-    void draw_node(Node* node, kmMat4* transform);
+    void draw_node(Node* node, const kmMat4* transform);
 };
 
 } // namespace anyone

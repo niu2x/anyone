@@ -246,7 +246,7 @@ bool Mesh::load(aiMesh* ai_mesh)
     return true;
 }
 
-void Model::draw_node(Node* node, kmMat4* parent_transform)
+void Model::draw_node(Node* node, const kmMat4* parent_transform)
 {
     kmMat4 my_transform;
 
@@ -274,7 +274,7 @@ void Model::draw_node(Node* node, kmMat4* parent_transform)
     }
 }
 
-void Model::draw(const Camera* camera)
+void Model::draw(const Camera* camera, const kmMat4* transform)
 {
     GET_RENDER_API()->set_depth_test(true);
     program_->use();
@@ -283,7 +283,7 @@ void Model::draw(const Camera* camera)
     auto view = camera->get_view_matrix();
     auto proj = camera->get_proj_matrix();
 
-    float ambient[] = {0.3, 0.3, 0.3};
+    float ambient[] = { 0.3, 0.3, 0.6 };
     float light_direction[] = {1/3.0, 1/3.0, 1/3.0};
     program_->set_param_vec3("ambient", ambient);
     program_->set_param_vec3("light_direction", light_direction);
@@ -291,9 +291,7 @@ void Model::draw(const Camera* camera)
     program_->set_param_mat4("proj", proj.mat);
 
     if (root_node_) {
-        kmMat4 model_transform;
-        kmMat4Identity(&model_transform);
-        draw_node(root_node_, &model_transform);
+        draw_node(root_node_, transform);
     }
     // program_->set_param_mat4("model", model.mat);
     // for (auto& mesh : meshes_) {

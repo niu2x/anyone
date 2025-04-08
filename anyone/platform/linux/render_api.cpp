@@ -141,7 +141,9 @@ Program* OpenGL_API::create_model_program()
 
     void main() {
         gl_Position = vec4(position, 1.0)*model*view*proj;
-        v_normal = normal;
+
+        mat3 norm_matrix = transpose(inverse(mat3(model*view)));
+        v_normal = normalize(normal*norm_matrix);
     }
 
 )";
@@ -158,7 +160,7 @@ Program* OpenGL_API::create_model_program()
     void main() {
         vec3 c = ambient;
         c += max(0.0, dot(v_normal, light_direction));
-        
+
         color = vec4(c, 1.0);
     }
 )";
