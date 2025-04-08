@@ -236,6 +236,34 @@ bool Mesh::load(aiMesh* ai_mesh)
     return true;
 }
 
+void Model::draw_node(Node* node, kmMat4* parent_transform)
+{
+    kmMat4 my_transform;
+
+    kmMat4Multiply(&my_transform, &node->transform, parent_transform);
+
+    for (auto child : node->children) {
+        draw_node(child, &my_transform);
+    }
+
+    if (node->meshes.size() > 0) {
+        program_->set_param_mat4("model", my_transform.mat);
+        for (auto mesh_id : node->meshes) {
+            auto mesh = meshes_[mesh_id].get();
+            auto vbo = mesh->get_vbo();
+            auto veo = mesh->get_veo();
+
+            GET_RENDER_API()->draw(DrawOperation {
+                .primitive = mesh->get_primitive_type(),
+                .polygon_mode = PolygonMode::FILL,
+                .vertex_buffer = vbo,
+                .indice_buffer = veo,
+                .count = veo->get_indice_count(),
+            });
+        }
+    }
+}
+
 void Model::draw(const Camera* camera)
 {
     GET_RENDER_API()->set_depth_test(true);
@@ -248,18 +276,24 @@ void Model::draw(const Camera* camera)
     program_->set_param_mat4("view", view.mat);
     program_->set_param_mat4("proj", proj.mat);
 
-    for (auto& mesh : meshes_) {
-        auto vbo = mesh->get_vbo();
-        auto veo = mesh->get_veo();
-
-        GET_RENDER_API()->draw(DrawOperation {
-            .primitive = PrimitiveType::TRIANGLE,
-            .polygon_mode = PolygonMode::LINE,
-            .vertex_buffer = vbo,
-            .indice_buffer = veo,
-            .count = veo->get_indice_count(),
-        });
+    if (root_node_) {
+        kmMat4 model_transform;
+        kmMat4Identity(&model_transform);
+        draw_node(root_node_, &model_transform);
     }
+    // program_->set_param_mat4("model", model.mat);
+    // for (auto& mesh : meshes_) {
+    //     auto vbo = mesh->get_vbo();
+    //     auto veo = mesh->get_veo();
+
+    //     GET_RENDER_API()->draw(DrawOperation {
+    //         .primitive = PrimitiveType::TRIANGLE,
+    //         .polygon_mode = PolygonMode::LINE,
+    //         .vertex_buffer = vbo,
+    //         .indice_buffer = veo,
+    //         .count = veo->get_indice_count(),
+    //     });
+    // }
 }
 
 Program* Model::program_ = nullptr;

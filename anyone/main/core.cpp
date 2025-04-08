@@ -251,14 +251,14 @@ void Core::init_lua()
         package.searchers = {__native_lua_loader}
     )RAW");
 
-    kmVec3 pos { 19.495882, 75.971092, 4.264231 };
-    kmVec4 ndc_pos;
+    // kmVec3 pos { 19.495882, 75.971092, 4.264231 };
+    // kmVec4 ndc_pos;
 
-    camera_.transform_vp(&pos, &ndc_pos);
-    LOG("ndc_pos %f %f %f",
-        ndc_pos.x / ndc_pos.w,
-        ndc_pos.y / ndc_pos.w,
-        ndc_pos.z / ndc_pos.w);
+    // camera_.transform_vp(&pos, &ndc_pos);
+    // LOG("ndc_pos %f %f %f",
+    //     ndc_pos.x / ndc_pos.w,
+    //     ndc_pos.y / ndc_pos.w,
+    //     ndc_pos.z / ndc_pos.w);
 }
 
 // void Core::run_project()

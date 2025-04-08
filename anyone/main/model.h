@@ -19,6 +19,8 @@ public:
     VertexBuffer* get_vbo() const { return vbo_; }
     IndiceBuffer* get_veo() const { return veo_; }
 
+    PrimitiveType get_primitive_type() const { return primitive_; }
+
 private:
     VertexBuffer* vbo_;
     IndiceBuffer* veo_;
@@ -48,6 +50,7 @@ private:
     Node* root_node_;
     static Program* program_;
     void destroy_node(Node* node);
+    void draw_node(Node* node, kmMat4* transform);
 };
 
 } // namespace anyone
