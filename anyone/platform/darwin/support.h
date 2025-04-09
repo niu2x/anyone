@@ -45,12 +45,14 @@ public:
     IntSize get_framebuffer_size() const override;
     DPI get_dpi() const override;
     bool is_full_screen() const override;
+    void exit() override;
 
 private:
     SDL_Window* native_window_;
     SDL_Renderer *sdl_renderer_;
     uint32_t window_flags_;
     Metal_API *render_api_;
+    bool running_;
 };
 
 } // namespace anyone

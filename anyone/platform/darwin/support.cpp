@@ -5,7 +5,14 @@
 
 namespace anyone {
 
-PlatformDarwin::PlatformDarwin() : native_window_(nullptr), window_flags_(0),sdl_renderer_(nullptr),render_api_(nullptr) { }
+PlatformDarwin::PlatformDarwin()
+: native_window_(nullptr)
+, window_flags_(0)
+, sdl_renderer_(nullptr)
+, render_api_(nullptr)
+, running_(true)
+{
+}
 
 PlatformDarwin::~PlatformDarwin()
 {
@@ -56,7 +63,6 @@ void PlatformDarwin::swap_buffers()
 }
 bool PlatformDarwin::poll_events()
 {
-    bool running = true;
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -69,7 +75,7 @@ bool PlatformDarwin::poll_events()
                 break;
             }
             case SDL_QUIT: {
-                running = false;
+                running_ = false;
                 break;
             }
 
@@ -85,7 +91,7 @@ bool PlatformDarwin::poll_events()
             }
         }
     }
-    return running;
+    return running_;
 }
 
 IntSize PlatformDarwin::get_framebuffer_size() const
@@ -113,5 +119,7 @@ bool PlatformDarwin::is_full_screen() const
     return SDL_GetWindowFlags(native_window_)
            & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
+
+void PlatformDarwin::exit() { running_ = false; }
 
 } // namespace anyone
