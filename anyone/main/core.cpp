@@ -27,6 +27,7 @@ Core::Core()
 , dpi_ { 90, 90 }
 , framebuffer_size_ { 1, 1 }
 , lua_(nullptr)
+,lua_main_loop_(0)
 
 {
     builtin_archive_ = nx::fs::create_zip_archive_from_memory(builtin,
@@ -141,7 +142,15 @@ void Core::cleanup_before_render_api_gone()
     render_system_.reset();
 }
 
-void Core::update() { }
+void Core::update() { 
+    if(lua_main_loop_) {
+        auto L = lua_;
+        lua_rawgeti(L, LUA_REGISTRYINDEX, lua_main_loop_);
+        if(lua_isfunction(L, -1)) {
+            lua_pcall(L, 0, 0, 0);
+        }
+    }
+}
 
 void Core::render()
 {
@@ -363,6 +372,13 @@ void Core::notify_mouse_button_event(const MouseButtonEvent& e) { (void)e; }
 
 void Core::notify_mouse_wheel_event(const MouseWheelEvent& e) { (void)e; }
 
+void Core::set_script_main_loop(LUA_FUNCTION func) {
+    if(lua_main_loop_ != 0) {
+        __tolua_unref_function(lua_, lua_main_loop_);
+    }
+    lua_main_loop_ = func;
+}
+
 void FrameStats::frame_begin()
 {
     this->frame_start = time_now();
@@ -379,4 +395,6 @@ void FrameStats::frame_end()
     this->avg_duration = this->duration_cache.get_avg();
     this->avg_fps = 1000 / this->avg_duration;
 }
+
+
 } // namespace anyone

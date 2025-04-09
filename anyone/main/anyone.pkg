@@ -5,6 +5,7 @@ $#include "main/attachment.h"
 $#include "main/scene_node.h"
 $#include "main/scene_manager.h"
 $#include "platform/api/support.h"
+$#include "tolua_support.h"
 
 namespace anyone {
 
@@ -28,6 +29,7 @@ class Core {
 	PlatformSupport* get_platform_support();
 	ModelManager* get_model_manager();
 	SceneManager* get_scene_manager();
+	void set_script_main_loop(LUA_FUNCTION);
 };
 
 

@@ -1,6 +1,10 @@
 _is_functions = _is_functions or { }
 _to_functions = _to_functions or { }
 _push_functions = _push_functions or { }
+
+_to_functions["LUA_FUNCTION"] = "__tolua_ref_function"
+_is_functions["LUA_FUNCTION"] = "__tolua_is_function"
+
 local toWrite = { }
 local currentString = ''
 local out
@@ -62,6 +66,9 @@ function post_output_hook ( package )
     -- replace ( [[*((vector<string>*)]] , [[(]] )
     -- replace ( [[tolua_usertype(tolua_S,"vector<string>");]] , [[]] )
     replace ( [[tolua_pushcppstring(tolua_S,(const char*)]] , [[anyone_pushcppstring(tolua_S,]] )
+
+    replace([[tolua_usertype(tolua_S,"LUA_FUNCTION");]], [[]])
+    replace([[*((LUA_FUNCTION*)]], [[(]])
     replace ( '\t' , '    ' )
     WRITE ( result )
 end

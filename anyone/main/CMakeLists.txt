@@ -9,7 +9,6 @@ target_sources(anyone_main PRIVATE
 	rml_ui.cpp
 	core.cpp
 	archive.cpp
-	export_lua.cpp
 	render_system.cpp
 	model.cpp
 	scene_node.cpp
@@ -18,6 +17,9 @@ target_sources(anyone_main PRIVATE
 	material.cpp
 	model_manager.cpp
 	attachment.cpp
+	
+	tolua_support.cpp
+	export_lua.cpp
 
 	embed/SpaceMono_Regular.cpp
 	embed/builtin.cpp

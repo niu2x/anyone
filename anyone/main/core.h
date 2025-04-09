@@ -11,6 +11,7 @@ extern "C" {
 #include "input.h"
 #include "archive.h"
 #include "camera.h"
+#include "tolua_support.h"
 // #include "rml_ui.h"
 
 namespace anyone {
@@ -63,6 +64,8 @@ public:
     UniquePtr<Read> read_file(const String& file_uri);
     Optional<ByteBuffer> read_file_data(const String& file_uri);
 
+    void set_script_main_loop(LUA_FUNCTION func);
+
 private:
     // void fire_framebuffer_size_changed();
 
@@ -94,6 +97,8 @@ private:
 
     int load_lua();
     static int lua_loader(lua_State* L);
+
+    int lua_main_loop_;
 
     void init_lua();
     // void run_project();
