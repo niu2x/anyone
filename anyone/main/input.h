@@ -33,6 +33,11 @@ enum {
     KEY_Y,
     KEY_Z,
     KEY_ESCAPE,
+
+    MOUSE_LEFT_BTN,
+    MOUSE_MIDDLE_BTN,
+    MOUSE_RIGHT_BTN,
+
 };
 
 enum class KeyboardEventType {
@@ -43,6 +48,32 @@ enum class KeyboardEventType {
 struct KeyboardEvent {
     KeyboardEventType type;
     int key_code;
+};
+
+struct MouseMoveEvent {
+    int x, y;
+    int rel_x, rel_y;
+};
+
+enum class MouseButtonEventType {
+    PRESS,
+    RELEASE,
+};
+
+struct MouseButtonEvent {
+    MouseButtonEventType type;
+    int x, y;
+    int button;
+};
+
+enum class MouseWheelDirection {
+    NORMAL,
+    FLIPPED,
+};
+
+struct MouseWheelEvent {
+    int x, y;
+    MouseWheelDirection direction;
 };
 
 } // namespace anyone

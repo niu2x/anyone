@@ -118,13 +118,54 @@ bool PlatformLinux::poll_events()
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
+            case SDL_KEYUP:
             case SDL_KEYDOWN: {
                 int key_code = from_SDL_key_code(event.key.keysym.sym);
-                KeyboardEvent event = { .type = KeyboardEventType::PRESS,
-                                        .key_code = key_code };
-                GET_CORE()->notify_keyboard_event(event);
+                KeyboardEvent e = { .type = event.type == SDL_KEYDOWN
+                                                ? KeyboardEventType::PRESS
+                                                : KeyboardEventType::RELEASE,
+                                    .key_code = key_code };
+                GET_CORE()->notify_keyboard_event(e);
                 break;
             }
+
+            case SDL_MOUSEMOTION: {
+                MouseMoveEvent move_event = { .x = event.motion.x,
+                                              .y = event.motion.y,
+                                              .rel_x = event.motion.xrel,
+                                              .rel_y = event.motion.yrel };
+                GET_CORE()->notify_mouse_move_event(move_event);
+                break;
+            }
+
+            case SDL_MOUSEBUTTONDOWN:
+            case SDL_MOUSEBUTTONUP: {
+                MouseButtonEvent button_event = {
+                    .type = (event.type == SDL_MOUSEBUTTONDOWN)
+                                ? MouseButtonEventType::PRESS
+                                : MouseButtonEventType::RELEASE,
+                    .x = event.button.x,
+                    .y = event.button.y,
+                    .button = from_SDL_mouse_button(event.button.button),
+
+                };
+                GET_CORE()->notify_mouse_button_event(button_event);
+                break;
+            }
+
+            case SDL_MOUSEWHEEL: {
+                MouseWheelEvent wheel_event = {
+                    .x = event.wheel.x,
+                    .y = event.wheel.y,
+                    .direction = (event.wheel.direction
+                                  == SDL_MOUSEWHEEL_FLIPPED)
+                                     ? MouseWheelDirection::FLIPPED
+                                     : MouseWheelDirection::NORMAL
+                };
+                GET_CORE()->notify_mouse_wheel_event(wheel_event);
+                break;
+            }
+
             case SDL_QUIT: {
                 running_ = false;
                 break;

@@ -47,6 +47,9 @@ public:
     void notify_dpi_changed();
     void notify_framebuffer_size_changed();
     void notify_keyboard_event(const KeyboardEvent& event);
+    void notify_mouse_move_event(const MouseMoveEvent&);
+    void notify_mouse_button_event(const MouseButtonEvent&);
+    void notify_mouse_wheel_event(const MouseWheelEvent&);
 
     // void add_framebuffer_size_listener(FramebufferSizeListener* l);
     // void remove_framebuffer_size_listener(FramebufferSizeListener* l);

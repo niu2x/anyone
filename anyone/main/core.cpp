@@ -341,6 +341,20 @@ void Core::notify_keyboard_event(const KeyboardEvent& event)
     }
 }
 
+void Core::notify_mouse_move_event(const MouseMoveEvent& e)
+{
+    (void)e;
+    //     LOG("mouse_move x: %d, y: %d, rel_x: %d, rel_y: %d",
+    //         e.x,
+    //         e.y,
+    //         e.rel_x,
+    //         e.rel_y);
+}
+
+void Core::notify_mouse_button_event(const MouseButtonEvent& e) { (void)e; }
+
+void Core::notify_mouse_wheel_event(const MouseWheelEvent& e) { (void)e; }
+
 void FrameStats::frame_begin()
 {
     this->frame_start = time_now();
