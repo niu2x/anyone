@@ -1,5 +1,5 @@
 build:
-	./tools/build.sh
+	echo "use ./tools/build.sh"
 
 update_version:
 	change-version Node cmd_tools/package.json -i -v $(version)

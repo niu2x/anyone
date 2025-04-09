@@ -12,6 +12,7 @@ target_sources(anyone_main PRIVATE
 	export_lua.cpp
 	render_system.cpp
 	model.cpp
+	scene_node.cpp
 	camera.cpp
 	material.cpp
 	model_manager.cpp
