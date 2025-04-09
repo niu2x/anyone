@@ -3,7 +3,10 @@
 
 namespace anyone {
 
-SceneManager::SceneManager() : root_(nullptr)
+SceneManager::SceneManager()
+: root_(nullptr)
+, ambient_color_(Color::DARK_SLATE_GRAY)
+, sky_color_(Color::DARK_SLATE_GRAY)
 {
     root_ = new SceneNode("/");
     root_->apply_transform(nullptr);

@@ -145,6 +145,7 @@ void Core::update() { }
 
 void Core::render()
 {
+    render_api_->set_clear_color(scene_manager_->get_sky_color());
     render_api_->clear();
 
     // auto model = model_manager_->get_model("test");
