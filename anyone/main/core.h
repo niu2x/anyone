@@ -41,6 +41,7 @@ public:
     RenderAPI* get_render_api() const { return render_api_; }
     ModelManager* get_model_manager() const { return model_manager_.get(); }
     RenderSystem* get_render_system() const { return render_system_.get(); }
+    SceneManager* get_scene_manager() const { return scene_manager_.get(); }
 
     // void dbg_printf(int x, int y, const char* xx, ...);
     // FreeTypeLibrary* get_ft_library() const { return ft_library_.get(); }

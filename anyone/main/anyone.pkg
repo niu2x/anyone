@@ -1,25 +1,47 @@
 $#include "main/model_manager.h"
 $#include "main/model.h"
 $#include "main/core.h"
+$#include "main/attachment.h"
+$#include "main/scene_node.h"
+$#include "main/scene_manager.h"
 $#include "platform/api/support.h"
 
 namespace anyone {
 
-class Model {}
+class Attachment{};
+
+class Renderable: public Attachment {};
+
+class Model: public Renderable {}
 
 class ModelManager {
     Model* load_model(const char* name, const char* path);
-}
+};
 
 class PlatformSupport {
 	void set_full_screen(bool);
-}
+};
 
 class Core {
 	static Core* get_singleton_ptr();
 	PlatformSupport* get_platform_support();
 	ModelManager* get_model_manager();
+	SceneManager* get_scene_manager();
+};
 
+
+class SceneManager {
+    SceneNode* get_root_node();
+};
+
+class SceneNode {
+    void attach_object(Renderable* a);
+    void detach_object(Renderable* a);
+    SceneNode* create_child_node(const char* name);
+    SceneNode* get_child(const char* name);
+    SceneNode* find_node(const char* name);
+    void remove_child(const char* name);
+    void remove_child(SceneNode*);
 };
 
 }

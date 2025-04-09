@@ -1,6 +1,6 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Thu Apr  3 00:12:19 2025.
+** Generated automatically by tolua++-1.0.93 on Wed Apr  9 15:20:42 2025.
 */
 
 #include "stdlib.h"
@@ -17,14 +17,21 @@ TOLUA_API int  tolua_anyone_open (lua_State* tolua_S);
 #include "main/model_manager.h"
 #include "main/model.h"
 #include "main/core.h"
+#include "main/attachment.h"
+#include "main/scene_node.h"
+#include "main/scene_manager.h"
 #include "platform/api/support.h"
 
 /* function to register type */
 static void tolua_reg_types (lua_State* tolua_S)
 {
-    tolua_usertype(tolua_S, "anyone::Model");
-    tolua_usertype(tolua_S, "anyone::Core");
     tolua_usertype(tolua_S, "anyone::PlatformSupport");
+    tolua_usertype(tolua_S, "anyone::SceneNode");
+    tolua_usertype(tolua_S, "anyone::Core");
+    tolua_usertype(tolua_S, "anyone::SceneManager");
+    tolua_usertype(tolua_S, "anyone::Model");
+    tolua_usertype(tolua_S, "anyone::Renderable");
+    tolua_usertype(tolua_S, "anyone::Attachment");
     tolua_usertype(tolua_S, "anyone::ModelManager");
 }
 
@@ -176,7 +183,7 @@ static int tolua_anyone_anyone_Core_get_model_manager00(lua_State* tolua_S)
   if (!self)
       tolua_error(
           tolua_S, "invalid 'self' in function 'get_model_manager'", NULL);
-#endif
+    #endif
   {
       anyone::ModelManager* tolua_ret = (anyone::ModelManager*)
                                             self->get_model_manager();
@@ -184,12 +191,325 @@ static int tolua_anyone_anyone_Core_get_model_manager00(lua_State* tolua_S)
   }
  }
  return 1;
-#ifndef TOLUA_RELEASE
- tolua_lerror:
-     tolua_error(
-         tolua_S, "#ferror in function 'get_model_manager'.", &tolua_err);
-     return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(
+        tolua_S, "#ferror in function 'get_model_manager'.", &tolua_err);
+    return 0;
     #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: get_scene_manager of class  anyone::Core */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Core_get_scene_manager00
+static int tolua_anyone_anyone_Core_get_scene_manager00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::Core", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 2, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::Core* self = (anyone::Core*)tolua_tousertype(tolua_S, 1, 0);
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(tolua_S,
+                        "invalid 'self' in function 'get_scene_manager'",
+                        NULL);
+    #endif
+        {
+            anyone::SceneManager* tolua_ret = (anyone::SceneManager*)
+                                                  self->get_scene_manager();
+            tolua_pushusertype(
+                tolua_S, (void*)tolua_ret, "anyone::SceneManager");
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(
+        tolua_S, "#ferror in function 'get_scene_manager'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: get_root_node of class  anyone::SceneManager */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneManager_get_root_node00
+static int tolua_anyone_anyone_SceneManager_get_root_node00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneManager", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 2, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::SceneManager* self = (anyone::SceneManager*)tolua_tousertype(
+            tolua_S, 1, 0);
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'get_root_node'", NULL);
+    #endif
+        {
+            anyone::SceneNode* tolua_ret = (anyone::SceneNode*)
+                                               self->get_root_node();
+            tolua_pushusertype(tolua_S, (void*)tolua_ret, "anyone::SceneNode");
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'get_root_node'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: attach_object of class  anyone::SceneNode */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneNode_attach_object00
+static int tolua_anyone_anyone_SceneNode_attach_object00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneNode", 0, &tolua_err)
+        || !tolua_isusertype(tolua_S, 2, "anyone::Renderable", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::SceneNode* self = (anyone::SceneNode*)tolua_tousertype(
+            tolua_S, 1, 0);
+        anyone::Renderable* a = ((anyone::Renderable*)tolua_tousertype(
+            tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'attach_object'", NULL);
+    #endif
+        {
+            self->attach_object(a);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'attach_object'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: detach_object of class  anyone::SceneNode */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneNode_detach_object00
+static int tolua_anyone_anyone_SceneNode_detach_object00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneNode", 0, &tolua_err)
+        || !tolua_isusertype(tolua_S, 2, "anyone::Renderable", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::SceneNode* self = (anyone::SceneNode*)tolua_tousertype(
+            tolua_S, 1, 0);
+        anyone::Renderable* a = ((anyone::Renderable*)tolua_tousertype(
+            tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'detach_object'", NULL);
+    #endif
+        {
+            self->detach_object(a);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'detach_object'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: create_child_node of class  anyone::SceneNode */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneNode_create_child_node00
+static int tolua_anyone_anyone_SceneNode_create_child_node00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneNode", 0, &tolua_err)
+        || !tolua_isstring(tolua_S, 2, 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::SceneNode* self = (anyone::SceneNode*)tolua_tousertype(
+            tolua_S, 1, 0);
+        const char* name = ((const char*)tolua_tostring(tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(tolua_S,
+                        "invalid 'self' in function 'create_child_node'",
+                        NULL);
+    #endif
+        {
+            anyone::SceneNode* tolua_ret = (anyone::SceneNode*)
+                                               self->create_child_node(name);
+            tolua_pushusertype(tolua_S, (void*)tolua_ret, "anyone::SceneNode");
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(
+        tolua_S, "#ferror in function 'create_child_node'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: get_child of class  anyone::SceneNode */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneNode_get_child00
+static int tolua_anyone_anyone_SceneNode_get_child00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneNode", 0, &tolua_err)
+        || !tolua_isstring(tolua_S, 2, 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::SceneNode* self = (anyone::SceneNode*)tolua_tousertype(
+            tolua_S, 1, 0);
+        const char* name = ((const char*)tolua_tostring(tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'get_child'", NULL);
+    #endif
+        {
+            anyone::SceneNode* tolua_ret = (anyone::SceneNode*)self->get_child(
+                name);
+            tolua_pushusertype(tolua_S, (void*)tolua_ret, "anyone::SceneNode");
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'get_child'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: find_node of class  anyone::SceneNode */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneNode_find_node00
+static int tolua_anyone_anyone_SceneNode_find_node00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneNode", 0, &tolua_err)
+        || !tolua_isstring(tolua_S, 2, 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::SceneNode* self = (anyone::SceneNode*)tolua_tousertype(
+            tolua_S, 1, 0);
+        const char* name = ((const char*)tolua_tostring(tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'find_node'", NULL);
+    #endif
+        {
+            anyone::SceneNode* tolua_ret = (anyone::SceneNode*)self->find_node(
+                name);
+            tolua_pushusertype(tolua_S, (void*)tolua_ret, "anyone::SceneNode");
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'find_node'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: remove_child of class  anyone::SceneNode */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneNode_remove_child00
+static int tolua_anyone_anyone_SceneNode_remove_child00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneNode", 0, &tolua_err)
+        || !tolua_isstring(tolua_S, 2, 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::SceneNode* self = (anyone::SceneNode*)tolua_tousertype(
+            tolua_S, 1, 0);
+        const char* name = ((const char*)tolua_tostring(tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'remove_child'", NULL);
+    #endif
+        {
+            self->remove_child(name);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'remove_child'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: remove_child of class  anyone::SceneNode */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneNode_remove_child01
+static int tolua_anyone_anyone_SceneNode_remove_child01(lua_State* tolua_S)
+{
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneNode", 0, &tolua_err)
+        || !tolua_isusertype(tolua_S, 2, "anyone::SceneNode", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else {
+        anyone::SceneNode* self = (anyone::SceneNode*)tolua_tousertype(
+            tolua_S, 1, 0);
+        anyone::SceneNode* tolua_var_2 = ((anyone::SceneNode*)tolua_tousertype(
+            tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'remove_child'", NULL);
+    #endif
+        {
+            self->remove_child(tolua_var_2);
+        }
+    }
+    return 0;
+tolua_lerror:
+    return tolua_anyone_anyone_SceneNode_remove_child00(tolua_S);
 }
 #endif //#ifndef TOLUA_DISABLE
 
@@ -202,7 +522,14 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
  tolua_beginmodule(tolua_S,NULL);
   tolua_module(tolua_S,"anyone",0);
   tolua_beginmodule(tolua_S,"anyone");
-  tolua_cclass(tolua_S, "Model", "anyone::Model", "", NULL);
+  tolua_cclass(tolua_S, "Attachment", "anyone::Attachment", "", NULL);
+  tolua_beginmodule(tolua_S, "Attachment");
+  tolua_endmodule(tolua_S);
+  tolua_cclass(
+      tolua_S, "Renderable", "anyone::Renderable", "anyone::Attachment", NULL);
+  tolua_beginmodule(tolua_S, "Renderable");
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "Model", "anyone::Model", "anyone::Renderable", NULL);
   tolua_beginmodule(tolua_S, "Model");
   tolua_endmodule(tolua_S);
   tolua_cclass(tolua_S, "ModelManager", "anyone::ModelManager", "", NULL);
@@ -227,6 +554,33 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
   tolua_function(tolua_S,
                  "get_model_manager",
                  tolua_anyone_anyone_Core_get_model_manager00);
+  tolua_function(tolua_S,
+                 "get_scene_manager",
+                 tolua_anyone_anyone_Core_get_scene_manager00);
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "SceneManager", "anyone::SceneManager", "", NULL);
+  tolua_beginmodule(tolua_S, "SceneManager");
+  tolua_function(tolua_S,
+                 "get_root_node",
+                 tolua_anyone_anyone_SceneManager_get_root_node00);
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "SceneNode", "anyone::SceneNode", "", NULL);
+  tolua_beginmodule(tolua_S, "SceneNode");
+  tolua_function(
+      tolua_S, "attach_object", tolua_anyone_anyone_SceneNode_attach_object00);
+  tolua_function(
+      tolua_S, "detach_object", tolua_anyone_anyone_SceneNode_detach_object00);
+  tolua_function(tolua_S,
+                 "create_child_node",
+                 tolua_anyone_anyone_SceneNode_create_child_node00);
+  tolua_function(
+      tolua_S, "get_child", tolua_anyone_anyone_SceneNode_get_child00);
+  tolua_function(
+      tolua_S, "find_node", tolua_anyone_anyone_SceneNode_find_node00);
+  tolua_function(
+      tolua_S, "remove_child", tolua_anyone_anyone_SceneNode_remove_child00);
+  tolua_function(
+      tolua_S, "remove_child", tolua_anyone_anyone_SceneNode_remove_child01);
   tolua_endmodule(tolua_S);
   tolua_endmodule(tolua_S);
  tolua_endmodule(tolua_S);

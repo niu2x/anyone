@@ -2,6 +2,7 @@
 
 namespace anyone {
 
+class Camera;
 class SceneNode;
 
 class SceneManager {
@@ -9,7 +10,7 @@ public:
     SceneManager();
     ~SceneManager();
 
-    void render();
+    void render(const Camera* camera);
     SceneNode* get_root_node() const { return root_; }
 
 private:

@@ -1,11 +1,12 @@
 #include "scene_node.h"
+#include "attachment.h"
 
 namespace anyone {
 
 SceneNode::SceneNode(const String& name)
 : name_(name)
 , children_ {}
-, attachments_ {}
+, renderables_ {}
 {
     kmVec3Zero(&position_);
     scale_.x = scale_.y = scale_.z = 1;
@@ -18,15 +19,15 @@ SceneNode::~SceneNode()
         delete child;
     }
 
-    attachments_.clear();
+    renderables_.clear();
     children_.clear();
 }
 
-void SceneNode::attach_object(Attachment* a) { attachments_.push_back(a); }
-void SceneNode::detach_object(Attachment* a)
+void SceneNode::attach_object(Renderable* a) { renderables_.push_back(a); }
+void SceneNode::detach_object(Renderable* a)
 {
-    auto it = std::remove(attachments_.begin(), attachments_.end(), a);
-    attachments_.erase(it, attachments_.end());
+    auto it = std::remove(renderables_.begin(), renderables_.end(), a);
+    renderables_.erase(it, renderables_.end());
 }
 
 SceneNode* SceneNode::create_child_node(const String& name)
@@ -74,6 +75,31 @@ void SceneNode::remove_child(SceneNode* n)
 {
     auto it = std::remove(children_.begin(), children_.end(), n);
     children_.erase(it, children_.end());
+}
+
+void SceneNode::apply_transform(const kmMat4* parent_transform)
+{
+    kmMat4Scaling(&transform_, scale_.x, scale_.y, scale_.z);
+
+    kmMat4 tmp_1;
+    kmMat4Translation(&tmp_1, position_.x, position_.y, position_.z);
+
+    kmMat4 tmp_2;
+    kmMat4RotationQuaternion(&tmp_2, &quaternion_);
+
+    kmMat4Multiply(&transform_, &transform_, &tmp_2);
+    kmMat4Multiply(&transform_, &transform_, &tmp_1);
+
+    if (parent_transform) {
+        kmMat4Multiply(&transform_, &transform_, parent_transform);
+    }
+}
+
+void SceneNode::render(const Camera* camera)
+{
+    for (auto r : renderables_) {
+        r->draw(camera, &transform_);
+    }
 }
 
 } // namespace anyone

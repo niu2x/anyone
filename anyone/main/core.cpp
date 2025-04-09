@@ -156,7 +156,7 @@ void Core::render()
         render_system_->draw_model(model, &camera_, &transform);
     }
 
-    scene_manager_->render();
+    scene_manager_->render(&camera_);
 
     debug_layer_->render();
 }

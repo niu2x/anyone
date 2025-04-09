@@ -10,6 +10,6 @@ SceneManager::~SceneManager()
     if (root_)
         delete root_;
 }
-void SceneManager::render() { }
+void SceneManager::render(const Camera* camera) { root_->render(camera); }
 
 } // namespace anyone
