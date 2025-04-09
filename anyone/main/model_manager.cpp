@@ -28,4 +28,13 @@ Model* ModelManager::get_model(const String& name) const
     return nullptr;
 }
 
+void ModelManager::unload_model(const String& name)
+{
+    auto it = model_cache_.find(name);
+    if (it != model_cache_.end()) {
+        delete it->second;
+    }
+    model_cache_.erase(it);
+}
+
 } // namespace anyone
