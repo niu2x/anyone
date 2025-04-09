@@ -435,27 +435,27 @@ void GL_Program::set_param_texture(const char* name, int tex_unit)
     glUniform1i(location, tex_unit);
     // LOG("set tex %s:%d %d", name, location, tex_unit);
 }
-void GL_Program::set_param_vec2(const char* name, float args[])
+void GL_Program::set_param_vec2(const char* name, const float args[])
 {
     auto location = glGetUniformLocation(program_, name);
     // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform2fv(location, 1, args);
     // LOG("set vec2 %s:%d %f %f", name, location, args[0], args[1]);
 }
-void GL_Program::set_param_vec3(const char* name, float args[])
+void GL_Program::set_param_vec3(const char* name, const float args[])
 {
     auto location = glGetUniformLocation(program_, name);
     // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform3fv(location, 1, args);
 }
-void GL_Program::set_param_vec4(const char* name, float args[])
+void GL_Program::set_param_vec4(const char* name, const float args[])
 {
     auto location = glGetUniformLocation(program_, name);
     // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform4fv(location, 1, args);
 }
 
-void GL_Program::set_param_mat4(const char* name, float args[])
+void GL_Program::set_param_mat4(const char* name, const float args[])
 {
     auto location = glGetUniformLocation(program_, name);
     // NX_ASSERT(location >= 0, "invalid uniform: %s", name);

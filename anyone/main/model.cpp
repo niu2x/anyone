@@ -287,8 +287,8 @@ void Model::draw(const Camera* camera, const kmMat4* transform)
     float light_direction[] = {1/3.0, 1/3.0, 1/3.0};
     program_->set_param_vec3("ambient", ambient);
     program_->set_param_vec3("light_direction", light_direction);
-    program_->set_param_mat4("view", view.mat);
-    program_->set_param_mat4("proj", proj.mat);
+    program_->set_param_mat4("view", view->mat);
+    program_->set_param_mat4("proj", proj->mat);
 
     if (root_node_) {
         draw_node(root_node_, transform);

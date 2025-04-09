@@ -37,23 +37,23 @@ public:
         (void)name;
         (void)tex_unit;
     }
-    void set_param_vec2(const char* name, float args[]) override
+    void set_param_vec2(const char* name, const float args[]) override
     {
         (void)name;
         (void)args;
     }
-    void set_param_vec3(const char* name, float args[]) override
+    void set_param_vec3(const char* name, const float args[]) override
     {
         (void)name;
         (void)args;
     }
-    void set_param_vec4(const char* name, float args[]) override
+    void set_param_vec4(const char* name, const float args[]) override
     {
         (void)name;
         (void)args;
     }
 
-    void set_param_mat4(const char* name, float args[]) override
+    void set_param_mat4(const char* name, const float args[]) override
     {
         (void)name;
         (void)args;

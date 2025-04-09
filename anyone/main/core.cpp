@@ -37,6 +37,7 @@ Core::Core()
     camera_.set_fov(60);
     camera_.set_near_clip(1.732);
     camera_.set_far_clip(1000);
+    camera_.apply();
 }
 
 Core::~Core()
@@ -161,6 +162,7 @@ void Core::notify_framebuffer_size_changed()
     }
     float aspect = (float)framebuffer_size_.width / framebuffer_size_.height;
     camera_.set_aspect(aspect);
+    camera_.apply();
 }
 
 void Core::notify_dpi_changed() { dpi_ = platform_support_->get_dpi(); }

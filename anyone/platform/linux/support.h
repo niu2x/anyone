@@ -44,10 +44,10 @@ public:
     GL_Program();
     ~GL_Program();
     void set_param_texture(const char* name, int tex_unit) override;
-    void set_param_vec2(const char* name, float args[]) override;
-    void set_param_vec3(const char* name, float args[]) override;
-    void set_param_vec4(const char* name, float args[]) override;
-    void set_param_mat4(const char* name, float args[]) override;
+    void set_param_vec2(const char* name, const float args[]) override;
+    void set_param_vec3(const char* name, const float args[]) override;
+    void set_param_vec4(const char* name, const float args[]) override;
+    void set_param_mat4(const char* name, const float args[]) override;
     void use() override;
     bool compile_program(const char* vertex, const char* fragment);
 

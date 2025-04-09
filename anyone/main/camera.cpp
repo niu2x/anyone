@@ -19,20 +19,6 @@ void Camera::look_at(float x, float y, float z) { look_ = { x, y, z }; }
 
 void Camera::set_up(float x, float y, float z) { up_ = { x, y, z }; }
 
-kmMat4 Camera::get_view_matrix() const
-{
-    kmMat4 mat;
-    kmMat4LookAt(&mat, &eye_, &look_, &up_);
-    return mat;
-}
-
-kmMat4 Camera::get_proj_matrix() const
-{
-    kmMat4 mat;
-    kmMat4PerspectiveProjection(&mat, fov_, aspect_, near_clip_, far_clip_);
-    return mat;
-}
-
 void Camera::set_aspect(float a) { aspect_ = a; }
 
 void Camera::set_fov(float a) { fov_ = a; }
@@ -49,11 +35,16 @@ void Camera::transform_vp(const kmVec3* in, kmVec4* out) const
 
 void Camera::transform_vp(const kmVec4* in, kmVec4* out) const
 {
-    auto view = get_view_matrix();
-    auto proj = get_proj_matrix();
     kmVec4 tmp;
-    kmVec4Transform(&tmp, in, &view);
-    kmVec4Transform(out, &tmp, &proj);
+    kmVec4Transform(&tmp, in, &view_matrix_);
+    kmVec4Transform(out, &tmp, &proj_matrix_);
+}
+
+void Camera::apply()
+{
+    kmMat4PerspectiveProjection(
+        &proj_matrix_, fov_, aspect_, near_clip_, far_clip_);
+    kmMat4LookAt(&view_matrix_, &eye_, &look_, &up_);
 }
 
 } // namespace anyone
