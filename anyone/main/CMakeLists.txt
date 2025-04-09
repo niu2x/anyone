@@ -15,6 +15,7 @@ target_sources(anyone_main PRIVATE
 	camera.cpp
 	material.cpp
 	model_manager.cpp
+	attachment.cpp
 
 	embed/SpaceMono_Regular.cpp
 	embed/builtin.cpp

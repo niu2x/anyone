@@ -3,6 +3,7 @@
 #include "base/type.h"
 #include "platform/api/support.h"
 #include "kazmath/kazmath.h"
+#include "attachment.h"
 
 class aiMesh;
 
@@ -27,12 +28,12 @@ private:
     PrimitiveType primitive_;
 };
 
-class Model {
+class Model : public Renderable {
 public:
     Model(const String& name);
     ~Model();
     bool load_from_file(const String& name);
-    void draw(const Camera* camera, const kmMat4* transform);
+    void draw(const Camera* camera, const kmMat4* transform) override;
 
     static void setup();
     static void cleanup();
