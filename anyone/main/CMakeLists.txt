@@ -13,6 +13,7 @@ target_sources(anyone_main PRIVATE
 	render_system.cpp
 	model.cpp
 	scene_node.cpp
+	scene_manager.cpp
 	camera.cpp
 	material.cpp
 	model_manager.cpp

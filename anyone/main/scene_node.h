@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base/type.h"
+#include "kazmath/kazmath.h"
 
 namespace anyone {
 
@@ -24,6 +25,9 @@ private:
     String name_;
     Vector<SceneNode*> children_;
     Vector<Attachment*> attachments_;
+    kmVec3 position_;
+    kmVec3 scale_;
+    kmQuaternion quaternion_;
 };
 
 } // namespace anyone

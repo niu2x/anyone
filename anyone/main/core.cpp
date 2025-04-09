@@ -3,6 +3,7 @@
 #include "model.h"
 #include "rml_ui.h"
 #include "model_manager.h"
+#include "scene_manager.h"
 #include "embed/builtin.h"
 #include "url-parser/url.hpp"
 #include "3rd/nlohmann/json.hpp"
@@ -21,6 +22,7 @@ Core::Core()
 , debug_layer_(nullptr)
 , render_system_(nullptr)
 , model_manager_(nullptr)
+, scene_manager_(nullptr)
 , project_dir_(std::nullopt)
 , dpi_ { 90, 90 }
 , framebuffer_size_ { 1, 1 }
@@ -114,6 +116,7 @@ void Core::setup_after_render_api_ready()
 
     render_system_ = std::make_unique<RenderSystem>(render_api_);
     model_manager_ = std::make_unique<ModelManager>();
+    scene_manager_ = std::make_unique<SceneManager>();
 
     RML_UI::setup();
     debug_layer_ = std::make_unique<RML_UI>();
@@ -132,6 +135,8 @@ void Core::cleanup_before_render_api_gone()
     Model::cleanup();
     debug_layer_.reset();
     RML_UI::cleanup();
+
+    scene_manager_.reset();
     model_manager_.reset();
     render_system_.reset();
 }
@@ -150,6 +155,8 @@ void Core::render()
         kmMat4RotationY(&transform, tick);
         render_system_->draw_model(model, &camera_, &transform);
     }
+
+    scene_manager_->render();
 
     debug_layer_->render();
 }

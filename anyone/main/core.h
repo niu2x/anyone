@@ -19,6 +19,7 @@ class PlatformSupport;
 class ModelManager;
 class RenderSystem;
 class RML_UI;
+class SceneManager;
 
 struct StartupConfig {
     PlatformSupport* platform_support;
@@ -81,6 +82,7 @@ private:
     UniquePtr<RML_UI> debug_layer_;
     UniquePtr<RenderSystem> render_system_;
     UniquePtr<ModelManager> model_manager_;
+    UniquePtr<SceneManager> scene_manager_;
 
     Optional<String> project_dir_;
     DPI dpi_;

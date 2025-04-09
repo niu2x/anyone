@@ -7,6 +7,9 @@ SceneNode::SceneNode(const String& name)
 , children_ {}
 , attachments_ {}
 {
+    kmVec3Zero(&position_);
+    scale_.x = scale_.y = scale_.z = 1;
+    kmQuaternionIdentity(&quaternion_);
 }
 
 SceneNode::~SceneNode()
