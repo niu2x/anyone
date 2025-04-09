@@ -28,6 +28,9 @@ public:
     void apply_transform_recursive(const kmMat4* parent_transform, bool force);
 
     void set_position(float x, float y, float z);
+    void rotate_by_local_z_axis(float r);
+    void rotate_by_local_x_axis(float r);
+    void rotate_by_local_y_axis(float r);
 
 private:
     String name_;

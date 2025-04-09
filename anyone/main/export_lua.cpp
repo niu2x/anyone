@@ -1,8 +1,7 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Wed Apr  9 19:57:46 2025.
+** Generated automatically by tolua++-1.0.93 on Wed Apr  9 20:08:40 2025.
 */
-
 
 #include "stdlib.h"
 #include "string.h"
@@ -595,6 +594,117 @@ static int tolua_anyone_anyone_SceneNode_set_position00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* method: rotate_by_local_z_axis of class  anyone::SceneNode */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneNode_rotate_by_local_z_axis00
+static int
+tolua_anyone_anyone_SceneNode_rotate_by_local_z_axis00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneNode", 0, &tolua_err)
+        || !tolua_isnumber(tolua_S, 2, 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::SceneNode* self = (anyone::SceneNode*)tolua_tousertype(
+            tolua_S, 1, 0);
+        float r = ((float)tolua_tonumber(tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(tolua_S,
+                        "invalid 'self' in function 'rotate_by_local_z_axis'",
+                        NULL);
+    #endif
+        {
+            self->rotate_by_local_z_axis(r);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(
+        tolua_S, "#ferror in function 'rotate_by_local_z_axis'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: rotate_by_local_x_axis of class  anyone::SceneNode */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneNode_rotate_by_local_x_axis00
+static int
+tolua_anyone_anyone_SceneNode_rotate_by_local_x_axis00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneNode", 0, &tolua_err)
+        || !tolua_isnumber(tolua_S, 2, 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::SceneNode* self = (anyone::SceneNode*)tolua_tousertype(
+            tolua_S, 1, 0);
+        float r = ((float)tolua_tonumber(tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(tolua_S,
+                        "invalid 'self' in function 'rotate_by_local_x_axis'",
+                        NULL);
+    #endif
+        {
+            self->rotate_by_local_x_axis(r);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(
+        tolua_S, "#ferror in function 'rotate_by_local_x_axis'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: rotate_by_local_y_axis of class  anyone::SceneNode */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneNode_rotate_by_local_y_axis00
+static int
+tolua_anyone_anyone_SceneNode_rotate_by_local_y_axis00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneNode", 0, &tolua_err)
+        || !tolua_isnumber(tolua_S, 2, 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::SceneNode* self = (anyone::SceneNode*)tolua_tousertype(
+            tolua_S, 1, 0);
+        float r = ((float)tolua_tonumber(tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(tolua_S,
+                        "invalid 'self' in function 'rotate_by_local_y_axis'",
+                        NULL);
+    #endif
+        {
+            self->rotate_by_local_y_axis(r);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(
+        tolua_S, "#ferror in function 'rotate_by_local_y_axis'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* Open function */
 TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
 {
@@ -644,10 +754,19 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
     tolua_function(tolua_S,"remove_child",tolua_anyone_anyone_SceneNode_remove_child00);
     tolua_function(tolua_S,"remove_child",tolua_anyone_anyone_SceneNode_remove_child01);
     tolua_function(tolua_S,"set_position",tolua_anyone_anyone_SceneNode_set_position00);
-   tolua_endmodule(tolua_S);
-  tolua_endmodule(tolua_S);
- tolua_endmodule(tolua_S);
- return 1;
+    tolua_function(tolua_S,
+                   "rotate_by_local_z_axis",
+                   tolua_anyone_anyone_SceneNode_rotate_by_local_z_axis00);
+    tolua_function(tolua_S,
+                   "rotate_by_local_x_axis",
+                   tolua_anyone_anyone_SceneNode_rotate_by_local_x_axis00);
+    tolua_function(tolua_S,
+                   "rotate_by_local_y_axis",
+                   tolua_anyone_anyone_SceneNode_rotate_by_local_y_axis00);
+    tolua_endmodule(tolua_S);
+    tolua_endmodule(tolua_S);
+    tolua_endmodule(tolua_S);
+    return 1;
 }
 
 

@@ -1,4 +1,5 @@
 #include "scene_node.h"
+#include "core.h"
 #include "attachment.h"
 
 namespace anyone {
@@ -127,5 +128,29 @@ void SceneNode::set_position(float x, float y, float z) {
 	transform_dirty_ = true;
 }
 
+void SceneNode::rotate_by_local_z_axis(float r)
+{
+    kmQuaternion tmp;
+    kmVec3 axis { 0, 0, 1 };
+    kmQuaternionRotationAxisAngle(&tmp, &axis, r);
+    kmQuaternionMultiply(&quaternion_, &quaternion_, &tmp);
+    transform_dirty_ = true;
+}
+void SceneNode::rotate_by_local_x_axis(float r)
+{
+    kmQuaternion tmp;
+    kmVec3 axis { 1, 0, 0 };
+    kmQuaternionRotationAxisAngle(&tmp, &axis, r);
+    kmQuaternionMultiply(&quaternion_, &quaternion_, &tmp);
+    transform_dirty_ = true;
+}
+void SceneNode::rotate_by_local_y_axis(float r)
+{
+    kmQuaternion tmp;
+    kmVec3 axis { 0, 1, 0 };
+    kmQuaternionRotationAxisAngle(&tmp, &axis, r);
+    kmQuaternionMultiply(&quaternion_, &quaternion_, &tmp);
+    transform_dirty_ = true;
+}
 
 } // namespace anyone
