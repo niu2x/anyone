@@ -7,6 +7,7 @@ SceneNode::SceneNode(const String& name)
 : name_(name)
 , children_ {}
 , renderables_ {}
+, transform_dirty_(true)
 {
     kmVec3Zero(&position_);
     scale_.x = scale_.y = scale_.z = 1;
@@ -95,11 +96,36 @@ void SceneNode::apply_transform(const kmMat4* parent_transform)
     }
 }
 
+void SceneNode::apply_transform_recursive(const kmMat4* parent_transform,
+                                          bool force)
+{
+
+    bool force_apply_children = false;
+
+    if (transform_dirty_ || force) {
+        transform_dirty_ = false;
+        apply_transform(parent_transform);
+        force_apply_children = true;
+    }
+
+    for (auto child : children_) {
+        child->apply_transform_recursive(&transform_, force_apply_children);
+    }
+}
+
 void SceneNode::render(const Camera* camera)
 {
     for (auto r : renderables_) {
         r->draw(camera, &transform_);
     }
 }
+
+void SceneNode::set_position(float x, float y, float z) {
+	position_.x = x;	
+	position_.y = y;	
+	position_.z = z;	
+	transform_dirty_ = true;
+}
+
 
 } // namespace anyone

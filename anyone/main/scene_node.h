@@ -23,9 +23,11 @@ public:
     void remove_child(SceneNode*);
 
     const kmMat4* get_transform() const { return &transform_; }
-
     void render(const Camera* camera);
-    void apply_transform(const kmMat4* parent_transform);
+
+    void apply_transform_recursive(const kmMat4* parent_transform, bool force);
+
+    void set_position(float x, float y, float z);
 
 private:
     String name_;
@@ -35,6 +37,8 @@ private:
     kmVec3 scale_;
     kmQuaternion quaternion_;
     kmMat4 transform_;
+    bool transform_dirty_;
+    void apply_transform(const kmMat4* parent_transform);
 };
 
 } // namespace anyone

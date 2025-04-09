@@ -163,10 +163,21 @@ bool Mesh::load(aiMesh* ai_mesh)
     auto num_vertices = ai_mesh->mNumVertices;
     auto num_faces = ai_mesh->mNumFaces;
     auto primitive_types = ai_mesh->mPrimitiveTypes;
-    LOG("mesh : num_vertices: %d, num_faces %d, primitive_types: %x, normals: %p",
+
+    int num_colors = 0;
+    for (; num_colors < AI_MAX_NUMBER_OF_COLOR_SETS; num_colors++) {
+        if (!ai_mesh->mColors[num_colors]) {
+            break;
+        }
+    }
+
+    LOG("mesh : num_vertices: %d, num_faces %d, primitive_types: %x, normals: "
+        "%p, num_colors: %d",
         num_vertices,
         num_faces,
-        primitive_types, ai_mesh->mNormals);
+        primitive_types,
+        ai_mesh->mNormals,
+        num_colors);
 
     // LOG("mesh AABB: %f %f %f, %f %f %f"
     //     , ai_mesh->mAABB.mMin.x

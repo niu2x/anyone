@@ -9,7 +9,7 @@ SceneManager::SceneManager()
 , sky_color_(Color::DARK_SLATE_GRAY)
 {
     root_ = new SceneNode("/");
-    root_->apply_transform(nullptr);
+    // root_->apply_transform(nullptr);
 }
 
 SceneManager::~SceneManager()
@@ -17,6 +17,10 @@ SceneManager::~SceneManager()
     if (root_)
         delete root_;
 }
-void SceneManager::render(const Camera* camera) { root_->render(camera); }
+void SceneManager::render(const Camera* camera)
+{
+    root_->apply_transform_recursive(nullptr, false);
+    root_->render(camera);
+}
 
 } // namespace anyone

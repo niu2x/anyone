@@ -43,6 +43,7 @@ class SceneNode {
     SceneNode* find_node(const char* name);
     void remove_child(const char* name);
     void remove_child(SceneNode*);
+    void set_position(float x, float y, float z);
 };
 
 }
