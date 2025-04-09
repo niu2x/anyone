@@ -25,6 +25,7 @@ public:
     const kmMat4* get_transform() const { return &transform_; }
 
     void render(const Camera* camera);
+    void apply_transform(const kmMat4* parent_transform);
 
 private:
     String name_;
@@ -34,8 +35,6 @@ private:
     kmVec3 scale_;
     kmQuaternion quaternion_;
     kmMat4 transform_;
-
-    void apply_transform(const kmMat4* parent_transform);
 };
 
 } // namespace anyone

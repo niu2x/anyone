@@ -3,7 +3,11 @@
 
 namespace anyone {
 
-SceneManager::SceneManager() : root_(nullptr) { root_ = new SceneNode("/"); }
+SceneManager::SceneManager() : root_(nullptr)
+{
+    root_ = new SceneNode("/");
+    root_->apply_transform(nullptr);
+}
 
 SceneManager::~SceneManager()
 {
