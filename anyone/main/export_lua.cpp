@@ -1,6 +1,6 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Wed Apr  9 15:20:42 2025.
+** Generated automatically by tolua++-1.0.93 on Wed Apr  9 15:38:03 2025.
 */
 
 #include "stdlib.h"
@@ -68,7 +68,41 @@ static int tolua_anyone_anyone_ModelManager_load_model00(lua_State* tolua_S)
      tolua_error(tolua_S, "#ferror in function 'load_model'.", &tolua_err);
      return 0;
     #endif
-}
+ }
+#endif //#ifndef TOLUA_DISABLE
+
+ /* method: unload_model of class  anyone::ModelManager */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_ModelManager_unload_model00
+ static int tolua_anyone_anyone_ModelManager_unload_model00(lua_State* tolua_S)
+ {
+    #ifndef TOLUA_RELEASE
+     tolua_Error tolua_err;
+     if (!tolua_isusertype(tolua_S, 1, "anyone::ModelManager", 0, &tolua_err)
+         || !tolua_isstring(tolua_S, 2, 0, &tolua_err)
+         || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+         goto tolua_lerror;
+     else
+    #endif
+     {
+         anyone::ModelManager* self = (anyone::ModelManager*)tolua_tousertype(
+             tolua_S, 1, 0);
+         const char* name = ((const char*)tolua_tostring(tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+         if (!self)
+             tolua_error(
+                 tolua_S, "invalid 'self' in function 'unload_model'", NULL);
+    #endif
+         {
+             self->unload_model(name);
+         }
+     }
+     return 0;
+    #ifndef TOLUA_RELEASE
+ tolua_lerror:
+     tolua_error(tolua_S, "#ferror in function 'unload_model'.", &tolua_err);
+     return 0;
+    #endif
+ }
 #endif //#ifndef TOLUA_DISABLE
 
 /* method: set_full_screen of class  anyone::PlatformSupport */
@@ -536,6 +570,8 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
   tolua_beginmodule(tolua_S, "ModelManager");
   tolua_function(
       tolua_S, "load_model", tolua_anyone_anyone_ModelManager_load_model00);
+  tolua_function(
+      tolua_S, "unload_model", tolua_anyone_anyone_ModelManager_unload_model00);
   tolua_endmodule(tolua_S);
   tolua_cclass(tolua_S, "PlatformSupport", "anyone::PlatformSupport", "", NULL);
   tolua_beginmodule(tolua_S, "PlatformSupport");

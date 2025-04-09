@@ -16,6 +16,7 @@ class Model: public Renderable {}
 
 class ModelManager {
     Model* load_model(const char* name, const char* path);
+    void unload_model(const char* name);
 };
 
 class PlatformSupport {
