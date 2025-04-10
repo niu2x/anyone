@@ -21,11 +21,33 @@ public:
     IndiceBuffer* get_veo() const { return veo_; }
 
     PrimitiveType get_primitive_type() const { return primitive_; }
+    int get_material_index() const { return material_; }
 
 private:
     VertexBuffer* vbo_;
     IndiceBuffer* veo_;
     PrimitiveType primitive_;
+    int material_;
+};
+
+class Material {
+public:
+    Material();
+    ~Material();
+
+    void set_base_color(const Color& c) { base_color_ = c; }
+    const Color& get_base_color() const { return base_color_; }
+
+    void set_metallic(float c) { metallic_ = c; }
+    float get_metallic() const { return metallic_; }
+
+    void set_roughness(float c) { roughness_ = c; }
+    float get_roughness() const { return roughness_; }
+
+private:
+    Color base_color_;
+    float metallic_;
+    float roughness_;
 };
 
 class Model : public Renderable {
@@ -50,6 +72,7 @@ public:
 private:
     String name_;
     Vector<UniquePtr<Mesh>> meshes_;
+    Vector<UniquePtr<Material>> materials_;
     Node* root_node_;
     static Program* program_;
     void destroy_node(Node* node);

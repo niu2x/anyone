@@ -132,6 +132,7 @@ Program* OpenGL_API::create_model_program()
     uniform mat4 model;
     uniform mat4 view;
     uniform mat4 proj;
+
     uniform vec3 light_direction;
 
     layout(location = 0) in vec3 position;
@@ -153,6 +154,7 @@ Program* OpenGL_API::create_model_program()
 
     uniform vec3 ambient;
     uniform vec3 light_direction;
+    uniform vec4 base_color;
 
     in vec3 v_normal;
 
@@ -160,8 +162,7 @@ Program* OpenGL_API::create_model_program()
     void main() {
         vec3 c = ambient;
         c += max(0.0, dot(v_normal, light_direction));
-
-        color = vec4(c, 1.0);
+        color = vec4(c, 1.0) * base_color;
     }
 )";
 

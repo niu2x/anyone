@@ -6,12 +6,17 @@
 
 namespace anyone {
 
-Model::Model(const String& name) : name_(name), meshes_ {}, root_node_(nullptr)
+Model::Model(const String& name)
+: name_(name)
+, meshes_ {}
+, materials_ {}
+, root_node_(nullptr)
 {
 }
 
 Model::~Model()
 {
+    materials_.clear();
     meshes_.clear();
     destroy_node(root_node_);
 }
@@ -211,6 +216,55 @@ bool Model::load_from_file(const String& path)
             }
         }
 
+        for (unsigned int i = 0; i < scene->mNumMaterials; i++) {
+            aiMaterial* material = scene->mMaterials[i];
+
+            auto my_material = std::make_unique<Material>();
+
+            // 1. 获取基础颜色（Albedo）
+            aiColor4D base_color;
+            if (AI_SUCCESS == material->Get(AI_MATKEY_BASE_COLOR, base_color)) {
+                // 使用 base_color.r/g/b/a
+                LOG("material(%d) base_color %f %f %f %f",
+                    i,
+                    base_color.r,
+                    base_color.g,
+                    base_color.b,
+                    base_color.a);
+
+                my_material->set_base_color(RGBA_F(
+                    base_color.r, base_color.g, base_color.b, base_color.a));
+            }
+
+            // 2. 获取金属度和粗糙度
+            float metallic = 0, roughness = 0;
+            if (AI_SUCCESS
+                == material->Get(AI_MATKEY_METALLIC_FACTOR, metallic)) {
+                LOG("material(%d) metallic %f", i, metallic);
+                my_material->set_metallic(metallic);
+            }
+            if (AI_SUCCESS
+                == material->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughness)) {
+                LOG("material(%d) roughness %f", i, roughness);
+                my_material->set_roughness(roughness);
+            }
+
+            materials_.push_back(std::move(my_material));
+
+            // 3. 获取贴图路径
+            // aiString texturePath;
+            // if (material->GetTexture(aiTextureType_BASE_COLOR, 0,
+            // &texturePath)
+            //     == AI_SUCCESS) {
+            //     std::string path = texturePath.C_Str(); // 基础颜色贴图路径
+            // }
+            // if (material->GetTexture(
+            //         aiTextureType_NORMAL_CAMERA, 0, &texturePath)
+            //     == AI_SUCCESS) {
+            //     std::string path = texturePath.C_Str(); // 法线贴图路径
+            // }
+        }
+
         root_node_ = load_node(root_node);
     }
 
@@ -219,7 +273,11 @@ bool Model::load_from_file(const String& path)
     return true;
 }
 
-Mesh::Mesh() : vbo_(nullptr), veo_(nullptr), primitive_(PrimitiveType::POINT)
+Mesh::Mesh()
+: vbo_(nullptr)
+, veo_(nullptr)
+, primitive_(PrimitiveType::POINT)
+, material_(-1)
 {
     auto api = GET_RENDER_API();
     vbo_ = api->create_vertex_buffer();
@@ -329,6 +387,8 @@ bool Mesh::load(aiMesh* ai_mesh)
     veo_->apply();
     veo_->free_cpu_buffer();
 
+    material_ = ai_mesh->mMaterialIndex;
+
     return true;
 }
 
@@ -346,6 +406,16 @@ void Model::draw_node(Node* node, const kmMat4* parent_transform)
         program_->set_param_mat4("model", my_transform.mat);
         for (auto mesh_id : node->meshes) {
             auto mesh = meshes_[mesh_id].get();
+
+            int material_index = mesh->get_material_index();
+            if (material_index >= 0 && material_index < materials_.size()) {
+                auto material = materials_[material_index].get();
+                program_->set_param_color("base_color",
+                                          material->get_base_color());
+            } else {
+                program_->set_param_color("base_color", Color::WHITE);
+            }
+
             auto vbo = mesh->get_vbo();
             auto veo = mesh->get_veo();
 
@@ -369,7 +439,7 @@ void Model::draw(const Camera* camera, const kmMat4* transform)
     auto view = camera->get_view_matrix();
     auto proj = camera->get_proj_matrix();
 
-    float ambient[] = { 0.3, 0.3, 0.6 };
+    float ambient[] = { 0.5, 0.5, 0.5 };
     float light_direction[] = {1/3.0, 1/3.0, 1/3.0};
     program_->set_param_vec3("ambient", ambient);
     program_->set_param_vec3("light_direction", light_direction);
@@ -391,5 +461,8 @@ Program* Model::program_ = nullptr;
 void Model::setup() { program_ = GET_RENDER_API()->create_model_program(); }
 
 void Model::cleanup() { GET_RENDER_API()->destroy_program(program_); }
+
+Material::Material() : base_color_(Color::GRAY), metallic_(0), roughness_(0) { }
+Material::~Material() { }
 
 } // namespace anyone
