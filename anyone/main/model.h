@@ -35,8 +35,8 @@ public:
     Material();
     ~Material();
 
-    void set_base_color(const Color& c) { base_color_ = c; }
-    const Color& get_base_color() const { return base_color_; }
+    void set_albedo(const Color& c) { albedo_ = c; }
+    const Color& get_albedo() const { return albedo_; }
 
     void set_metallic(float c) { metallic_ = c; }
     float get_metallic() const { return metallic_; }
@@ -45,7 +45,7 @@ public:
     float get_roughness() const { return roughness_; }
 
 private:
-    Color base_color_;
+    Color albedo_;
     float metallic_;
     float roughness_;
 };

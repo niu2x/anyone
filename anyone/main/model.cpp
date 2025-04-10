@@ -232,7 +232,7 @@ bool Model::load_from_file(const String& path)
                     base_color.b,
                     base_color.a);
 
-                my_material->set_base_color(RGBA_F(
+                my_material->set_albedo(RGBA_F(
                     base_color.r, base_color.g, base_color.b, base_color.a));
             }
 
@@ -412,10 +412,9 @@ void Model::draw_node(Node* node, const kmMat4* parent_transform)
             int material_index = mesh->get_material_index();
             if (material_index >= 0 && material_index < materials_.size()) {
                 auto material = materials_[material_index].get();
-                program_->set_param_color("base_color",
-                                          material->get_base_color());
+                program_->set_param_color("albedo", material->get_albedo());
             } else {
-                program_->set_param_color("base_color", Color::WHITE);
+                program_->set_param_color("albedo", Color::WHITE);
             }
 
             auto vbo = mesh->get_vbo();
@@ -430,6 +429,12 @@ void Model::draw_node(Node* node, const kmMat4* parent_transform)
             });
         }
     }
+}
+
+float get_time()
+{
+    static auto init = nx::time_now();
+    return nx::time_diff(init, nx::time_now());
 }
 
 void Model::draw(const Camera* camera, const kmMat4* transform)
@@ -448,6 +453,9 @@ void Model::draw(const Camera* camera, const kmMat4* transform)
     program_->set_param_mat4("view", view->mat);
     program_->set_param_mat4("proj", proj->mat);
 
+    float time[] = { get_time(), 0, 0, 0 };
+    program_->set_param_vec4("time", time);
+
     // kmMat4 adjust_axis;
     // kmMat4RotationX(&adjust_axis, -PI / 2);
     // kmMat4Multiply(&adjust_axis, &adjust_axis, transform);
@@ -464,7 +472,7 @@ void Model::setup() { program_ = GET_RENDER_API()->create_model_program(); }
 
 void Model::cleanup() { GET_RENDER_API()->destroy_program(program_); }
 
-Material::Material() : base_color_(Color::GRAY), metallic_(0), roughness_(0) { }
+Material::Material() : albedo_(Color::GRAY), metallic_(0), roughness_(0) { }
 Material::~Material() { }
 
 } // namespace anyone

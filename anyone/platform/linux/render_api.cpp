@@ -99,7 +99,9 @@ Program* OpenGL_API::create_rml_ui_program()
 
     in vec2 v_uv;
     in vec4 v_color;
+
     out vec4 color;
+
     void main() {
         color = texture(tex, v_uv) * v_color;
     }
@@ -139,9 +141,13 @@ Program* OpenGL_API::create_model_program()
     layout(location = 1) in vec3 normal;
 
     out vec3 v_normal;
+    out vec3 v_world_pos;
 
     void main() {
-        gl_Position = vec4(position, 1.0)*model*view*proj;
+
+        vec4 tmp = vec4(position, 1.0) * model;
+        gl_Position = tmp*view*proj;
+        v_world_pos = tmp.xyz/tmp.w;
 
         mat3 norm_matrix = transpose(inverse(mat3(model*view)));
         v_normal = normalize(normal*norm_matrix);
@@ -153,19 +159,26 @@ Program* OpenGL_API::create_model_program()
     #version 330 core
 
     uniform vec3 ambient;
-    uniform vec3 light_direction;
-    
-    uniform vec4 base_color;
+    uniform vec3 eye_pos;
+
+    uniform vec3 light_position;
+    uniform vec3 light_color;
+
+    uniform vec4 albedo;
     uniform float metallic;
     uniform float roughness;
 
+    uniform vec4 time;
+
+    const float PI = 3.14159265359;
+
     in vec3 v_normal;
+    in vec3 v_world_pos;
 
     out vec4 color;
     void main() {
         vec3 c = ambient;
-        c += max(0.0, dot(v_normal, light_direction));
-        color = vec4(c, 1.0) * base_color;
+        color = vec4(c, 1.0) * albedo + sin(vec4(v_world_pos.z+time*0.01));
     }
 )";
 
