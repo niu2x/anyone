@@ -154,7 +154,10 @@ Program* OpenGL_API::create_model_program()
 
     uniform vec3 ambient;
     uniform vec3 light_direction;
+    
     uniform vec4 base_color;
+    uniform float metallic;
+    uniform float roughness;
 
     in vec3 v_normal;
 
