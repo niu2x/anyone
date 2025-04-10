@@ -45,6 +45,8 @@ public:
         Node* parent;
     };
 
+    static Program* get_program() { return program_; }
+
 private:
     String name_;
     Vector<UniquePtr<Mesh>> meshes_;

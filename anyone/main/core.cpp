@@ -157,15 +157,6 @@ void Core::render()
     render_api_->set_clear_color(scene_manager_->get_sky_color());
     render_api_->clear();
 
-    // auto model = model_manager_->get_model("test");
-    // if (model) {
-    //     kmMat4 transform;
-    //     static float tick = 0;
-    //     tick += 0.1;
-    //     kmMat4RotationY(&transform, tick);
-    //     render_system_->draw_model(model, &camera_, &transform);
-    // }
-
     scene_manager_->render(&camera_);
 
     debug_layer_->render();

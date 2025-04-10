@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base/color.h"
+#include "platform/api/support.h"
 
 namespace anyone {
 
@@ -20,6 +21,11 @@ private:
     SceneNode* root_;
     Color ambient_color_;
     Color sky_color_;
+
+    VertexBuffer* axis_vbo_;
+    IndiceBuffer* axis_veo_;
+
+    void draw_axis(const Camera* camera);
 };
 
 } // namespace anyone

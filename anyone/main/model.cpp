@@ -304,19 +304,6 @@ void Model::draw(const Camera* camera, const kmMat4* transform)
     if (root_node_) {
         draw_node(root_node_, transform);
     }
-    // program_->set_param_mat4("model", model.mat);
-    // for (auto& mesh : meshes_) {
-    //     auto vbo = mesh->get_vbo();
-    //     auto veo = mesh->get_veo();
-
-    //     GET_RENDER_API()->draw(DrawOperation {
-    //         .primitive = PrimitiveType::TRIANGLE,
-    //         .polygon_mode = PolygonMode::LINE,
-    //         .vertex_buffer = vbo,
-    //         .indice_buffer = veo,
-    //         .count = veo->get_indice_count(),
-    //     });
-    // }
 }
 
 Program* Model::program_ = nullptr;
