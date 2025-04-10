@@ -59,6 +59,10 @@ void copy_transform(aiMatrix4x4* in, kmMat4* out)
     out->mat[13] = in->d2;
     out->mat[14] = in->d3;
     out->mat[15] = in->d4;
+
+    for (int i = 0; i < 16; i++) {
+        LOG("out->mat %i %f", i, out->mat[i]);
+    }
 }
 
 Model::Node* load_node(aiNode* ai_node)
@@ -134,6 +138,77 @@ bool Model::load_from_file(const String& path)
             auto mesh = std::make_unique<Mesh>();
             mesh->load(ai_mesh);
             meshes_.push_back(std::move(mesh));
+        }
+
+        auto meta = scene->mMetaData;
+
+        // int32_t up_axis = 0;
+        // int32_t up_axis_sign = 0;
+
+        if (meta) {
+            for (unsigned int i = 0; i < meta->mNumProperties; i++) {
+                // auto key = String(meta->mKeys[i]);
+                // auto value = meta->mValues[i];
+
+                // if(key == "UpAxis") {
+                //     NX_ASSERT(value.mType == AI_INT32, "");
+                //     up_axis = *(int32_t*)(value.mData);
+                // }
+                // else if(key == "UpAxisSign") {
+                //     NX_ASSERT(value.mType == AI_INT32, "");
+                //     up_axis_sign = *(int32_t*)(value.mData);
+                // }
+
+                // switch (value.mType) {
+                //     case AI_BOOL: {
+                //         LOG("meta %s(%s): ", key.data, "AI_BOOL");
+                //         break;
+                //     }
+                //     case AI_INT32: {
+                //         LOG("meta %s(%s): %d",
+                //             key.data,
+                //             "AI_INT32",
+                //             *(int32_t*)(value.mData));
+                //         break;
+                //     }
+
+                //     case AI_UINT64: {
+                //         LOG("meta %s(%s): ", key.data, "AI_UINT64");
+                //         break;
+                //     }
+                //     case AI_FLOAT: {
+                //         LOG("meta %s(%s): %f",
+                //             key.data,
+                //             "AI_FLOAT",
+                //             *(float*)(value.mData));
+                //         break;
+                //     }
+                //     case AI_DOUBLE: {
+                //         LOG("meta %s(%s): ", key.data, "AI_DOUBLE");
+                //         break;
+                //     }
+                //     case AI_AISTRING: {
+                //         LOG("meta %s(%s): ", key.data, "AI_AISTRING");
+                //         break;
+                //     }
+                //     case AI_AIVECTOR3D: {
+                //         LOG("meta %s(%s): ", key.data, "AI_AIVECTOR3D");
+                //         break;
+                //     }
+                //     case AI_AIMETADATA: {
+                //         LOG("meta %s(%s): ", key.data, "AI_AIMETADATA");
+                //         break;
+                //     }
+                //     case AI_INT64: {
+                //         LOG("meta %s(%s): ", key.data, "AI_INT64");
+                //         break;
+                //     }
+                //     case AI_UINT32: {
+                //         LOG("meta %s(%s): ", key.data, "AI_UINT32");
+                //         break;
+                //     }
+                // }
+            }
         }
 
         root_node_ = load_node(root_node);
@@ -301,8 +376,13 @@ void Model::draw(const Camera* camera, const kmMat4* transform)
     program_->set_param_mat4("view", view->mat);
     program_->set_param_mat4("proj", proj->mat);
 
+    kmMat4 adjust_axis;
+    kmMat4RotationX(&adjust_axis, -PI / 2);
+
+    kmMat4Multiply(&adjust_axis, &adjust_axis, transform);
+
     if (root_node_) {
-        draw_node(root_node_, transform);
+        draw_node(root_node_, &adjust_axis);
     }
 }
 

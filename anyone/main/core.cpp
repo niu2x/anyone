@@ -35,10 +35,10 @@ Core::Core()
 
     camera_.set_eye(200, 200, 200);
     camera_.look_at(0, 0, 0);
-    camera_.set_up(0, 1, 0);
+    camera_.set_up(0, 0, 1);
     camera_.set_aspect(1);
     camera_.set_fov(60);
-    camera_.set_near_clip(1.732);
+    camera_.set_near_clip(0.1);
     camera_.set_far_clip(1000);
     camera_.apply();
 }

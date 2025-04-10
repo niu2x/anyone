@@ -25,6 +25,8 @@ using namespace nx;
 template <class K, class V>
 using Map = std::map<K, V>;
 
+constexpr float PI = 3.1415926;
+
 template <class T>
 class Singleton {
 public:

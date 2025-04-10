@@ -84,7 +84,7 @@ void SceneManager::draw_axis(const Camera* camera)
     kmMat4 model_matrix;
     kmMat4Identity(&model_matrix);
 
-    GET_RENDER_API()->set_depth_test(false);
+    GET_RENDER_API()->set_depth_test(true);
     GET_RENDER_API()->set_blend_type(BlendType::NORMAL);
     auto program = Model::get_program();
     program->use();
