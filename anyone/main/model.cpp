@@ -257,6 +257,8 @@ bool Model::load_from_file(const String& path)
             // &texturePath)
             //     == AI_SUCCESS) {
             //     std::string path = texturePath.C_Str(); // 基础颜色贴图路径
+            //     LOG("material(%d) base color texture %s", i, path.c_str());
+
             // }
             // if (material->GetTexture(
             //         aiTextureType_NORMAL_CAMERA, 0, &texturePath)
