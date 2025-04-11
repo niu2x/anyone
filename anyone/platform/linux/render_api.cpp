@@ -151,7 +151,7 @@ Program* OpenGL_API::create_model_program()
         gl_Position = tmp*view*proj;
         v_world_pos = tmp.xyz/tmp.w;
 
-        mat3 norm_matrix = transpose(inverse(mat3(model*view)));
+        mat3 norm_matrix = transpose(inverse(mat3(model)));
         v_normal = normalize(normal*norm_matrix);
         v_uv = uv;
     }
@@ -161,13 +161,13 @@ Program* OpenGL_API::create_model_program()
     const char* fragment_source = R"(
     #version 330 core
 
-    uniform vec3 ambient;
+    uniform vec3 ambient_color;
     uniform vec3 eye_pos;
 
     uniform vec3 light_position;
     uniform vec3 light_color;
 
-    uniform vec4 albedo;
+    uniform vec4 albedo_color;
     uniform float metallic;
     uniform float roughness;
 
@@ -183,19 +183,116 @@ Program* OpenGL_API::create_model_program()
     in vec2 v_uv;
 
     out vec4 color;
+
+
+
+    float DistributionGGX(vec3 N, vec3 H, float roughness) {
+        float a = roughness * roughness;
+        float a2 = a * a;
+        float NdotH = max(dot(N, H), 0.0);
+        float NdotH2 = NdotH * NdotH;
+
+        float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+        denom = PI * denom * denom;
+
+        return a2 / max(denom, 0.0001); // 避免除以0
+    }
+
+    // ----------------------------------------------------------------------------
+    // 几何遮挡函数 (Geometry Shadowing): Smith-Schlick GGX
+    // ----------------------------------------------------------------------------
+    float GeometrySchlickGGX(float NdotV, float roughness) {
+        float r = (roughness + 1.0);
+        float k = (r * r) / 8.0; // 直接光照的调整参数
+
+        float nom = NdotV;
+        float denom = NdotV * (1.0 - k) + k;
+
+        return nom / denom;
+    }
+
+    float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
+        float NdotV = max(dot(N, V), 0.0);
+        float NdotL = max(dot(N, L), 0.0);
+        float ggx1 = GeometrySchlickGGX(NdotV, roughness);
+        float ggx2 = GeometrySchlickGGX(NdotL, roughness);
+
+        return ggx1 * ggx2;
+    }
+
+    // ----------------------------------------------------------------------------
+    // 菲涅尔方程 (Fresnel): Schlick近似
+    // ----------------------------------------------------------------------------
+    vec3 FresnelSchlick(float cos_theta, vec3 F0) {
+        return F0 + (1.0 - F0) * pow(clamp(1.0 - cos_theta, 0.0, 1.0), 5.0);
+    }
+
     void main() {
 
-        vec4 albedo_color;
+        vec3 albedo;
         if(use_albedo_tex) {
-            albedo_color = texture(albedo_tex, v_uv);
+            albedo = pow(texture(albedo_tex, v_uv).rgb, vec3(2.2));
         }
         else {
-            albedo_color = albedo;
+            albedo = albedo_color.rgb;
         }
 
-        vec3 c = ambient;
-        color = vec4(c, 1.0) * albedo_color;
+        float ao = 1.0;
+
+        // 初始化输入向量
+        vec3 N = normalize(v_normal);
+        vec3 V = normalize(eye_pos - v_world_pos);
+
+        // 基础反射率（非金属0.04，金属用Albedo）
+        vec3 F0 = vec3(0.04);
+        F0 = mix(F0, albedo, metallic);
+
+        // 直接光照计算
+        vec3 Lo = vec3(0.0);
+        for (int i = 0; i < 1; ++i) {
+            // 计算每盏光的贡献
+            vec3 L = normalize(light_position - v_world_pos);
+            vec3 H = normalize(V + L);
+
+            // 光线距离衰减
+            float distance = length(light_position - v_world_pos);
+            float attenuation = 1.0 / (distance * distance);
+            vec3 radiance = light_color * attenuation;
+
+            // Cook-Torrance BRDF
+            float NDF = DistributionGGX(N, H, roughness);
+            float G = GeometrySmith(N, V, L, roughness);
+            vec3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
+
+            // 镜面反射和漫反射比例
+            vec3 kS = F;
+            vec3 kD = vec3(1.0) - kS;
+            kD *= 1.0 - metallic; // 金属无漫反射
+
+            // BRDF组合
+            vec3 numerator = NDF * G * F;
+            float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
+            vec3 specular = numerator / max(denominator, 0.001);
+
+            // 光线贡献 = (漫反射 + 镜面反射) * 辐射度
+            float NdotL = max(dot(N, L), 0.0);
+            Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+        }
+
+        // 环境光照（简化的IBL）
+        vec3 ambient = ambient_color * albedo * ao;
+
+        // 最终颜色（HDR -> sRGB）
+        color.a = 1.0;
+        color.rgb = ambient + Lo;
+        color.rgb = color.rgb / (color.rgb + vec3(1.0)); // Reinhard色调映射
+        color.rgb = pow(color.rgb, vec3(1.0 / 2.2)); // Linear -> sRGB
+
     }
+
+
+
+
 )";
 
     auto m = new GL_Program;
@@ -493,6 +590,14 @@ void GL_Program::set_param_int(const char* name, int arg)
     auto location = glGetUniformLocation(program_, name);
     // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform1i(location, arg);
+    // LOG("set vec2 %s:%d %f %f", name, location, args[0], args[1]);
+}
+
+void GL_Program::set_param_float(const char* name, float arg)
+{
+    auto location = glGetUniformLocation(program_, name);
+    // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
+    glUniform1f(location, arg);
     // LOG("set vec2 %s:%d %f %f", name, location, args[0], args[1]);
 }
 

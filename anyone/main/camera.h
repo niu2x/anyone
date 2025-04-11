@@ -26,6 +26,8 @@ public:
     void transform_vp(const kmVec3* in, kmVec4* out) const;
     void transform_vp(const kmVec4* in, kmVec4* out) const;
 
+    const kmVec3* get_eye() const { return &eye_; }
+
 private:
     kmVec3 eye_;
     kmVec3 look_;

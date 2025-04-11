@@ -44,6 +44,12 @@ public:
         (void)arg;
     }
 
+    void set_param_float(const char* name, float arg) override
+    {
+        (void)name;
+        (void)arg;
+    }
+
     void set_param_vec2(const char* name, const float args[]) override
     {
         (void)name;

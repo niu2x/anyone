@@ -33,13 +33,13 @@ Core::Core()
     builtin_archive_ = nx::fs::create_zip_archive_from_memory(builtin,
                                                               builtin_length);
 
-    camera_.set_eye(2, 2, 2);
+    camera_.set_eye(1, 1, 1);
     camera_.look_at(0, 0, 0);
     camera_.set_up(0, 0, 1);
     camera_.set_aspect(1);
     camera_.set_fov(60);
     camera_.set_near_clip(0.1);
-    camera_.set_far_clip(1000);
+    camera_.set_far_clip(100);
     camera_.apply();
 }
 

@@ -462,12 +462,16 @@ void Model::draw_node(Node* node, const kmMat4* parent_transform)
                     albedo_texture->bind(0);
                 } else {
 
-                    program_->set_param_color("albedo", material->get_albedo());
+                    program_->set_param_color("albedo_color",
+                                              material->get_albedo());
                     program_->set_param_int("use_albedo_tex", 0);
                 }
 
+                program_->set_param_float("metallic", material->get_metallic());
+                program_->set_param_float("roughness",
+                                          material->get_roughness());
             } else {
-                program_->set_param_color("albedo", Color::WHITE);
+                program_->set_param_color("albedo_color", Color::WHITE);
                 program_->set_param_int("use_albedo_tex", 0);
             }
 
@@ -502,8 +506,11 @@ void Model::draw(const Camera* camera, const kmMat4* transform)
 
     float ambient[] = { 0.5, 0.5, 0.5 };
     float light_direction[] = {1/3.0, 1/3.0, 1/3.0};
-    program_->set_param_vec3("ambient", ambient);
-    program_->set_param_vec3("light_direction", light_direction);
+    program_->set_param_vec3("ambient_color", ambient);
+    program_->set_param_vec3("light_position", 3, 0, 3);
+    program_->set_param_vec3("light_color", 1000, 1000, 1000);
+    auto eye_pos = camera->get_eye();
+    program_->set_param_vec3("eye_pos", eye_pos->x, eye_pos->y, eye_pos->z);
     program_->set_param_mat4("view", view->mat);
     program_->set_param_mat4("proj", proj->mat);
 

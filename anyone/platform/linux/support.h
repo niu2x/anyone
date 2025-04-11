@@ -49,6 +49,7 @@ public:
     void set_param_vec4(const char* name, const float args[]) override;
     void set_param_mat4(const char* name, const float args[]) override;
     void set_param_int(const char* name, int arg) override;
+    void set_param_float(const char* name, float arg) override;
 
     void use() override;
     bool compile_program(const char* vertex, const char* fragment);
