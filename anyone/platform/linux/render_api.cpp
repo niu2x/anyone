@@ -178,7 +178,7 @@ Program* OpenGL_API::create_model_program()
     out vec4 color;
     void main() {
         vec3 c = ambient;
-        color = vec4(c, 1.0) * albedo + sin(vec4(v_world_pos.z+time*0.01));
+        color = vec4(c, 1.0) * albedo;
     }
 )";
 

@@ -73,6 +73,7 @@ private:
     String name_;
     Vector<UniquePtr<Mesh>> meshes_;
     Vector<UniquePtr<Material>> materials_;
+    Vector<Texture2D*> textures_;
     Node* root_node_;
     static Program* program_;
     void destroy_node(Node* node);

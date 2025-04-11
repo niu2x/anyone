@@ -1,5 +1,6 @@
 #include "model.h"
 #include "main/core.h"
+#include "main/texture_loader.h"
 #include <assimp/Importer.hpp> // C++ importer interface
 #include <assimp/scene.h> // Output data structure
 #include <assimp/postprocess.h> // Post processing flags
@@ -10,12 +11,17 @@ Model::Model(const String& name)
 : name_(name)
 , meshes_ {}
 , materials_ {}
+, textures_ {}
 , root_node_(nullptr)
 {
 }
 
 Model::~Model()
 {
+    for (auto tex : textures_) {
+        GET_RENDER_API()->destroy_texture_2d(tex);
+    }
+    textures_.clear();
     materials_.clear();
     meshes_.clear();
     destroy_node(root_node_);
@@ -252,14 +258,31 @@ bool Model::load_from_file(const String& path)
             materials_.push_back(std::move(my_material));
 
             // 3. 获取贴图路径
-            // aiString texturePath;
-            // if (material->GetTexture(aiTextureType_BASE_COLOR, 0,
-            // &texturePath)
-            //     == AI_SUCCESS) {
-            //     std::string path = texturePath.C_Str(); // 基础颜色贴图路径
-            //     LOG("material(%d) base color texture %s", i, path.c_str());
-
-            // }
+            aiString texturePath;
+            if (material->GetTexture(aiTextureType_BASE_COLOR, 0, &texturePath)
+                == AI_SUCCESS) {
+                auto path = texturePath.C_Str(); // 基础颜色贴图路径
+                if (path[0] == '*') {
+                    unsigned int tex_index = std::stoi(path + 1);
+                    aiTexture* tex = scene->mTextures[tex_index];
+                    LOG("tex(%d) format_hint: %s",
+                        tex_index,
+                        tex->achFormatHint);
+                    if (tex->mHeight == 0) {
+                        if (strcasecmp(tex->achFormatHint, "jpg") == 0) {
+                            textures_.push_back(TextureLoader::load_2d_jpg(
+                                (const uint8_t*)tex->pcData, tex->mWidth));
+                        } else {
+                            NX_PANIC("don't support compressed format: %s",
+                                     tex->achFormatHint);
+                        }
+                    } else {
+                        NX_PANIC("don't support uncompressed material texture");
+                    }
+                } else {
+                    NX_PANIC("only support embed texture");
+                }
+            }
             // if (material->GetTexture(
             //         aiTextureType_NORMAL_CAMERA, 0, &texturePath)
             //     == AI_SUCCESS) {

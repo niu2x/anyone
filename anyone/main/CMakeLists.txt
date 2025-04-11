@@ -17,6 +17,7 @@ target_sources(anyone_main PRIVATE
 	material.cpp
 	model_manager.cpp
 	attachment.cpp
+	texture_loader.cpp
 	
 	tolua_support.cpp
 	export_lua.cpp
