@@ -336,13 +336,20 @@ bool Mesh::load(aiMesh* ai_mesh)
         }
     }
 
+    int num_uv = 0;
+    for (; num_uv < AI_MAX_NUMBER_OF_TEXTURECOORDS; num_uv++) {
+        if (!ai_mesh->mTextureCoords[num_uv]) {
+            break;
+        }
+    }
+
     LOG("mesh : num_vertices: %d, num_faces %d, primitive_types: %x, normals: "
-        "%p, num_colors: %d",
+        "%p, num_colors: %d, num_uv: %d",
         num_vertices,
         num_faces,
         primitive_types,
         ai_mesh->mNormals,
-        num_colors);
+        num_colors, num_uv);
 
     // LOG("mesh AABB: %f %f %f, %f %f %f"
     //     , ai_mesh->mAABB.mMin.x
@@ -372,6 +379,7 @@ bool Mesh::load(aiMesh* ai_mesh)
     struct GPU_Vertex {
         float x, y, z;
         float nx,ny, nz;
+        float u0, v0;
     };
 
     vbo_->alloc_cpu_buffer(sizeof(GPU_Vertex) * num_vertices);
@@ -387,6 +395,11 @@ bool Mesh::load(aiMesh* ai_mesh)
             vertices[i].nz = ai_mesh->mNormals[i].z;
         }
 
+        if(num_uv > 0) {
+            vertices[i].u0 = ai_mesh->mTextureCoords[0][i].x;
+            vertices[i].v0 = ai_mesh->mTextureCoords[0][i].y;
+        }
+
         //         LOG("mesh AABB: %f %f %f"
         //     , vertices[i].x
         //     , vertices[i].y
@@ -396,7 +409,7 @@ bool Mesh::load(aiMesh* ai_mesh)
     vbo_->apply();
     vbo_->free_cpu_buffer();
 
-    vbo_->set_vertex_layout({ VertexAttr::POSITION_XYZ, VertexAttr::NORMAL });
+    vbo_->set_vertex_layout({ VertexAttr::POSITION_XYZ, VertexAttr::NORMAL , VertexAttr::UV});
 
     veo_->alloc_cpu_buffer(num_faces * expect_indice_num);
     auto indices = veo_->get_cpu_buffer();
