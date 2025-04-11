@@ -139,9 +139,11 @@ Program* OpenGL_API::create_model_program()
 
     layout(location = 0) in vec3 position;
     layout(location = 1) in vec3 normal;
+    layout(location = 2) in vec2 uv;
 
     out vec3 v_normal;
     out vec3 v_world_pos;
+    out vec2 v_uv;
 
     void main() {
 
@@ -151,6 +153,7 @@ Program* OpenGL_API::create_model_program()
 
         mat3 norm_matrix = transpose(inverse(mat3(model*view)));
         v_normal = normalize(normal*norm_matrix);
+        v_uv = uv;
     }
 
 )";
@@ -168,17 +171,30 @@ Program* OpenGL_API::create_model_program()
     uniform float metallic;
     uniform float roughness;
 
+    uniform sampler2D albedo_tex;
+    uniform bool use_albedo_tex;
+
     uniform vec4 time;
 
     const float PI = 3.14159265359;
 
     in vec3 v_normal;
     in vec3 v_world_pos;
+    in vec2 v_uv;
 
     out vec4 color;
     void main() {
+
+        vec4 albedo_color;
+        if(use_albedo_tex) {
+            albedo_color = texture(albedo_tex, v_uv);
+        }
+        else {
+            albedo_color = albedo;
+        }
+
         vec3 c = ambient;
-        color = vec4(c, 1.0) * albedo;
+        color = vec4(c, 1.0) * albedo_color;
     }
 )";
 
@@ -471,6 +487,15 @@ void GL_Program::set_param_texture(const char* name, int tex_unit)
     glUniform1i(location, tex_unit);
     // LOG("set tex %s:%d %d", name, location, tex_unit);
 }
+
+void GL_Program::set_param_int(const char* name, int arg)
+{
+    auto location = glGetUniformLocation(program_, name);
+    // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
+    glUniform1i(location, arg);
+    // LOG("set vec2 %s:%d %f %f", name, location, args[0], args[1]);
+}
+
 void GL_Program::set_param_vec2(const char* name, const float args[])
 {
     auto location = glGetUniformLocation(program_, name);

@@ -44,10 +44,14 @@ public:
     void set_roughness(float c) { roughness_ = c; }
     float get_roughness() const { return roughness_; }
 
+    void set_albedo_texture(Texture2D* tex) { albedo_tex_ = tex; }
+    Texture2D* get_albedo_texture() const { return albedo_tex_; }
+
 private:
     Color albedo_;
     float metallic_;
     float roughness_;
+    Texture2D* albedo_tex_;
 };
 
 class Model : public Renderable {

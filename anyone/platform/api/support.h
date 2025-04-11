@@ -180,6 +180,7 @@ public:
     virtual void set_param_vec3(const char* name, const float args[]) = 0;
     virtual void set_param_vec4(const char* name, const float args[]) = 0;
     virtual void set_param_mat4(const char* name, const float args[]) = 0;
+    virtual void set_param_int(const char* name, int arg) = 0;
 
     void set_param_color(const char* name, const Color& c)
     {

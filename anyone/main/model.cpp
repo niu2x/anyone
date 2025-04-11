@@ -255,8 +255,6 @@ bool Model::load_from_file(const String& path)
                 my_material->set_roughness(roughness);
             }
 
-            materials_.push_back(std::move(my_material));
-
             // 3. 获取贴图路径
             aiString texturePath;
             if (material->GetTexture(aiTextureType_BASE_COLOR, 0, &texturePath)
@@ -270,8 +268,14 @@ bool Model::load_from_file(const String& path)
                         tex->achFormatHint);
                     if (tex->mHeight == 0) {
                         if (strcasecmp(tex->achFormatHint, "jpg") == 0) {
-                            textures_.push_back(TextureLoader::load_2d_jpg(
-                                (const uint8_t*)tex->pcData, tex->mWidth));
+
+                            auto texture = TextureLoader::load_2d_jpg(
+                                (const uint8_t*)tex->pcData, tex->mWidth);
+                            if (texture) {
+                                my_material->set_albedo_texture(texture);
+                                textures_.push_back(texture);
+                            }
+
                         } else {
                             NX_PANIC("don't support compressed format: %s",
                                      tex->achFormatHint);
@@ -283,6 +287,9 @@ bool Model::load_from_file(const String& path)
                     NX_PANIC("only support embed texture");
                 }
             }
+
+            materials_.push_back(std::move(my_material));
+
             // if (material->GetTexture(
             //         aiTextureType_NORMAL_CAMERA, 0, &texturePath)
             //     == AI_SUCCESS) {
@@ -435,9 +442,20 @@ void Model::draw_node(Node* node, const kmMat4* parent_transform)
             int material_index = mesh->get_material_index();
             if (material_index >= 0 && material_index < materials_.size()) {
                 auto material = materials_[material_index].get();
-                program_->set_param_color("albedo", material->get_albedo());
+                auto albedo_texture = material->get_albedo_texture();
+                if (albedo_texture) {
+                    program_->set_param_int("use_albedo_tex", 1);
+                    program_->set_param_texture("albedo_tex", 0);
+                    albedo_texture->bind(0);
+                } else {
+
+                    program_->set_param_color("albedo", material->get_albedo());
+                    program_->set_param_int("use_albedo_tex", 0);
+                }
+
             } else {
                 program_->set_param_color("albedo", Color::WHITE);
+                program_->set_param_int("use_albedo_tex", 0);
             }
 
             auto vbo = mesh->get_vbo();
@@ -495,7 +513,13 @@ void Model::setup() { program_ = GET_RENDER_API()->create_model_program(); }
 
 void Model::cleanup() { GET_RENDER_API()->destroy_program(program_); }
 
-Material::Material() : albedo_(Color::GRAY), metallic_(0), roughness_(0) { }
+Material::Material()
+: albedo_(Color::GRAY)
+, metallic_(0)
+, roughness_(0)
+, albedo_tex_(nullptr)
+{
+}
 Material::~Material() { }
 
 } // namespace anyone

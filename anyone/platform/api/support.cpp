@@ -37,6 +37,13 @@ public:
         (void)name;
         (void)tex_unit;
     }
+
+    void set_param_int(const char* name, int arg) override
+    {
+        (void)name;
+        (void)arg;
+    }
+
     void set_param_vec2(const char* name, const float args[]) override
     {
         (void)name;
