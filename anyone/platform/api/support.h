@@ -119,6 +119,18 @@ struct VertexIndiceBuffer {
     IndiceBuffer* veo;
 };
 
+enum class PixelFormat {
+    RGBA_U8,
+    RGB_U8,
+};
+
+struct PixelFormatDescription {
+    int num_channel;
+    size_t elem_size;
+};
+
+const PixelFormatDescription& get_pixel_format_desc(PixelFormat fmt);
+
 class Texture2D {
 public:
     Texture2D();
@@ -126,6 +138,8 @@ public:
 
     virtual void apply() = 0;
     virtual void bind(int tex_unit) = 0;
+
+    void set_pixel_format(PixelFormat fmt) { pixel_format_ = fmt; }
 
     void alloc_cpu_buffer(int w, int h);
     void free_cpu_buffer();
@@ -142,6 +156,7 @@ public:
 protected:
     int width_, height_;
     ByteBuffer cpu_buffer_;
+    PixelFormat pixel_format_;
 };
 
 // enum class VertexStrategy {

@@ -394,15 +394,34 @@ void GL_Texture2D::apply()
     // memset(cpu_buffer_.data(), 0xff, cpu_buffer_.size());
     // glActiveTexture(GL_TEXTURE0 + 0);
     glBindTexture(GL_TEXTURE_2D, name_);
-    glTexImage2D(GL_TEXTURE_2D,
-                 0,
-                 GL_RGBA8,
-                 width_,
-                 height_,
-                 0,
-                 GL_RGBA,
-                 GL_UNSIGNED_BYTE,
-                 cpu_buffer_.data());
+    switch (pixel_format_) {
+        case PixelFormat::RGBA_U8: {
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+            glTexImage2D(GL_TEXTURE_2D,
+                         0,
+                         GL_RGBA8,
+                         width_,
+                         height_,
+                         0,
+                         GL_RGBA,
+                         GL_UNSIGNED_BYTE,
+                         cpu_buffer_.data());
+            break;
+        }
+        case PixelFormat::RGB_U8: {
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            glTexImage2D(GL_TEXTURE_2D,
+                         0,
+                         GL_RGB8,
+                         width_,
+                         height_,
+                         0,
+                         GL_RGB,
+                         GL_UNSIGNED_BYTE,
+                         cpu_buffer_.data());
+            break;
+        }
+    }
 
     glTexParameteri(
         GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);

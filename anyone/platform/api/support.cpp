@@ -131,7 +131,12 @@ void IndiceBuffer::alloc_cpu_buffer(size_t indice_count)
 
 void IndiceBuffer::free_cpu_buffer() { cpu_buffer_.clear(); }
 
-Texture2D::Texture2D() : width_(0), height_(0) { }
+Texture2D::Texture2D()
+: width_(0)
+, height_(0)
+, pixel_format_(PixelFormat::RGBA_U8)
+{
+}
 
 Texture2D::~Texture2D() { }
 
@@ -139,7 +144,9 @@ void Texture2D::alloc_cpu_buffer(int w, int h)
 {
     width_ = w;
     height_ = h;
-    cpu_buffer_.resize(width_ * height_ * 4);
+    auto& pf_desc = get_pixel_format_desc(pixel_format_);
+    cpu_buffer_.resize(width_ * height_ * pf_desc.num_channel
+                       * pf_desc.elem_size);
 }
 
 void Texture2D::free_cpu_buffer() { cpu_buffer_.clear(); }
@@ -147,5 +154,15 @@ void Texture2D::free_cpu_buffer() { cpu_buffer_.clear(); }
 Program::Program() { }
 
 Program::~Program() { }
+
+static PixelFormatDescription pixel_format_desc_list[] = {
+    { .num_channel = 4, .elem_size = 1 },
+    { .num_channel = 3, .elem_size = 1 },
+};
+
+const PixelFormatDescription& get_pixel_format_desc(PixelFormat fmt)
+{
+    return pixel_format_desc_list[(int)fmt];
+}
 
 } // namespace anyone

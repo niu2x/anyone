@@ -4,6 +4,8 @@ file(GLOB_RECURSE src_files
 	"./*.cpp"
 )
 
+find_package(libjpeg-turbo REQUIRED)
+
 target_sources(anyone_main PRIVATE
 	# ${src_files}
 	rml_ui.cpp
@@ -42,6 +44,7 @@ target_link_libraries(anyone_main PUBLIC
 	# freetype
 	tolua
 	kazmath
+	libjpeg-turbo::turbojpeg-static
 )
 
 target_link_directories(anyone_main PUBLIC

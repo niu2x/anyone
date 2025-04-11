@@ -24,6 +24,6 @@ cpu_core=$(expr $(get_job_num) - 1)
 
 cmake -S ${project} -B build/${project} \
 	-DCMAKE_BUILD_TYPE=Release \
-	-DBUILD_SHARED_LIBS=ON ${@: 2}
+	${@: 2}
 cmake --build build/${project} -j ${cpu_core}
 cmake --install build/${project} --prefix dist
