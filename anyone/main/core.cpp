@@ -39,7 +39,7 @@ Core::Core()
     camera_.set_aspect(1);
     camera_.set_fov(60);
     camera_.set_near_clip(0.1);
-    camera_.set_far_clip(100);
+    camera_.set_far_clip(100000);
     camera_.apply();
 }
 
@@ -352,11 +352,15 @@ void Core::notify_keyboard_event(const KeyboardEvent& event)
 void Core::notify_mouse_move_event(const MouseMoveEvent& e)
 {
     (void)e;
-    //     LOG("mouse_move x: %d, y: %d, rel_x: %d, rel_y: %d",
-    //         e.x,
-    //         e.y,
-    //         e.rel_x,
-    //         e.rel_y);
+        // LOG("mouse_move x: %d, y: %d, rel_x: %d, rel_y: %d",
+        //     e.x,
+        //     e.y,
+        //     e.rel_x,
+        //     e.rel_y);
+    static float z = 0;
+    z += e.rel_y;
+    camera_.look_at(0, 0, z/100.0);
+    camera_.apply();
 }
 
 void Core::notify_mouse_button_event(const MouseButtonEvent& e) { (void)e; }

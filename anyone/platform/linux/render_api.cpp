@@ -124,12 +124,13 @@ Program* OpenGL_API::create_sky_box_program()
 
     uniform mat4 view;
     uniform mat4 proj;
+    uniform vec3 eye_pos;
 
     out vec3 v_uv;
 
     void main() {
-        gl_Position = vec4(position, 1.0);
-        v_uv = gl_Position.xyz;
+        gl_Position = vec4(position*1000.0, 1.0)* view * proj;
+        v_uv = position.xyz;
     }
 
 )";
@@ -140,7 +141,7 @@ Program* OpenGL_API::create_sky_box_program()
     in vec3 v_uv;
     out vec4 color;
     void main() {
-        color = texture(tex, v_uv);
+        color = texture(tex, normalize(v_uv));
     }
 )";
 

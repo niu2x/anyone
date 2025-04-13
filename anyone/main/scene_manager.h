@@ -33,7 +33,7 @@ private:
     CubeMap* sky_box_;
 
     void draw_axis(const Camera* camera);
-    void draw_sky_box();
+    void draw_sky_box(const Camera* camera);
 
     void init_axis();
     void init_sky_box();

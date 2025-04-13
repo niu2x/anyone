@@ -207,20 +207,30 @@ void SceneManager::render(const Camera* camera)
 
     // draw sky box
 
-    draw_sky_box();
+    draw_sky_box(camera);
 
     root_->render(camera);
     draw_axis(camera);
 }
 
-void SceneManager::draw_sky_box()
+void SceneManager::draw_sky_box(const Camera* camera)
 {
     if (sky_box_) {
-        GET_RENDER_API()->set_depth_test(false);
+        GET_RENDER_API()->set_depth_test(true);
 
         sky_box_->bind(0);
         sky_box_program_->use();
         sky_box_program_->set_param_texture("tex", 0);
+
+        auto view = camera->get_view_matrix();
+        auto proj = camera->get_proj_matrix();
+
+        sky_box_program_->set_param_mat4("view", view->mat);
+        sky_box_program_->set_param_mat4("proj", proj->mat);
+
+        auto eye_pos = camera->get_eye();
+        sky_box_program_->set_param_vec3("eye_pos", eye_pos->x, eye_pos->y, eye_pos->z);
+
 
         GET_RENDER_API()->draw(DrawOperation {
             .primitive = PrimitiveType::TRIANGLE,
