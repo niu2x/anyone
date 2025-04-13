@@ -1,6 +1,6 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Wed Apr  9 20:08:40 2025.
+** Generated automatically by tolua++-1.0.93 on Sun Apr 13 11:22:29 2025.
 */
 
 #include "stdlib.h"
@@ -21,21 +21,244 @@ TOLUA_API int  tolua_anyone_open (lua_State* tolua_S);
 #include "main/scene_node.h"
 #include "main/scene_manager.h"
 #include "platform/api/support.h"
+#include "texture_loader.h"
 #include "tolua_support.h"
 
 /* function to register type */
 static void tolua_reg_types (lua_State* tolua_S)
 {
  tolua_usertype(tolua_S,"anyone::PlatformSupport");
+ tolua_usertype(tolua_S, "anyone::TextureLoader");
+ tolua_usertype(tolua_S, "anyone::VertexBuffer");
+ tolua_usertype(tolua_S, "anyone::Texture2D");
+ tolua_usertype(tolua_S, "anyone::SceneNode");
  tolua_usertype(tolua_S,"anyone::Renderable");
+ tolua_usertype(tolua_S, "anyone::Program");
  tolua_usertype(tolua_S,"anyone::ModelManager");
- tolua_usertype(tolua_S,"anyone::SceneNode");
+ tolua_usertype(tolua_S, "anyone::CubeMap");
+ tolua_usertype(tolua_S, "anyone::IndiceBuffer");
+
  tolua_usertype(tolua_S,"anyone::SceneManager");
- tolua_usertype(tolua_S,"anyone::Attachment");
- tolua_usertype(tolua_S,"anyone::Model");
- 
+ tolua_usertype(tolua_S, "anyone::Attachment");
  tolua_usertype(tolua_S,"anyone::Core");
+ tolua_usertype(tolua_S, "anyone::Model");
+ tolua_usertype(tolua_S, "anyone::RenderAPI");
 }
+
+/* method: load_cube_map_png of class  anyone::TextureLoader */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_TextureLoader_load_cube_map_png00
+static int
+tolua_anyone_anyone_TextureLoader_load_cube_map_png00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(tolua_S, 1, "anyone::TextureLoader", 0, &tolua_err)
+        || !tolua_isstring(tolua_S, 2, 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        const char* uri = ((const char*)tolua_tostring(tolua_S, 2, 0));
+        {
+            anyone::CubeMap* tolua_ret = (anyone::CubeMap*)
+                anyone::TextureLoader::load_cube_map_png(uri);
+            tolua_pushusertype(tolua_S, (void*)tolua_ret, "anyone::CubeMap");
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(
+        tolua_S, "#ferror in function 'load_cube_map_png'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: destroy_vertex_buffer of class  anyone::RenderAPI */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_RenderAPI_destroy_vertex_buffer00
+static int
+tolua_anyone_anyone_RenderAPI_destroy_vertex_buffer00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::RenderAPI", 0, &tolua_err)
+        || !tolua_isusertype(tolua_S, 2, "anyone::VertexBuffer", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::RenderAPI* self = (anyone::RenderAPI*)tolua_tousertype(
+            tolua_S, 1, 0);
+        anyone::VertexBuffer* vbo = ((anyone::VertexBuffer*)tolua_tousertype(
+            tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(tolua_S,
+                        "invalid 'self' in function 'destroy_vertex_buffer'",
+                        NULL);
+    #endif
+        {
+            self->destroy_vertex_buffer(vbo);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(
+        tolua_S, "#ferror in function 'destroy_vertex_buffer'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: destroy_indice_buffer of class  anyone::RenderAPI */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_RenderAPI_destroy_indice_buffer00
+static int
+tolua_anyone_anyone_RenderAPI_destroy_indice_buffer00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::RenderAPI", 0, &tolua_err)
+        || !tolua_isusertype(tolua_S, 2, "anyone::IndiceBuffer", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::RenderAPI* self = (anyone::RenderAPI*)tolua_tousertype(
+            tolua_S, 1, 0);
+        anyone::IndiceBuffer* veo = ((anyone::IndiceBuffer*)tolua_tousertype(
+            tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(tolua_S,
+                        "invalid 'self' in function 'destroy_indice_buffer'",
+                        NULL);
+    #endif
+        {
+            self->destroy_indice_buffer(veo);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(
+        tolua_S, "#ferror in function 'destroy_indice_buffer'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: destroy_texture_2d of class  anyone::RenderAPI */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_RenderAPI_destroy_texture_2d00
+static int
+tolua_anyone_anyone_RenderAPI_destroy_texture_2d00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::RenderAPI", 0, &tolua_err)
+        || !tolua_isusertype(tolua_S, 2, "anyone::Texture2D", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::RenderAPI* self = (anyone::RenderAPI*)tolua_tousertype(
+            tolua_S, 1, 0);
+        anyone::Texture2D* vbo = ((anyone::Texture2D*)tolua_tousertype(
+            tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(tolua_S,
+                        "invalid 'self' in function 'destroy_texture_2d'",
+                        NULL);
+    #endif
+        {
+            self->destroy_texture_2d(vbo);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(
+        tolua_S, "#ferror in function 'destroy_texture_2d'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: destroy_cube_map of class  anyone::RenderAPI */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_RenderAPI_destroy_cube_map00
+static int tolua_anyone_anyone_RenderAPI_destroy_cube_map00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::RenderAPI", 0, &tolua_err)
+        || !tolua_isusertype(tolua_S, 2, "anyone::CubeMap", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::RenderAPI* self = (anyone::RenderAPI*)tolua_tousertype(
+            tolua_S, 1, 0);
+        anyone::CubeMap* cb = ((anyone::CubeMap*)tolua_tousertype(
+            tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'destroy_cube_map'", NULL);
+    #endif
+        {
+            self->destroy_cube_map(cb);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'destroy_cube_map'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: destroy_program of class  anyone::RenderAPI */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_RenderAPI_destroy_program00
+static int tolua_anyone_anyone_RenderAPI_destroy_program00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::RenderAPI", 0, &tolua_err)
+        || !tolua_isusertype(tolua_S, 2, "anyone::Program", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::RenderAPI* self = (anyone::RenderAPI*)tolua_tousertype(
+            tolua_S, 1, 0);
+        anyone::Program* p = ((anyone::Program*)tolua_tousertype(
+            tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'destroy_program'", NULL);
+    #endif
+        {
+            self->destroy_program(p);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'destroy_program'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
 
 /* method: load_model of class  anyone::ModelManager */
 #ifndef TOLUA_DISABLE_tolua_anyone_anyone_ModelManager_load_model00
@@ -136,6 +359,72 @@ static int tolua_anyone_anyone_PlatformSupport_set_full_screen00(lua_State* tolu
  tolua_error(tolua_S,"#ferror in function 'set_full_screen'.",&tolua_err);
  return 0;
 #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: get_render_api of class  anyone::PlatformSupport */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_PlatformSupport_get_render_api00
+static int
+tolua_anyone_anyone_PlatformSupport_get_render_api00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::PlatformSupport", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 2, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::PlatformSupport* self = (anyone::PlatformSupport*)
+            tolua_tousertype(tolua_S, 1, 0);
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'get_render_api'", NULL);
+    #endif
+        {
+            anyone::RenderAPI* tolua_ret = (anyone::RenderAPI*)
+                                               self->get_render_api();
+            tolua_pushusertype(tolua_S, (void*)tolua_ret, "anyone::RenderAPI");
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'get_render_api'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: exit of class  anyone::PlatformSupport */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_PlatformSupport_exit00
+static int tolua_anyone_anyone_PlatformSupport_exit00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::PlatformSupport", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 2, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::PlatformSupport* self = (anyone::PlatformSupport*)
+            tolua_tousertype(tolua_S, 1, 0);
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(tolua_S, "invalid 'self' in function 'exit'", NULL);
+    #endif
+        {
+            self->exit();
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'exit'.", &tolua_err);
+    return 0;
+    #endif
 }
 #endif //#ifndef TOLUA_DISABLE
 
@@ -325,6 +614,41 @@ static int tolua_anyone_anyone_SceneManager_get_root_node00(lua_State* tolua_S)
  tolua_error(tolua_S,"#ferror in function 'get_root_node'.",&tolua_err);
  return 0;
 #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: set_sky_box of class  anyone::SceneManager */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_SceneManager_set_sky_box00
+static int tolua_anyone_anyone_SceneManager_set_sky_box00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::SceneManager", 0, &tolua_err)
+        || !tolua_isusertype(tolua_S, 2, "anyone::CubeMap", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::SceneManager* self = (anyone::SceneManager*)tolua_tousertype(
+            tolua_S, 1, 0);
+        anyone::CubeMap* c = ((anyone::CubeMap*)tolua_tousertype(
+            tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'set_sky_box'", NULL);
+    #endif
+        {
+            self->set_sky_box(c);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'set_sky_box'.", &tolua_err);
+    return 0;
+    #endif
 }
 #endif //#ifndef TOLUA_DISABLE
 
@@ -714,59 +1038,130 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
  tolua_beginmodule(tolua_S,NULL);
   tolua_module(tolua_S,"anyone",0);
   tolua_beginmodule(tolua_S,"anyone");
-   tolua_cclass(tolua_S,"Attachment","anyone::Attachment","",NULL);
-   tolua_beginmodule(tolua_S,"Attachment");
-   tolua_endmodule(tolua_S);
-   tolua_cclass(tolua_S,"Renderable","anyone::Renderable","anyone::Attachment",NULL);
-   tolua_beginmodule(tolua_S,"Renderable");
-   tolua_endmodule(tolua_S);
-   tolua_cclass(tolua_S,"Model","anyone::Model","anyone::Renderable",NULL);
-   tolua_beginmodule(tolua_S,"Model");
-   tolua_endmodule(tolua_S);
-   tolua_cclass(tolua_S,"ModelManager","anyone::ModelManager","",NULL);
-   tolua_beginmodule(tolua_S,"ModelManager");
-    tolua_function(tolua_S,"load_model",tolua_anyone_anyone_ModelManager_load_model00);
-    tolua_function(tolua_S,"unload_model",tolua_anyone_anyone_ModelManager_unload_model00);
-   tolua_endmodule(tolua_S);
-   tolua_cclass(tolua_S,"PlatformSupport","anyone::PlatformSupport","",NULL);
-   tolua_beginmodule(tolua_S,"PlatformSupport");
-    tolua_function(tolua_S,"set_full_screen",tolua_anyone_anyone_PlatformSupport_set_full_screen00);
-   tolua_endmodule(tolua_S);
-   tolua_cclass(tolua_S,"Core","anyone::Core","",NULL);
-   tolua_beginmodule(tolua_S,"Core");
-    tolua_function(tolua_S,"get_singleton_ptr",tolua_anyone_anyone_Core_get_singleton_ptr00);
-    tolua_function(tolua_S,"get_platform_support",tolua_anyone_anyone_Core_get_platform_support00);
-    tolua_function(tolua_S,"get_model_manager",tolua_anyone_anyone_Core_get_model_manager00);
-    tolua_function(tolua_S,"get_scene_manager",tolua_anyone_anyone_Core_get_scene_manager00);
-    tolua_function(tolua_S,"set_script_main_loop",tolua_anyone_anyone_Core_set_script_main_loop00);
-   tolua_endmodule(tolua_S);
-   tolua_cclass(tolua_S,"SceneManager","anyone::SceneManager","",NULL);
-   tolua_beginmodule(tolua_S,"SceneManager");
-    tolua_function(tolua_S,"get_root_node",tolua_anyone_anyone_SceneManager_get_root_node00);
-   tolua_endmodule(tolua_S);
-   tolua_cclass(tolua_S,"SceneNode","anyone::SceneNode","",NULL);
-   tolua_beginmodule(tolua_S,"SceneNode");
-    tolua_function(tolua_S,"attach_object",tolua_anyone_anyone_SceneNode_attach_object00);
-    tolua_function(tolua_S,"detach_object",tolua_anyone_anyone_SceneNode_detach_object00);
-    tolua_function(tolua_S,"create_child_node",tolua_anyone_anyone_SceneNode_create_child_node00);
-    tolua_function(tolua_S,"get_child",tolua_anyone_anyone_SceneNode_get_child00);
-    tolua_function(tolua_S,"find_node",tolua_anyone_anyone_SceneNode_find_node00);
-    tolua_function(tolua_S,"remove_child",tolua_anyone_anyone_SceneNode_remove_child00);
-    tolua_function(tolua_S,"remove_child",tolua_anyone_anyone_SceneNode_remove_child01);
-    tolua_function(tolua_S,"set_position",tolua_anyone_anyone_SceneNode_set_position00);
-    tolua_function(tolua_S,
-                   "rotate_by_local_z_axis",
-                   tolua_anyone_anyone_SceneNode_rotate_by_local_z_axis00);
-    tolua_function(tolua_S,
-                   "rotate_by_local_x_axis",
-                   tolua_anyone_anyone_SceneNode_rotate_by_local_x_axis00);
-    tolua_function(tolua_S,
-                   "rotate_by_local_y_axis",
-                   tolua_anyone_anyone_SceneNode_rotate_by_local_y_axis00);
-    tolua_endmodule(tolua_S);
-    tolua_endmodule(tolua_S);
-    tolua_endmodule(tolua_S);
-    return 1;
+  tolua_cclass(tolua_S, "VertexBuffer", "anyone::VertexBuffer", "", NULL);
+  tolua_beginmodule(tolua_S, "VertexBuffer");
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "IndiceBuffer", "anyone::IndiceBuffer", "", NULL);
+  tolua_beginmodule(tolua_S, "IndiceBuffer");
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "Texture2D", "anyone::Texture2D", "", NULL);
+  tolua_beginmodule(tolua_S, "Texture2D");
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "CubeMap", "anyone::CubeMap", "", NULL);
+  tolua_beginmodule(tolua_S, "CubeMap");
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "Program", "anyone::Program", "", NULL);
+  tolua_beginmodule(tolua_S, "Program");
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "TextureLoader", "anyone::TextureLoader", "", NULL);
+  tolua_beginmodule(tolua_S, "TextureLoader");
+  tolua_function(tolua_S,
+                 "load_cube_map_png",
+                 tolua_anyone_anyone_TextureLoader_load_cube_map_png00);
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "RenderAPI", "anyone::RenderAPI", "", NULL);
+  tolua_beginmodule(tolua_S, "RenderAPI");
+  tolua_function(tolua_S,
+                 "destroy_vertex_buffer",
+                 tolua_anyone_anyone_RenderAPI_destroy_vertex_buffer00);
+  tolua_function(tolua_S,
+                 "destroy_indice_buffer",
+                 tolua_anyone_anyone_RenderAPI_destroy_indice_buffer00);
+  tolua_function(tolua_S,
+                 "destroy_texture_2d",
+                 tolua_anyone_anyone_RenderAPI_destroy_texture_2d00);
+  tolua_function(tolua_S,
+                 "destroy_cube_map",
+                 tolua_anyone_anyone_RenderAPI_destroy_cube_map00);
+  tolua_function(tolua_S,
+                 "destroy_program",
+                 tolua_anyone_anyone_RenderAPI_destroy_program00);
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "Attachment", "anyone::Attachment", "", NULL);
+  tolua_beginmodule(tolua_S, "Attachment");
+  tolua_endmodule(tolua_S);
+  tolua_cclass(
+      tolua_S, "Renderable", "anyone::Renderable", "anyone::Attachment", NULL);
+  tolua_beginmodule(tolua_S, "Renderable");
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "Model", "anyone::Model", "anyone::Renderable", NULL);
+  tolua_beginmodule(tolua_S, "Model");
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "ModelManager", "anyone::ModelManager", "", NULL);
+  tolua_beginmodule(tolua_S, "ModelManager");
+  tolua_function(
+      tolua_S, "load_model", tolua_anyone_anyone_ModelManager_load_model00);
+  tolua_function(
+      tolua_S, "unload_model", tolua_anyone_anyone_ModelManager_unload_model00);
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "PlatformSupport", "anyone::PlatformSupport", "", NULL);
+  tolua_beginmodule(tolua_S, "PlatformSupport");
+  tolua_function(tolua_S,
+                 "set_full_screen",
+                 tolua_anyone_anyone_PlatformSupport_set_full_screen00);
+  tolua_function(tolua_S,
+                 "get_render_api",
+                 tolua_anyone_anyone_PlatformSupport_get_render_api00);
+  tolua_function(tolua_S, "exit", tolua_anyone_anyone_PlatformSupport_exit00);
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "Core", "anyone::Core", "", NULL);
+  tolua_beginmodule(tolua_S, "Core");
+  tolua_function(tolua_S,
+                 "get_singleton_ptr",
+                 tolua_anyone_anyone_Core_get_singleton_ptr00);
+  tolua_function(tolua_S,
+                 "get_platform_support",
+                 tolua_anyone_anyone_Core_get_platform_support00);
+  tolua_function(tolua_S,
+                 "get_model_manager",
+                 tolua_anyone_anyone_Core_get_model_manager00);
+  tolua_function(tolua_S,
+                 "get_scene_manager",
+                 tolua_anyone_anyone_Core_get_scene_manager00);
+  tolua_function(tolua_S,
+                 "set_script_main_loop",
+                 tolua_anyone_anyone_Core_set_script_main_loop00);
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "SceneManager", "anyone::SceneManager", "", NULL);
+  tolua_beginmodule(tolua_S, "SceneManager");
+  tolua_function(tolua_S,
+                 "get_root_node",
+                 tolua_anyone_anyone_SceneManager_get_root_node00);
+  tolua_function(
+      tolua_S, "set_sky_box", tolua_anyone_anyone_SceneManager_set_sky_box00);
+  tolua_endmodule(tolua_S);
+  tolua_cclass(tolua_S, "SceneNode", "anyone::SceneNode", "", NULL);
+  tolua_beginmodule(tolua_S, "SceneNode");
+  tolua_function(
+      tolua_S, "attach_object", tolua_anyone_anyone_SceneNode_attach_object00);
+  tolua_function(
+      tolua_S, "detach_object", tolua_anyone_anyone_SceneNode_detach_object00);
+  tolua_function(tolua_S,
+                 "create_child_node",
+                 tolua_anyone_anyone_SceneNode_create_child_node00);
+  tolua_function(
+      tolua_S, "get_child", tolua_anyone_anyone_SceneNode_get_child00);
+  tolua_function(
+      tolua_S, "find_node", tolua_anyone_anyone_SceneNode_find_node00);
+  tolua_function(
+      tolua_S, "remove_child", tolua_anyone_anyone_SceneNode_remove_child00);
+  tolua_function(
+      tolua_S, "remove_child", tolua_anyone_anyone_SceneNode_remove_child01);
+  tolua_function(
+      tolua_S, "set_position", tolua_anyone_anyone_SceneNode_set_position00);
+  tolua_function(tolua_S,
+                 "rotate_by_local_z_axis",
+                 tolua_anyone_anyone_SceneNode_rotate_by_local_z_axis00);
+  tolua_function(tolua_S,
+                 "rotate_by_local_x_axis",
+                 tolua_anyone_anyone_SceneNode_rotate_by_local_x_axis00);
+  tolua_function(tolua_S,
+                 "rotate_by_local_y_axis",
+                 tolua_anyone_anyone_SceneNode_rotate_by_local_y_axis00);
+  tolua_endmodule(tolua_S);
+  tolua_endmodule(tolua_S);
+  tolua_endmodule(tolua_S);
+  return 1;
 }
 
 

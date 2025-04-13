@@ -114,6 +114,43 @@ Program* OpenGL_API::create_rml_ui_program()
     return m;
 }
 
+Program* OpenGL_API::create_sky_box_program()
+{
+
+    // Shader sources
+    const char* vertex_source = R"(
+    #version 330 core
+    layout(location = 0) in vec3 position;
+
+    uniform mat4 view;
+    uniform mat4 proj;
+
+    out vec3 v_uv;
+
+    void main() {
+        gl_Position = vec4(position, 1.0);
+        v_uv = gl_Position.xyz;
+    }
+
+)";
+
+    const char* fragment_source = R"(
+    #version 330 core
+    uniform samplerCube tex;
+    in vec3 v_uv;
+    out vec4 color;
+    void main() {
+        color = texture(tex, v_uv);
+    }
+)";
+
+    auto m = new GL_Program;
+    bool succ = m->compile_program(vertex_source, fragment_source);
+    NX_ASSERT(succ, "create_rml_ui_program fail");
+    // m->set_blend_type(BlendType::NORMAL);
+    return m;
+}
+
 void OpenGL_API::set_depth_test(bool b)
 {
     if (b) {
@@ -309,8 +346,10 @@ VertexBuffer* OpenGL_API::create_vertex_buffer() { return new GL_VertexBuffer; }
 void OpenGL_API::destroy_vertex_buffer(VertexBuffer* vbo) { delete vbo; }
 
 Texture2D* OpenGL_API::create_texture_2d() { return new GL_Texture2D; }
+CubeMap* OpenGL_API::create_cube_map() { return new GL_CubeMap; }
 
 void OpenGL_API::destroy_texture_2d(Texture2D* tex) { delete tex; }
+void OpenGL_API::destroy_cube_map(CubeMap* tex) { delete tex; }
 
 IndiceBuffer* OpenGL_API::create_indice_buffer() { return new GL_IndiceBuffer; }
 
@@ -548,6 +587,67 @@ void GL_Texture2D::bind(int tex_unit)
 {
     glActiveTexture(GL_TEXTURE0 + tex_unit);
     glBindTexture(GL_TEXTURE_2D, name_);
+}
+
+GL_CubeMap::GL_CubeMap() : name_(0) { glGenTextures(1, &name_); }
+GL_CubeMap::~GL_CubeMap() { glDeleteTextures(1, &name_); }
+
+void GL_CubeMap::apply()
+{
+    NX_ASSERT(cpu_buffer_.size() > 0, "no pixels_buffer");
+
+    // LOG("cpu_buffer_.size() %lu", cpu_buffer_.size());
+    // memset(cpu_buffer_.data(), 0xff, cpu_buffer_.size());
+    // glActiveTexture(GL_TEXTURE0 + 0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, name_);
+    switch (pixel_format_) {
+        case PixelFormat::RGBA_U8: {
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+
+            for (int i = 0; i < 6; i++) {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                             0,
+                             GL_RGBA8,
+                             edge_,
+                             edge_,
+                             0,
+                             GL_RGBA,
+                             GL_UNSIGNED_BYTE,
+                             cpu_buffer_.data() + i * get_one_face_bytes());
+            }
+
+            break;
+        }
+        case PixelFormat::RGB_U8: {
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            for (int i = 0; i < 6; i++) {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                             0,
+                             GL_RGB8,
+                             edge_,
+                             edge_,
+                             0,
+                             GL_RGB,
+                             GL_UNSIGNED_BYTE,
+                             cpu_buffer_.data() + i * get_one_face_bytes());
+            }
+            break;
+        }
+    }
+
+    glTexParameteri(
+        GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+}
+void GL_CubeMap::bind(int tex_unit)
+{
+    glActiveTexture(GL_TEXTURE0 + tex_unit);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, name_);
 }
 
 GL_Program::GL_Program() : program_(0) { }

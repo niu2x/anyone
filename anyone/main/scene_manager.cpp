@@ -11,9 +11,20 @@ SceneManager::SceneManager()
 , sky_color_(Color::DARK_SLATE_GRAY)
 , axis_vbo_(nullptr)
 , axis_veo_(nullptr)
+, sky_box_(nullptr)
+, sky_box_vbo_(nullptr)
+, sky_box_veo_(nullptr)
+, sky_box_program_(nullptr)
 {
     root_ = new SceneNode("/");
     // root_->apply_transform(nullptr);
+    init_axis();
+    init_sky_box();
+}
+
+void SceneManager::init_axis()
+{
+
     axis_vbo_ = GET_RENDER_API()->create_vertex_buffer();
     axis_veo_ = GET_RENDER_API()->create_indice_buffer();
 
@@ -62,10 +73,130 @@ SceneManager::SceneManager()
     axis_veo_->free_cpu_buffer();
 }
 
+void SceneManager::init_sky_box()
+{
+
+    sky_box_vbo_ = GET_RENDER_API()->create_vertex_buffer();
+    sky_box_veo_ = GET_RENDER_API()->create_indice_buffer();
+
+    struct GPU_Vertex {
+        float x, y, z;
+    };
+
+    sky_box_vbo_->alloc_cpu_buffer(8 * sizeof(GPU_Vertex));
+    {
+        auto buf = (GPU_Vertex*)sky_box_vbo_->get_cpu_buffer();
+        buf[0].x = -1;
+        buf[0].y = -1;
+        buf[0].z = -1;
+
+        buf[1].x = -1;
+        buf[1].y = 1;
+        buf[1].z = -1;
+
+        buf[2].x = 1;
+        buf[2].y = 1;
+        buf[2].z = -1;
+
+        buf[3].x = 1;
+        buf[3].y = -1;
+        buf[3].z = -1;
+
+        buf[4].x = -1;
+        buf[4].y = -1;
+        buf[4].z = 1;
+
+        buf[5].x = -1;
+        buf[5].y = 1;
+        buf[5].z = 1;
+
+        buf[6].x = 1;
+        buf[6].y = 1;
+        buf[6].z = 1;
+
+        buf[7].x = 1;
+        buf[7].y = -1;
+        buf[7].z = 1;
+    }
+
+    sky_box_vbo_->apply();
+    sky_box_vbo_->free_cpu_buffer();
+    sky_box_vbo_->set_vertex_layout({ VertexAttr::POSITION_XYZ });
+
+    sky_box_veo_->alloc_cpu_buffer(36);
+    {
+        auto buf = sky_box_veo_->get_cpu_buffer();
+        int i = 0;
+
+        buf[i++] = 0;
+        buf[i++] = 1;
+        buf[i++] = 2;
+        buf[i++] = 0;
+        buf[i++] = 2;
+        buf[i++] = 3;
+
+        buf[i++] = 5;
+        buf[i++] = 4;
+        buf[i++] = 6;
+        buf[i++] = 6;
+        buf[i++] = 4;
+        buf[i++] = 7;
+
+        buf[i++] = 1;
+        buf[i++] = 5;
+        buf[i++] = 6;
+        buf[i++] = 1;
+        buf[i++] = 6;
+        buf[i++] = 2;
+
+        buf[i++] = 7;
+        buf[i++] = 4;
+        buf[i++] = 0;
+        buf[i++] = 7;
+        buf[i++] = 0;
+        buf[i++] = 3;
+
+        buf[i++] = 2;
+        buf[i++] = 6;
+        buf[i++] = 7;
+        buf[i++] = 2;
+        buf[i++] = 7;
+        buf[i++] = 3;
+
+        buf[i++] = 1;
+        buf[i++] = 4;
+        buf[i++] = 5;
+        buf[i++] = 1;
+        buf[i++] = 0;
+        buf[i++] = 4;
+    }
+
+    sky_box_veo_->apply();
+    sky_box_veo_->free_cpu_buffer();
+
+    sky_box_program_ = GET_RENDER_API()->create_sky_box_program();
+}
+
+void SceneManager::set_sky_box(CubeMap* c)
+{
+    if (sky_box_) {
+        GET_RENDER_API()->destroy_cube_map(sky_box_);
+    }
+    sky_box_ = c;
+}
+
 SceneManager::~SceneManager()
 {
-    delete axis_vbo_;
-    delete axis_veo_;
+    if (sky_box_) {
+        GET_RENDER_API()->destroy_cube_map(sky_box_);
+    }
+
+    GET_RENDER_API()->destroy_indice_buffer(sky_box_veo_);
+    GET_RENDER_API()->destroy_vertex_buffer(sky_box_vbo_);
+    GET_RENDER_API()->destroy_program(sky_box_program_);
+
+    GET_RENDER_API()->destroy_indice_buffer(axis_veo_);
+    GET_RENDER_API()->destroy_vertex_buffer(axis_vbo_);
 
     if (root_)
         delete root_;
@@ -73,8 +204,32 @@ SceneManager::~SceneManager()
 void SceneManager::render(const Camera* camera)
 {
     root_->apply_transform_recursive(nullptr, false);
+
+    // draw sky box
+
+    draw_sky_box();
+
     root_->render(camera);
     draw_axis(camera);
+}
+
+void SceneManager::draw_sky_box()
+{
+    if (sky_box_) {
+        GET_RENDER_API()->set_depth_test(false);
+
+        sky_box_->bind(0);
+        sky_box_program_->use();
+        sky_box_program_->set_param_texture("tex", 0);
+
+        GET_RENDER_API()->draw(DrawOperation {
+            .primitive = PrimitiveType::TRIANGLE,
+            .polygon_mode = PolygonMode::FILL,
+            .vertex_buffer = sky_box_vbo_,
+            .indice_buffer = sky_box_veo_,
+            .count = sky_box_veo_->get_indice_count(),
+        });
+    }
 }
 
 void SceneManager::draw_axis(const Camera* camera)

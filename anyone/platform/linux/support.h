@@ -39,6 +39,17 @@ private:
     GLuint name_;
 };
 
+class GL_CubeMap : public CubeMap {
+public:
+    GL_CubeMap();
+    ~GL_CubeMap();
+    void apply() override;
+    void bind(int tex_unit) override;
+
+private:
+    GLuint name_;
+};
+
 class GL_Program : public Program {
 public:
     GL_Program();
@@ -76,8 +87,12 @@ public:
     Texture2D* create_texture_2d() override;
     void destroy_texture_2d(Texture2D* vbo) override;
 
+    CubeMap* create_cube_map() override;
+    void destroy_cube_map(CubeMap* vbo) override;
+
     Program* create_rml_ui_program() override;
     Program* create_model_program() override;
+    Program* create_sky_box_program() override;
     void destroy_program(Program* vbo) override;
 
     void set_blend_type(BlendType b) override;

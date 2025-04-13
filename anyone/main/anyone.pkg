@@ -5,9 +5,28 @@ $#include "main/attachment.h"
 $#include "main/scene_node.h"
 $#include "main/scene_manager.h"
 $#include "platform/api/support.h"
+$#include "texture_loader.h"
 $#include "tolua_support.h"
 
 namespace anyone {
+
+class VertexBuffer{};
+class IndiceBuffer{};
+class Texture2D{};
+class CubeMap{};
+class Program{};
+
+struct TextureLoader {
+    static CubeMap* load_cube_map_png(const char* uri);
+};
+
+class RenderAPI {
+    void destroy_vertex_buffer(VertexBuffer* vbo);
+    void destroy_indice_buffer(IndiceBuffer* veo);
+    void destroy_texture_2d(Texture2D* vbo);
+    void destroy_cube_map(CubeMap* cb);
+    void destroy_program(Program* p);
+};
 
 class Attachment{};
 
@@ -22,6 +41,8 @@ class ModelManager {
 
 class PlatformSupport {
 	void set_full_screen(bool);
+	RenderAPI* get_render_api();
+	void exit();
 };
 
 class Core {
@@ -35,6 +56,7 @@ class Core {
 
 class SceneManager {
     SceneNode* get_root_node();
+    void set_sky_box(CubeMap* c);
 };
 
 class SceneNode {

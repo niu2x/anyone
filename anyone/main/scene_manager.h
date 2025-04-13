@@ -17,6 +17,8 @@ public:
     SceneNode* get_root_node() const { return root_; }
     const Color& get_sky_color() const { return sky_color_; };
 
+    void set_sky_box(CubeMap* c);
+
 private:
     SceneNode* root_;
     Color ambient_color_;
@@ -25,7 +27,16 @@ private:
     VertexBuffer* axis_vbo_;
     IndiceBuffer* axis_veo_;
 
+    VertexBuffer* sky_box_vbo_;
+    IndiceBuffer* sky_box_veo_;
+    Program* sky_box_program_;
+    CubeMap* sky_box_;
+
     void draw_axis(const Camera* camera);
+    void draw_sky_box();
+
+    void init_axis();
+    void init_sky_box();
 };
 
 } // namespace anyone

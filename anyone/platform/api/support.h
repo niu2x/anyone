@@ -159,6 +159,41 @@ protected:
     PixelFormat pixel_format_;
 };
 
+// CUBE_MAP_POSITIVE_X  Right
+// CUBE_MAP_NEGATIVE_X  Left
+// CUBE_MAP_POSITIVE_Y  Top
+// CUBE_MAP_NEGATIVE_Y  Bottom
+// CUBE_MAP_POSITIVE_Z  Back
+// CUBE_MAP_NEGATIVE_Z  Front
+
+class CubeMap {
+public:
+    CubeMap();
+    virtual ~CubeMap();
+
+    virtual void apply() = 0;
+    virtual void bind(int tex_unit) = 0;
+
+    void set_pixel_format(PixelFormat fmt) { pixel_format_ = fmt; }
+
+    void alloc_cpu_buffer(int edge);
+    void free_cpu_buffer();
+
+    uint8_t* get_cpu_buffer(int i)
+    {
+        NX_ASSERT(cpu_buffer_.size() > 0, "no pixels_buffer");
+        return cpu_buffer_.data() + i * get_one_face_bytes();
+    }
+
+    int get_edge() const { return edge_; }
+    size_t get_one_face_bytes() const;
+
+protected:
+    int edge_;
+    ByteBuffer cpu_buffer_;
+    PixelFormat pixel_format_;
+};
+
 // enum class VertexStrategy {
 //     POINT_LIST,
 // };
@@ -222,6 +257,7 @@ public:
     virtual ~RenderAPI() = 0;
 
     virtual void clear();
+
     virtual void set_clear_color(const Color& color);
     virtual VertexBuffer* create_vertex_buffer();
     virtual void destroy_vertex_buffer(VertexBuffer* vbo);
@@ -229,9 +265,13 @@ public:
     virtual void destroy_indice_buffer(IndiceBuffer* vbo);
     virtual Texture2D* create_texture_2d();
     virtual void destroy_texture_2d(Texture2D* vbo);
+    virtual CubeMap* create_cube_map();
+    virtual void destroy_cube_map(CubeMap* vbo);
+
     virtual void draw(const DrawOperation& operation);
 
     virtual Program* create_model_program();
+    virtual Program* create_sky_box_program();
     virtual Program* create_rml_ui_program();
     virtual void destroy_program(Program* vbo);
     virtual void set_blend_type(BlendType b);
