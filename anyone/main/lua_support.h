@@ -26,6 +26,29 @@ class LuaFunction : public LuaValue {
 public:
     LuaFunction(lua_State* L, int slot);
     void protected_call();
+
+    template <class... T>
+    void protected_call(const T&... args)
+    {
+        int old_top = lua_gettop(L_);
+        lua_rawgeti(L_, LUA_REGISTRYINDEX, ref_);
+        int num_args = sizeof...(T);
+        push_args(args...);
+        lua_pcall(L_, num_args, 0, 0);
+        lua_settop(L_, old_top);
+    }
+
+private:
+    template <class FirstT, class... T>
+    void push_args(const FirstT& first_arg, const T&... args)
+    {
+        push_args(first_arg);
+        push_args(args...);
+    }
+
+    void push_args(int arg) { lua_pushinteger(L_, arg); }
+
+    void push_args() { }
 };
 
 class LuaTable : public LuaValue {
@@ -50,6 +73,7 @@ public:
 private:
     LuaTable* proxy_;
     LuaFunction* frame_update_;
+    LuaFunction* mouse_move_;
 };
 
 } // namespace anyone

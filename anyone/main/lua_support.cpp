@@ -57,18 +57,23 @@ void LuaCoreEventListener::set_proxy(LuaTable* table)
     delete frame_update_;
     frame_update_ = nullptr;
 
+    delete mouse_move_;
+    mouse_move_ = nullptr;
+
     delete proxy_;
 
     proxy_ = table;
 
     if (proxy_ && proxy_->is_valid()) {
-        frame_update_ = proxy_->get_function("frameUpdate");
+        frame_update_ = proxy_->get_function("onFrameUpdate");
+        mouse_move_ = proxy_->get_function("onMouseMove");
     }
 }
 
 LuaCoreEventListener::LuaCoreEventListener()
 : proxy_(nullptr)
 , frame_update_(nullptr)
+, mouse_move_(nullptr)
 {
 }
 
@@ -76,9 +81,16 @@ LuaCoreEventListener::~LuaCoreEventListener()
 {
     delete proxy_;
     delete frame_update_;
+    delete mouse_move_;
 }
 
-void LuaCoreEventListener::on_mouse_move(const MouseMoveEvent&) { }
+void LuaCoreEventListener::on_mouse_move(const MouseMoveEvent& e)
+{
+    if (mouse_move_ && mouse_move_->is_valid()) {
+        // mouse_move_->protected_call();
+        mouse_move_->protected_call(e.x, e.y, e.rel_x, e.rel_y);
+    }
+}
 
 void LuaCoreEventListener::on_mouse_button(const MouseButtonEvent&) { }
 
