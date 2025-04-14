@@ -2,6 +2,7 @@
 #include "render_system.h"
 #include "model.h"
 #include "rml_ui.h"
+#include "std_helper.h"
 #include "model_manager.h"
 #include "scene_manager.h"
 #include "embed/builtin.h"
@@ -27,8 +28,9 @@ Core::Core()
 , dpi_ { 90, 90 }
 , framebuffer_size_ { 1, 1 }
 , lua_(nullptr)
-, lua_main_loop_(nullptr)
-, lua_input_handler_(nullptr)
+, core_event_listeners_ {}
+// , lua_main_loop_(nullptr)
+// , lua_input_handler_(nullptr)
 {
     builtin_archive_ = nx::fs::create_zip_archive_from_memory(builtin,
                                                               builtin_length);
@@ -132,8 +134,8 @@ void Core::setup_after_render_api_ready()
 
 void Core::cleanup_before_render_api_gone()
 {
-    delete lua_input_handler_;
-    delete lua_main_loop_;
+    // delete lua_input_handler_;
+    // delete lua_main_loop_;
 
     lua_close(lua_);
 
@@ -146,10 +148,12 @@ void Core::cleanup_before_render_api_gone()
     render_system_.reset();
 }
 
-void Core::update() { 
-    if(lua_main_loop_) {
-        lua_main_loop_->protected_call();
-    }
+void Core::update()
+{
+    fire_frame_update_event();
+    // if(lua_main_loop_) {
+    // lua_main_loop_->protected_call();
+    // }
 }
 
 void Core::render()
@@ -347,10 +351,7 @@ void Core::notify_keyboard_event(const KeyboardEvent& event)
             platform_support_->exit();
         }
     }
-    
-    if(lua_input_handler_) {
-
-    }
+    fire_keyboard_event(event);
 }
 
 void Core::notify_mouse_move_event(const MouseMoveEvent& e)
@@ -367,25 +368,77 @@ void Core::notify_mouse_move_event(const MouseMoveEvent& e)
     x += e.rel_x;
     camera_.look_at(x / 100.0, 0, z / 100.0);
     camera_.apply();
+    fire_mouse_move_event(e);
 }
 
-void Core::notify_mouse_button_event(const MouseButtonEvent& e) { (void)e; }
-
-void Core::notify_mouse_wheel_event(const MouseWheelEvent& e) { (void)e; }
-
-void Core::set_lua_main_loop(LuaFunction* func)
+void Core::notify_mouse_button_event(const MouseButtonEvent& e)
 {
-    delete lua_main_loop_;
-    lua_main_loop_ = func;
+    fire_mouse_button_event(e);
 }
 
-void Core::set_lua_input_handler(LuaFunction* func)
+void Core::notify_mouse_wheel_event(const MouseWheelEvent& e)
 {
-    delete lua_input_handler_;
-    lua_input_handler_ = func;
+    fire_mouse_wheel_event(e);
 }
 
-void Core::set_lua_input_handler(LUA_FUNCTION func) { }
+void Core::fire_frame_update_event()
+{
+    for (auto l : core_event_listeners_) {
+        l->on_frame_update();
+    }
+}
+
+void Core::fire_mouse_move_event(const MouseMoveEvent& e)
+{
+    for (auto l : core_event_listeners_) {
+        l->on_mouse_move(e);
+    }
+}
+
+void Core::fire_mouse_wheel_event(const MouseWheelEvent& e)
+{
+    for (auto l : core_event_listeners_) {
+        l->on_mouse_wheel(e);
+    }
+}
+
+void Core::fire_mouse_button_event(const MouseButtonEvent& e)
+{
+    for (auto l : core_event_listeners_) {
+        l->on_mouse_button(e);
+    }
+}
+
+void Core::fire_keyboard_event(const KeyboardEvent& e)
+{
+    for (auto l : core_event_listeners_) {
+        l->on_keyboard(e);
+    }
+}
+
+void Core::add_core_event_listener(CoreEventListener* l)
+{
+    core_event_listeners_.push_back(l);
+}
+
+void Core::remove_core_event_listener(CoreEventListener* l)
+{
+    std_helper::remove_value(&core_event_listeners_, l);
+}
+
+// void Core::set_lua_main_loop(LuaFunction* func)
+// {
+//     delete lua_main_loop_;
+//     lua_main_loop_ = func;
+// }
+
+// void Core::set_lua_input_handler(LuaFunction* func)
+// {
+//     delete lua_input_handler_;
+//     lua_input_handler_ = func;
+// }
+
+// void Core::set_lua_input_handler(LUA_FUNCTION func) { }
 
 void FrameStats::frame_begin()
 {

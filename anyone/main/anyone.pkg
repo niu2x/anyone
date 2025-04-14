@@ -50,7 +50,6 @@ class Core {
 	PlatformSupport* get_platform_support();
 	ModelManager* get_model_manager();
 	SceneManager* get_scene_manager();
-	void set_lua_main_loop(LUA_FUNCTION);
 };
 
 

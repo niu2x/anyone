@@ -21,6 +21,18 @@ struct StartupConfig {
     String project_dir;
 };
 
+class CoreEventListener {
+public:
+    CoreEventListener() { }
+    ~CoreEventListener() { }
+
+    virtual void on_mouse_move(const MouseMoveEvent&) { }
+    virtual void on_mouse_button(const MouseButtonEvent&) { }
+    virtual void on_mouse_wheel(const MouseWheelEvent&) { }
+    virtual void on_keyboard(const KeyboardEvent&) { }
+    virtual void on_frame_update() { }
+};
+
 class Core : public Singleton<Core> {
 public:
     Core();
@@ -58,10 +70,11 @@ public:
     UniquePtr<Read> read_file(const String& file_uri);
     Optional<ByteBuffer> read_file_data(const String& file_uri);
 
-    void set_lua_main_loop(LuaFunction* func);
-    void set_lua_input_handler(LuaFunction* func);
-
+    // void set_lua_main_loop(LuaFunction* func);
+    // void set_lua_input_handler(LuaFunction* func);
     lua_State* get_lua_engine() const { return lua_; }
+    void add_core_event_listener(CoreEventListener* l);
+    void remove_core_event_listener(CoreEventListener* l);
 
 private:
     // void fire_framebuffer_size_changed();
@@ -95,8 +108,16 @@ private:
     int load_lua();
     static int lua_loader(lua_State* L);
 
-    LuaFunction* lua_main_loop_;
-    LuaFunction* lua_input_handler_;
+    // LuaFunction* lua_main_loop_;
+    // LuaFunction* lua_input_handler_;
+    //
+    Vector<CoreEventListener*> core_event_listeners_;
+
+    void fire_frame_update_event();
+    void fire_mouse_move_event(const MouseMoveEvent&);
+    void fire_mouse_wheel_event(const MouseWheelEvent&);
+    void fire_mouse_button_event(const MouseButtonEvent&);
+    void fire_keyboard_event(const KeyboardEvent&);
 
     void init_lua();
     // void run_project();
