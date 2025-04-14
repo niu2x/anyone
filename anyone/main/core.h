@@ -8,7 +8,7 @@ extern "C" {
 
 #include "base/type.h"
 #include "platform/api/support.h"
-#include "input.h"
+#include "core_event.h"
 #include "archive.h"
 #include "camera.h"
 
@@ -23,18 +23,6 @@ class SceneManager;
 struct StartupConfig {
     PlatformSupport* platform_support;
     String project_dir;
-};
-
-class CoreEventListener {
-public:
-    CoreEventListener() { }
-    ~CoreEventListener() { }
-
-    virtual void on_mouse_move(const MouseMoveEvent&) { }
-    virtual void on_mouse_button(const MouseButtonEvent&) { }
-    virtual void on_mouse_wheel(const MouseWheelEvent&) { }
-    virtual void on_keyboard(const KeyboardEvent&) { }
-    virtual void on_frame_update() { }
 };
 
 class Core : public Singleton<Core> {

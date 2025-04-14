@@ -4,6 +4,7 @@ $#include "main/core.h"
 $#include "main/attachment.h"
 $#include "main/scene_node.h"
 $#include "main/scene_manager.h"
+$#include "main/lua_support.h"
 $#include "platform/api/support.h"
 $#include "texture_loader.h"
 $#include "tolua_support.h"
@@ -21,6 +22,12 @@ struct TextureLoader {
 };
 
 class CoreEventListener{
+};
+
+class LuaCoreEventListener: CoreEventListener {
+	LuaCoreEventListener();
+	~LuaCoreEventListener();
+	void set_proxy(LUA_TABLE table);
 };
 
 class RenderAPI {

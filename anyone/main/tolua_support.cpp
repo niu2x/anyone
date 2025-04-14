@@ -22,3 +22,25 @@ LUA_FUNCTION __tolua_create_lua_function(lua_State* L, int lo, int def)
     if (!lua_isfunction(L, lo)) return 0;
     return new anyone::LuaFunction(L, lo);
 }
+
+bool __tolua_is_lua_table(lua_State* L,
+                          int lo,
+                          const char* type,
+                          int def,
+                          tolua_Error* err)
+{
+    if (lua_gettop(L) >= abs(lo) && lua_istable(L, lo)) {
+        return true;
+    }
+    err->index = lo;
+    err->array = 0;
+    err->type = "[not table]";
+    return false;
+}
+
+LUA_TABLE __tolua_create_lua_table(lua_State* L, int lo, int def)
+{
+    if (!lua_istable(L, lo))
+        return 0;
+    return new anyone::LuaTable(L, lo);
+}

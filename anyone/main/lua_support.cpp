@@ -3,8 +3,17 @@
 
 namespace anyone {
 
-LuaFunction::LuaFunction(lua_State* L, int slot) : ref_(0), L_(L)
+LuaValue::LuaValue() : L_(nullptr), ref_(0) { }
+LuaValue::~LuaValue()
 {
+    if (ref_)
+        luaL_unref(L_, LUA_REGISTRYINDEX, ref_);
+}
+
+LuaFunction::LuaFunction(lua_State* L, int slot)
+{
+    L_ = L;
+
     if (lua_isfunction(L_, slot)) {
         lua_pushvalue(L_, slot);
         ref_ = luaL_ref(L_, LUA_REGISTRYINDEX);
@@ -13,23 +22,74 @@ LuaFunction::LuaFunction(lua_State* L, int slot) : ref_(0), L_(L)
     }
 }
 
-LuaFunction::~LuaFunction()
-{
-    if (ref_)
-        luaL_unref(L_, LUA_REGISTRYINDEX, ref_);
-}
-
 void LuaFunction::protected_call()
 {
-    if (!ref_)
-        return;
-
     int old_top = lua_gettop(L_);
     lua_rawgeti(L_, LUA_REGISTRYINDEX, ref_);
-    if (lua_isfunction(L_, -1)) {
-        lua_pcall(L_, 0, 0, 0);
-    }
+    lua_pcall(L_, 0, 0, 0);
     lua_settop(L_, old_top);
+}
+
+LuaTable::LuaTable(lua_State* L, int slot)
+{
+    L_ = L;
+    if (lua_istable(L_, slot)) {
+        lua_pushvalue(L_, slot);
+        ref_ = luaL_ref(L_, LUA_REGISTRYINDEX);
+    } else {
+        LOG("LuaTable: is not a lua table");
+    }
+}
+
+LuaFunction* LuaTable::get_function(const char* field)
+{
+    LuaFunction* value = nullptr;
+    int old_top = lua_gettop(L_);
+    lua_rawgeti(L_, LUA_REGISTRYINDEX, ref_);
+    lua_getfield(L_, -1, field);
+    value = new LuaFunction(L_, -1);
+    lua_settop(L_, old_top);
+    return value;
+}
+
+void LuaCoreEventListener::set_proxy(LuaTable* table)
+{
+    delete frame_update_;
+    frame_update_ = nullptr;
+
+    delete proxy_;
+
+    proxy_ = table;
+
+    if (proxy_ && proxy_->is_valid()) {
+        frame_update_ = proxy_->get_function("frameUpdate");
+    }
+}
+
+LuaCoreEventListener::LuaCoreEventListener()
+: proxy_(nullptr)
+, frame_update_(nullptr)
+{
+}
+
+LuaCoreEventListener::~LuaCoreEventListener()
+{
+    delete proxy_;
+    delete frame_update_;
+}
+
+void LuaCoreEventListener::on_mouse_move(const MouseMoveEvent&) { }
+
+void LuaCoreEventListener::on_mouse_button(const MouseButtonEvent&) { }
+
+void LuaCoreEventListener::on_mouse_wheel(const MouseWheelEvent&) { }
+
+void LuaCoreEventListener::on_keyboard(const KeyboardEvent&) { }
+
+void LuaCoreEventListener::on_frame_update()
+{
+    if (frame_update_ && frame_update_->is_valid())
+        frame_update_->protected_call();
 }
 
 } // namespace anyone

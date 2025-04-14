@@ -1,8 +1,7 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Mon Apr 14 17:15:18 2025.
+** Generated automatically by tolua++-1.0.93 on Mon Apr 14 17:42:26 2025.
 */
-
 
 #include "stdlib.h"
 #include "string.h"
@@ -21,29 +20,44 @@ TOLUA_API int  tolua_anyone_open (lua_State* tolua_S);
 #include "main/attachment.h"
 #include "main/scene_node.h"
 #include "main/scene_manager.h"
+#include "main/lua_support.h"
 #include "platform/api/support.h"
 #include "texture_loader.h"
 #include "tolua_support.h"
 
+/* function to release collected object via destructor */
+#ifdef __cplusplus
+
+static int tolua_collect_anyone__LuaCoreEventListener(lua_State* tolua_S)
+{
+    anyone::LuaCoreEventListener* self = (anyone::LuaCoreEventListener*)
+        tolua_tousertype(tolua_S, 1, 0);
+    Mtolua_delete(self);
+    return 0;
+}
+#endif
+
 /* function to register type */
 static void tolua_reg_types (lua_State* tolua_S)
 {
- tolua_usertype(tolua_S,"anyone::PlatformSupport");
- tolua_usertype(tolua_S,"anyone::TextureLoader");
- tolua_usertype(tolua_S,"anyone::VertexBuffer");
- tolua_usertype(tolua_S,"anyone::Texture2D");
- tolua_usertype(tolua_S,"anyone::SceneNode");
- tolua_usertype(tolua_S,"anyone::Renderable");
- tolua_usertype(tolua_S,"anyone::Program");
- tolua_usertype(tolua_S,"anyone::ModelManager");
- tolua_usertype(tolua_S,"anyone::CubeMap");
- tolua_usertype(tolua_S,"anyone::IndiceBuffer");
- tolua_usertype(tolua_S,"anyone::CoreEventListener");
- tolua_usertype(tolua_S,"anyone::SceneManager");
- tolua_usertype(tolua_S,"anyone::Attachment");
- tolua_usertype(tolua_S,"anyone::Core");
- tolua_usertype(tolua_S,"anyone::Model");
- tolua_usertype(tolua_S,"anyone::RenderAPI");
+    tolua_usertype(tolua_S, "anyone::PlatformSupport");
+    tolua_usertype(tolua_S, "anyone::VertexBuffer");
+    tolua_usertype(tolua_S, "anyone::Texture2D");
+    tolua_usertype(tolua_S, "anyone::Renderable");
+    tolua_usertype(tolua_S, "anyone::ModelManager");
+    tolua_usertype(tolua_S, "anyone::SceneNode");
+    tolua_usertype(tolua_S, "anyone::Model");
+    tolua_usertype(tolua_S, "anyone::RenderAPI");
+    tolua_usertype(tolua_S, "anyone::TextureLoader");
+    tolua_usertype(tolua_S, "anyone::Program");
+    tolua_usertype(tolua_S, "anyone::CubeMap");
+    tolua_usertype(tolua_S, "anyone::IndiceBuffer");
+
+    tolua_usertype(tolua_S, "anyone::SceneManager");
+    tolua_usertype(tolua_S, "anyone::LuaCoreEventListener");
+    tolua_usertype(tolua_S, "anyone::Attachment");
+    tolua_usertype(tolua_S, "anyone::CoreEventListener");
+    tolua_usertype(tolua_S, "anyone::Core");
 }
 
 /* method: load_cube_map_png of class  anyone::TextureLoader */
@@ -73,6 +87,135 @@ static int tolua_anyone_anyone_TextureLoader_load_cube_map_png00(lua_State* tolu
  tolua_error(tolua_S,"#ferror in function 'load_cube_map_png'.",&tolua_err);
  return 0;
 #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: new of class  anyone::LuaCoreEventListener */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_LuaCoreEventListener_new00
+static int tolua_anyone_anyone_LuaCoreEventListener_new00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(
+            tolua_S, 1, "anyone::LuaCoreEventListener", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 2, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        {
+            anyone::LuaCoreEventListener* tolua_ret
+                = (anyone::LuaCoreEventListener*)Mtolua_new(
+                    (anyone::LuaCoreEventListener)());
+            tolua_pushusertype(
+                tolua_S, (void*)tolua_ret, "anyone::LuaCoreEventListener");
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'new'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: new_local of class  anyone::LuaCoreEventListener */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_LuaCoreEventListener_new00_local
+static int
+tolua_anyone_anyone_LuaCoreEventListener_new00_local(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(
+            tolua_S, 1, "anyone::LuaCoreEventListener", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 2, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        {
+            anyone::LuaCoreEventListener* tolua_ret
+                = (anyone::LuaCoreEventListener*)Mtolua_new(
+                    (anyone::LuaCoreEventListener)());
+            tolua_pushusertype(
+                tolua_S, (void*)tolua_ret, "anyone::LuaCoreEventListener");
+            tolua_register_gc(tolua_S, lua_gettop(tolua_S));
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'new'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: delete of class  anyone::LuaCoreEventListener */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_LuaCoreEventListener_delete00
+static int tolua_anyone_anyone_LuaCoreEventListener_delete00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(
+            tolua_S, 1, "anyone::LuaCoreEventListener", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 2, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::LuaCoreEventListener* self = (anyone::LuaCoreEventListener*)
+            tolua_tousertype(tolua_S, 1, 0);
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(tolua_S, "invalid 'self' in function 'delete'", NULL);
+    #endif
+        Mtolua_delete(self);
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'delete'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: set_proxy of class  anyone::LuaCoreEventListener */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_LuaCoreEventListener_set_proxy00
+static int
+tolua_anyone_anyone_LuaCoreEventListener_set_proxy00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(
+            tolua_S, 1, "anyone::LuaCoreEventListener", 0, &tolua_err)
+        || (tolua_isvaluenil(tolua_S, 2, &tolua_err)
+            || !__tolua_is_lua_table(tolua_S, 2, "LUA_TABLE", 0, &tolua_err))
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::LuaCoreEventListener* self = (anyone::LuaCoreEventListener*)
+            tolua_tousertype(tolua_S, 1, 0);
+        LUA_TABLE table = (__tolua_create_lua_table(tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'set_proxy'", NULL);
+    #endif
+        {
+            self->set_proxy(table);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'set_proxy'.", &tolua_err);
+    return 0;
+    #endif
 }
 #endif //#ifndef TOLUA_DISABLE
 
@@ -1023,6 +1166,33 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
    tolua_endmodule(tolua_S);
    tolua_cclass(tolua_S,"CoreEventListener","anyone::CoreEventListener","",NULL);
    tolua_beginmodule(tolua_S,"CoreEventListener");
+   tolua_endmodule(tolua_S);
+#ifdef __cplusplus
+   tolua_cclass(tolua_S,
+                "LuaCoreEventListener",
+                "anyone::LuaCoreEventListener",
+                "anyone::CoreEventListener",
+                tolua_collect_anyone__LuaCoreEventListener);
+#else
+   tolua_cclass(tolua_S,
+                "LuaCoreEventListener",
+                "anyone::LuaCoreEventListener",
+                "anyone::CoreEventListener",
+                NULL);
+#endif
+   tolua_beginmodule(tolua_S, "LuaCoreEventListener");
+   tolua_function(
+       tolua_S, "new", tolua_anyone_anyone_LuaCoreEventListener_new00);
+   tolua_function(tolua_S,
+                  "new_local",
+                  tolua_anyone_anyone_LuaCoreEventListener_new00_local);
+   tolua_function(
+       tolua_S, ".call", tolua_anyone_anyone_LuaCoreEventListener_new00_local);
+   tolua_function(
+       tolua_S, "delete", tolua_anyone_anyone_LuaCoreEventListener_delete00);
+   tolua_function(tolua_S,
+                  "set_proxy",
+                  tolua_anyone_anyone_LuaCoreEventListener_set_proxy00);
    tolua_endmodule(tolua_S);
    tolua_cclass(tolua_S,"RenderAPI","anyone::RenderAPI","",NULL);
    tolua_beginmodule(tolua_S,"RenderAPI");

@@ -5,6 +5,9 @@ _push_functions = _push_functions or { }
 _to_functions["LUA_FUNCTION"] = "__tolua_create_lua_function"
 _is_functions["LUA_FUNCTION"] = "__tolua_is_lua_function"
 
+_to_functions["LUA_TABLE"] = "__tolua_create_lua_table"
+_is_functions["LUA_TABLE"] = "__tolua_is_lua_table"
+
 local toWrite = { }
 local currentString = ''
 local out
@@ -69,6 +72,10 @@ function post_output_hook ( package )
 
     replace([[tolua_usertype(tolua_S,"LUA_FUNCTION");]], [[]])
     replace([[*((LUA_FUNCTION*)]], [[(]])
+
+    replace([[tolua_usertype(tolua_S,"LUA_TABLE");]], [[]])
+    replace([[*((LUA_TABLE*)]], [[(]])
+
     replace ( '\t' , '    ' )
     WRITE ( result )
 end
