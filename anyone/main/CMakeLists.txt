@@ -23,6 +23,7 @@ target_sources(anyone_main PRIVATE
 	
 	tolua_support.cpp
 	export_lua.cpp
+	lua_support.cpp
 
 	embed/SpaceMono_Regular.cpp
 	embed/builtin.cpp

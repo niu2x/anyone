@@ -369,12 +369,15 @@ void Core::notify_mouse_button_event(const MouseButtonEvent& e) { (void)e; }
 
 void Core::notify_mouse_wheel_event(const MouseWheelEvent& e) { (void)e; }
 
-void Core::set_script_main_loop(LUA_FUNCTION func) {
+void Core::set_lua_main_loop(LUA_FUNCTION func)
+{
     if(lua_main_loop_ != 0) {
         __tolua_unref_function(lua_, lua_main_loop_);
     }
     lua_main_loop_ = func;
 }
+
+void Core::set_lua_input_handler(LUA_FUNCTION func) { }
 
 void FrameStats::frame_begin()
 {

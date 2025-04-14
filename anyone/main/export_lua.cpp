@@ -1,6 +1,6 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Sun Apr 13 11:22:29 2025.
+** Generated automatically by tolua++-1.0.93 on Mon Apr 14 16:31:12 2025.
 */
 
 #include "stdlib.h"
@@ -552,9 +552,9 @@ static int tolua_anyone_anyone_Core_get_scene_manager00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
-/* method: set_script_main_loop of class  anyone::Core */
-#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Core_set_script_main_loop00
-static int tolua_anyone_anyone_Core_set_script_main_loop00(lua_State* tolua_S)
+/* method: set_lua_main_loop of class  anyone::Core */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Core_set_lua_main_loop00
+static int tolua_anyone_anyone_Core_set_lua_main_loop00(lua_State* tolua_S)
 {
 #ifndef TOLUA_RELEASE
  tolua_Error tolua_err;
@@ -570,18 +570,21 @@ static int tolua_anyone_anyone_Core_set_script_main_loop00(lua_State* tolua_S)
   anyone::Core* self = (anyone::Core*)  tolua_tousertype(tolua_S,1,0);
   LUA_FUNCTION tolua_var_2 = (  __tolua_ref_function(tolua_S,2,0));
 #ifndef TOLUA_RELEASE
-  if (!self) tolua_error(tolua_S,"invalid 'self' in function 'set_script_main_loop'", NULL);
+  if (!self)
+      tolua_error(
+          tolua_S, "invalid 'self' in function 'set_lua_main_loop'", NULL);
 #endif
   {
-   self->set_script_main_loop(tolua_var_2);
+      self->set_lua_main_loop(tolua_var_2);
   }
  }
  return 0;
 #ifndef TOLUA_RELEASE
  tolua_lerror:
- tolua_error(tolua_S,"#ferror in function 'set_script_main_loop'.",&tolua_err);
- return 0;
-#endif
+     tolua_error(
+         tolua_S, "#ferror in function 'set_lua_main_loop'.", &tolua_err);
+     return 0;
+    #endif
 }
 #endif //#ifndef TOLUA_DISABLE
 
@@ -1119,8 +1122,8 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
                  "get_scene_manager",
                  tolua_anyone_anyone_Core_get_scene_manager00);
   tolua_function(tolua_S,
-                 "set_script_main_loop",
-                 tolua_anyone_anyone_Core_set_script_main_loop00);
+                 "set_lua_main_loop",
+                 tolua_anyone_anyone_Core_set_lua_main_loop00);
   tolua_endmodule(tolua_S);
   tolua_cclass(tolua_S, "SceneManager", "anyone::SceneManager", "", NULL);
   tolua_beginmodule(tolua_S, "SceneManager");

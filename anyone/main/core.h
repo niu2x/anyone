@@ -1,13 +1,8 @@
 #pragma once
 
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-}
-
 #include "base/type.h"
 #include "platform/api/support.h"
+#include "lua_support.h"
 #include "input.h"
 #include "archive.h"
 #include "camera.h"
@@ -64,7 +59,10 @@ public:
     UniquePtr<Read> read_file(const String& file_uri);
     Optional<ByteBuffer> read_file_data(const String& file_uri);
 
-    void set_script_main_loop(LUA_FUNCTION func);
+    void set_lua_main_loop(LUA_FUNCTION func);
+    void set_lua_input_handler(LUA_FUNCTION func);
+
+    lua_State* get_lua_engine() const { return lua_; }
 
 private:
     // void fire_framebuffer_size_changed();
@@ -99,6 +97,7 @@ private:
     static int lua_loader(lua_State* L);
 
     int lua_main_loop_;
+    int lua_input_handler_;
 
     void init_lua();
     // void run_project();
@@ -115,4 +114,5 @@ private:
 #define GET_CORE()             anyone::Core::get_singleton_ptr()
 #define GET_PLATFORM_SUPPORT() ((GET_CORE())->get_platform_support())
 #define GET_RENDER_API()       ((GET_CORE())->get_render_api())
+#define GET_LUA()              ((GET_CORE())->get_lua_engine())
 #define LOG(...)               (GET_PLATFORM_SUPPORT())->log(__VA_ARGS__)
