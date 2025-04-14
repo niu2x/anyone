@@ -1,12 +1,16 @@
 #pragma once
 
+extern "C" {
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+}
+
 #include "base/type.h"
 #include "platform/api/support.h"
-#include "lua_support.h"
 #include "input.h"
 #include "archive.h"
 #include "camera.h"
-#include "tolua_support.h"
 
 namespace anyone {
 
