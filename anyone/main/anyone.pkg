@@ -20,6 +20,9 @@ struct TextureLoader {
     static CubeMap* load_cube_map_png(const char* uri);
 };
 
+class CoreEventListener{
+};
+
 class RenderAPI {
     void destroy_vertex_buffer(VertexBuffer* vbo);
     void destroy_indice_buffer(IndiceBuffer* veo);
@@ -50,6 +53,7 @@ class Core {
 	PlatformSupport* get_platform_support();
 	ModelManager* get_model_manager();
 	SceneManager* get_scene_manager();
+    void add_core_event_listener(CoreEventListener* l);
 };
 
 
