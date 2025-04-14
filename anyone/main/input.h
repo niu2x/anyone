@@ -48,6 +48,7 @@ enum class KeyboardEventType {
 struct KeyboardEvent {
     KeyboardEventType type;
     int key_code;
+    bool repeat;
 };
 
 struct MouseMoveEvent {

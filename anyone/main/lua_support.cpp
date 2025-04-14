@@ -118,7 +118,7 @@ void LuaCoreEventListener::on_mouse_wheel(const MouseWheelEvent& e)
 void LuaCoreEventListener::on_keyboard(const KeyboardEvent& e)
 {
     if (keyboard_ && keyboard_->is_valid()) {
-        keyboard_->protected_call(e.type, e.key_code);
+        keyboard_->protected_call(e.type, e.key_code, e.repeat);
     }
 }
 

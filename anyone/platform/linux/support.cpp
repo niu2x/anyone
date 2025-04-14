@@ -125,7 +125,8 @@ bool PlatformLinux::poll_events()
                 KeyboardEvent e = { .type = event.type == SDL_KEYDOWN
                                                 ? KeyboardEventType::PRESS
                                                 : KeyboardEventType::RELEASE,
-                                    .key_code = key_code };
+                                    .key_code = key_code,
+                                    .repeat = event.key.repeat };
                 GET_CORE()->notify_keyboard_event(e);
                 break;
             }

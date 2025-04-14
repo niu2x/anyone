@@ -47,6 +47,7 @@ private:
     }
 
     void push_arg(int arg) { lua_pushinteger(L_, arg); }
+    void push_arg(bool arg) { lua_pushboolean(L_, arg); }
     void push_arg(MouseWheelDirection arg) { lua_pushinteger(L_, (int)arg); }
     void push_arg(KeyboardEventType arg) { lua_pushinteger(L_, (int)arg); }
     void push_arg(MouseButtonEventType arg) { lua_pushinteger(L_, (int)arg); }
