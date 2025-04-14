@@ -20,6 +20,65 @@ class Texture2D{};
 class CubeMap{};
 class Program{};
 
+enum {
+    KEY_UNKNOWN,
+    KEY_A,
+    KEY_B,
+    KEY_C,
+    KEY_D,
+    KEY_E,
+    KEY_F,
+    KEY_G,
+    KEY_H,
+    KEY_I,
+    KEY_J,
+    KEY_K,
+    KEY_L,
+    KEY_M,
+    KEY_N,
+    KEY_O,
+    KEY_P,
+    KEY_Q,
+    KEY_R,
+    KEY_S,
+    KEY_T,
+    KEY_U,
+    KEY_V,
+    KEY_W,
+    KEY_X,
+    KEY_Y,
+    KEY_Z,
+    KEY_ESCAPE,
+
+    MOUSE_LEFT_BTN,
+    MOUSE_MIDDLE_BTN,
+    MOUSE_RIGHT_BTN,
+
+};
+
+struct KeyboardEventType{
+    enum {
+        PRESS,
+        RELEASE,
+    };
+};
+
+struct MouseButtonEventType{
+    enum {
+        PRESS,
+        RELEASE,
+    };
+};
+
+struct MouseWheelDirection{
+    enum {
+        NORMAL,
+        FLIPPED,
+    };
+};
+
+
+
 class Camera {
     void set_eye(float x, float y, float z);
     void look_at(float x, float y, float z);

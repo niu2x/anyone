@@ -30,32 +30,25 @@ function write ( a )
 end
 function post_output_hook ( package )
     local result = table.concat ( toWrite )
+
     local function replace ( pattern , replacement )
-        local k = 0
-        local nxt , currentString = 1 , ''
-        repeat local s , e = string.find ( result , pattern , nxt , true )
-        if e then
-            currentString = currentString .. string.sub ( result , nxt , s - 1 ) .. replacement
-            nxt = e + 1
-            k = k + 1
-        end until not e
-        result = currentString .. string.sub ( result , nxt )
-        -- if k == 0 then
-            -- print ( 'Pattern not replaced' , pattern )
-        -- end
+        -- local k = 0
+        -- local nxt , currentString = 1 , ''
+        -- repeat local s , e = string.find ( result , pattern , nxt , true )
+        -- if e then
+        --     currentString = currentString .. string.sub ( result , nxt , s - 1 ) .. replacement
+        --     nxt = e + 1
+        --     k = k + 1
+        -- end until not e
+        -- result = currentString .. string.sub ( result , nxt )
+        
+        result = string.gsub(result, pattern, replacement)
     end
-    replace ( [[#ifndef __cplusplus
-#include "stdlib.h"
-#endif
-#include "string.h"
 
-#include "tolua++.h"]] , [[
-
-#include "stdlib.h"
-#include "string.h"
+    replace ( [[#include "tolua%+%+.h"]] , [[
 #include "tolua++.h"
 
-#define tolua_iscppstring                       tolua_isstring
+#define tolua_iscppstring                   tolua_isstring
 #define anyone_pushcppstring(lua_state, sz) lua_pushlstring(lua_state, sz.c_str(), sz.size())
 ]] )
 
@@ -70,12 +63,21 @@ function post_output_hook ( package )
     -- replace ( [[tolua_usertype(tolua_S,"vector<string>");]] , [[]] )
     replace ( [[tolua_pushcppstring(tolua_S,(const char*)]] , [[anyone_pushcppstring(tolua_S,]] )
 
-    replace([[tolua_usertype(tolua_S,"LUA_FUNCTION");]], [[]])
-    replace([[*((LUA_FUNCTION*)]], [[(]])
+    -- replace([[tolua_usertype(tolua_S,"LUA_FUNCTION");]], [[]])
+    -- replace([[*((LUA_FUNCTION*)]], [[(]])
 
-    replace([[tolua_usertype(tolua_S,"LUA_TABLE");]], [[]])
-    replace([[*((LUA_TABLE*)]], [[(]])
+    replace([[tolua_usertype%(tolua_S,"LUA_TABLE"%);]], [[]])
+    replace([[*%(%(LUA_TABLE%*%)]], [[(]])
 
-    replace ( '\t' , '    ' )
-    WRITE ( result )
+    replace([[tolua_constant%(tolua_S,"(.-)",anyone::KeyboardEventType::(.-)%)]]
+        , [[tolua_constant(tolua_S,"%1",(int)anyone::KeyboardEventType::%2)]])
+
+    replace([[tolua_constant%(tolua_S,"(.-)",anyone::MouseButtonEventType::(.-)%)]]
+        , [[tolua_constant(tolua_S,"%1",(int)anyone::MouseButtonEventType::%2)]])
+
+    replace([[tolua_constant%(tolua_S,"(.-)",anyone::MouseWheelDirection::(.-)%)]]
+        , [[tolua_constant(tolua_S,"%1",(int)anyone::MouseWheelDirection::%2)]])
+
+    replace('\t' , '    ' )
+    WRITE(result)
 end

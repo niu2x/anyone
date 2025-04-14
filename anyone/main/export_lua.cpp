@@ -1,13 +1,16 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Mon Apr 14 19:31:37 2025.
+** Generated automatically by tolua++-1.0.93 on Mon Apr 14 19:56:55 2025.
 */
 
-#include "stdlib.h"
+#ifndef __cplusplus
+    #include "stdlib.h"
+#endif
 #include "string.h"
+
 #include "tolua++.h"
 
-#define tolua_iscppstring                       tolua_isstring
+#define tolua_iscppstring tolua_isstring
 #define anyone_pushcppstring(lua_state, sz) lua_pushlstring(lua_state, sz.c_str(), sz.size())
 
 
@@ -52,6 +55,9 @@ static void tolua_reg_types (lua_State* tolua_S)
     tolua_usertype(tolua_S, "anyone::Attachment");
     tolua_usertype(tolua_S, "anyone::RenderAPI");
     tolua_usertype(tolua_S, "anyone::TextureLoader");
+    tolua_usertype(tolua_S, "anyone::MouseButtonEventType");
+    tolua_usertype(tolua_S, "anyone::MouseWheelDirection");
+    tolua_usertype(tolua_S, "anyone::KeyboardEventType");
     tolua_usertype(tolua_S, "anyone::Program");
     tolua_usertype(tolua_S, "kmScalar");
     tolua_usertype(tolua_S, "anyone::CubeMap");
@@ -1705,6 +1711,55 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
  tolua_endmodule(tolua_S);
  tolua_cclass(tolua_S, "Program", "anyone::Program", "", NULL);
  tolua_beginmodule(tolua_S, "Program");
+ tolua_endmodule(tolua_S);
+ tolua_constant(tolua_S, "KEY_UNKNOWN", anyone::KEY_UNKNOWN);
+ tolua_constant(tolua_S, "KEY_A", anyone::KEY_A);
+ tolua_constant(tolua_S, "KEY_B", anyone::KEY_B);
+ tolua_constant(tolua_S, "KEY_C", anyone::KEY_C);
+ tolua_constant(tolua_S, "KEY_D", anyone::KEY_D);
+ tolua_constant(tolua_S, "KEY_E", anyone::KEY_E);
+ tolua_constant(tolua_S, "KEY_F", anyone::KEY_F);
+ tolua_constant(tolua_S, "KEY_G", anyone::KEY_G);
+ tolua_constant(tolua_S, "KEY_H", anyone::KEY_H);
+ tolua_constant(tolua_S, "KEY_I", anyone::KEY_I);
+ tolua_constant(tolua_S, "KEY_J", anyone::KEY_J);
+ tolua_constant(tolua_S, "KEY_K", anyone::KEY_K);
+ tolua_constant(tolua_S, "KEY_L", anyone::KEY_L);
+ tolua_constant(tolua_S, "KEY_M", anyone::KEY_M);
+ tolua_constant(tolua_S, "KEY_N", anyone::KEY_N);
+ tolua_constant(tolua_S, "KEY_O", anyone::KEY_O);
+ tolua_constant(tolua_S, "KEY_P", anyone::KEY_P);
+ tolua_constant(tolua_S, "KEY_Q", anyone::KEY_Q);
+ tolua_constant(tolua_S, "KEY_R", anyone::KEY_R);
+ tolua_constant(tolua_S, "KEY_S", anyone::KEY_S);
+ tolua_constant(tolua_S, "KEY_T", anyone::KEY_T);
+ tolua_constant(tolua_S, "KEY_U", anyone::KEY_U);
+ tolua_constant(tolua_S, "KEY_V", anyone::KEY_V);
+ tolua_constant(tolua_S, "KEY_W", anyone::KEY_W);
+ tolua_constant(tolua_S, "KEY_X", anyone::KEY_X);
+ tolua_constant(tolua_S, "KEY_Y", anyone::KEY_Y);
+ tolua_constant(tolua_S, "KEY_Z", anyone::KEY_Z);
+ tolua_constant(tolua_S, "KEY_ESCAPE", anyone::KEY_ESCAPE);
+ tolua_constant(tolua_S, "MOUSE_LEFT_BTN", anyone::MOUSE_LEFT_BTN);
+ tolua_constant(tolua_S, "MOUSE_MIDDLE_BTN", anyone::MOUSE_MIDDLE_BTN);
+ tolua_constant(tolua_S, "MOUSE_RIGHT_BTN", anyone::MOUSE_RIGHT_BTN);
+ tolua_cclass(
+     tolua_S, "KeyboardEventType", "anyone::KeyboardEventType", "", NULL);
+ tolua_beginmodule(tolua_S, "KeyboardEventType");
+ tolua_constant(tolua_S, "PRESS", (int)anyone::KeyboardEventType::PRESS);
+ tolua_constant(tolua_S, "RELEASE", (int)anyone::KeyboardEventType::RELEASE);
+ tolua_endmodule(tolua_S);
+ tolua_cclass(
+     tolua_S, "MouseButtonEventType", "anyone::MouseButtonEventType", "", NULL);
+ tolua_beginmodule(tolua_S, "MouseButtonEventType");
+ tolua_constant(tolua_S, "PRESS", (int)anyone::MouseButtonEventType::PRESS);
+ tolua_constant(tolua_S, "RELEASE", (int)anyone::MouseButtonEventType::RELEASE);
+ tolua_endmodule(tolua_S);
+ tolua_cclass(
+     tolua_S, "MouseWheelDirection", "anyone::MouseWheelDirection", "", NULL);
+ tolua_beginmodule(tolua_S, "MouseWheelDirection");
+ tolua_constant(tolua_S, "NORMAL", (int)anyone::MouseWheelDirection::NORMAL);
+ tolua_constant(tolua_S, "FLIPPED", (int)anyone::MouseWheelDirection::FLIPPED);
  tolua_endmodule(tolua_S);
  tolua_cclass(tolua_S, "Camera", "anyone::Camera", "", NULL);
  tolua_beginmodule(tolua_S, "Camera");
