@@ -131,6 +131,7 @@ Program* OpenGL_API::create_sky_box_program()
     void main() {
         gl_Position = vec4(position*1000.0, 1.0)* view * proj;
         v_uv = position.xyz;
+        v_uv.zy = v_uv.yz;
     }
 
 )";

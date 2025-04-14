@@ -358,8 +358,10 @@ void Core::notify_mouse_move_event(const MouseMoveEvent& e)
         //     e.rel_x,
         //     e.rel_y);
     static float z = 0;
+    static float x = 0;
     z += e.rel_y;
-    camera_.look_at(0, 0, z/100.0);
+    x += e.rel_x;
+    camera_.look_at(x / 100.0, 0, z / 100.0);
     camera_.apply();
 }
 
