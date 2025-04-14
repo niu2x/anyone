@@ -2,8 +2,8 @@ _is_functions = _is_functions or { }
 _to_functions = _to_functions or { }
 _push_functions = _push_functions or { }
 
-_to_functions["LUA_FUNCTION"] = "__tolua_ref_function"
-_is_functions["LUA_FUNCTION"] = "__tolua_is_function"
+_to_functions["LUA_FUNCTION"] = "__tolua_create_lua_function"
+_is_functions["LUA_FUNCTION"] = "__tolua_is_lua_function"
 
 local toWrite = { }
 local currentString = ''

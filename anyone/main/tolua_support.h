@@ -1,7 +1,11 @@
 #include "tolua++.h"
+#include "lua_support.h"
 
-using LUA_FUNCTION = int;
+using LUA_FUNCTION = anyone::LuaFunction*;
 
-int __tolua_is_function(lua_State* L, int lo, const char* type, int def, tolua_Error* err);
-int __tolua_ref_function(lua_State* L, int lo, int def);
-void __tolua_unref_function(lua_State* L, int ref);
+bool __tolua_is_lua_function(lua_State* L,
+                             int lo,
+                             const char* type,
+                             int def,
+                             tolua_Error* err);
+LUA_FUNCTION __tolua_create_lua_function(lua_State* L, int lo, int def);

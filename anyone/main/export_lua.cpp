@@ -1,6 +1,6 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Mon Apr 14 16:31:12 2025.
+** Generated automatically by tolua++-1.0.93 on Mon Apr 14 16:39:26 2025.
 */
 
 #include "stdlib.h"
@@ -558,17 +558,16 @@ static int tolua_anyone_anyone_Core_set_lua_main_loop00(lua_State* tolua_S)
 {
 #ifndef TOLUA_RELEASE
  tolua_Error tolua_err;
- if (
-     !tolua_isusertype(tolua_S,1,"anyone::Core",0,&tolua_err) ||
-     (tolua_isvaluenil(tolua_S,2,&tolua_err) || !__tolua_is_function(tolua_S,2,"LUA_FUNCTION",0,&tolua_err)) ||
-     !tolua_isnoobj(tolua_S,3,&tolua_err)
- )
-  goto tolua_lerror;
+ if (!tolua_isusertype(tolua_S, 1, "anyone::Core", 0, &tolua_err)
+     || (tolua_isvaluenil(tolua_S, 2, &tolua_err)
+         || !__tolua_is_lua_function(tolua_S, 2, "LUA_FUNCTION", 0, &tolua_err))
+     || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+     goto tolua_lerror;
  else
 #endif
  {
   anyone::Core* self = (anyone::Core*)  tolua_tousertype(tolua_S,1,0);
-  LUA_FUNCTION tolua_var_2 = (  __tolua_ref_function(tolua_S,2,0));
+  LUA_FUNCTION tolua_var_2 = (__tolua_create_lua_function(tolua_S, 2, 0));
 #ifndef TOLUA_RELEASE
   if (!self)
       tolua_error(

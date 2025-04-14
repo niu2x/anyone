@@ -59,8 +59,8 @@ public:
     UniquePtr<Read> read_file(const String& file_uri);
     Optional<ByteBuffer> read_file_data(const String& file_uri);
 
-    void set_lua_main_loop(LUA_FUNCTION func);
-    void set_lua_input_handler(LUA_FUNCTION func);
+    void set_lua_main_loop(LuaFunction* func);
+    void set_lua_input_handler(LuaFunction* func);
 
     lua_State* get_lua_engine() const { return lua_; }
 
@@ -96,8 +96,8 @@ private:
     int load_lua();
     static int lua_loader(lua_State* L);
 
-    int lua_main_loop_;
-    int lua_input_handler_;
+    LuaFunction* lua_main_loop_;
+    LuaFunction* lua_input_handler_;
 
     void init_lua();
     // void run_project();

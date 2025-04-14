@@ -10,8 +10,9 @@ namespace anyone {
 
 class LuaFunction {
 public:
-    LuaFunction();
+    LuaFunction(lua_State* L, int slot);
     ~LuaFunction();
+    void protected_call();
 
 private:
     // managed by luaL_ref/luaL_unref
