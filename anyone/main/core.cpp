@@ -343,42 +343,22 @@ void Core::start_game()
 
 void Core::notify_keyboard_event(const KeyboardEvent& event)
 {
-    if (event.type == KeyboardEventType::PRESS) {
-        if (event.key_code == KEY_F) {
-            bool full_screen = platform_support_->is_full_screen();
-            platform_support_->set_full_screen(!full_screen);
-        } else if (event.key_code == KEY_ESCAPE) {
-            platform_support_->exit();
-        }
-    }
     fire_keyboard_event(event);
 }
 
-void Core::notify_mouse_move_event(const MouseMoveEvent& e)
+void Core::notify_mouse_move_event(const MouseMoveEvent& event)
 {
-    (void)e;
-        // LOG("mouse_move x: %d, y: %d, rel_x: %d, rel_y: %d",
-        //     e.x,
-        //     e.y,
-        //     e.rel_x,
-        //     e.rel_y);
-    static float z = 0;
-    static float x = 0;
-    z += e.rel_y;
-    x += e.rel_x;
-    camera_.look_at(x / 100.0, 0, z / 100.0);
-    camera_.apply();
-    fire_mouse_move_event(e);
+    fire_mouse_move_event(event);
 }
 
-void Core::notify_mouse_button_event(const MouseButtonEvent& e)
+void Core::notify_mouse_button_event(const MouseButtonEvent& event)
 {
-    fire_mouse_button_event(e);
+    fire_mouse_button_event(event);
 }
 
-void Core::notify_mouse_wheel_event(const MouseWheelEvent& e)
+void Core::notify_mouse_wheel_event(const MouseWheelEvent& event)
 {
-    fire_mouse_wheel_event(e);
+    fire_mouse_wheel_event(event);
 }
 
 void Core::fire_frame_update_event()
@@ -388,31 +368,31 @@ void Core::fire_frame_update_event()
     }
 }
 
-void Core::fire_mouse_move_event(const MouseMoveEvent& e)
+void Core::fire_mouse_move_event(const MouseMoveEvent& event)
 {
     for (auto l : core_event_listeners_) {
-        l->on_mouse_move(e);
+        l->on_mouse_move(event);
     }
 }
 
-void Core::fire_mouse_wheel_event(const MouseWheelEvent& e)
+void Core::fire_mouse_wheel_event(const MouseWheelEvent& event)
 {
     for (auto l : core_event_listeners_) {
-        l->on_mouse_wheel(e);
+        l->on_mouse_wheel(event);
     }
 }
 
-void Core::fire_mouse_button_event(const MouseButtonEvent& e)
+void Core::fire_mouse_button_event(const MouseButtonEvent& event)
 {
     for (auto l : core_event_listeners_) {
-        l->on_mouse_button(e);
+        l->on_mouse_button(event);
     }
 }
 
-void Core::fire_keyboard_event(const KeyboardEvent& e)
+void Core::fire_keyboard_event(const KeyboardEvent& event)
 {
     for (auto l : core_event_listeners_) {
-        l->on_keyboard(e);
+        l->on_keyboard(event);
     }
 }
 

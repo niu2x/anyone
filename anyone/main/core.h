@@ -68,6 +68,8 @@ public:
     void add_core_event_listener(CoreEventListener* l);
     void remove_core_event_listener(CoreEventListener* l);
 
+    Camera* get_camera() { return &camera_; }
+
 private:
     // void fire_framebuffer_size_changed();
 

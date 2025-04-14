@@ -9,6 +9,9 @@ $#include "platform/api/support.h"
 $#include "texture_loader.h"
 $#include "tolua_support.h"
 
+struct kmMat4 {};
+struct kmVec3 {kmScalar x,y,z;};
+
 namespace anyone {
 
 class VertexBuffer{};
@@ -16,6 +19,25 @@ class IndiceBuffer{};
 class Texture2D{};
 class CubeMap{};
 class Program{};
+
+class Camera {
+    void set_eye(float x, float y, float z);
+    void look_at(float x, float y, float z);
+    void set_up(float x, float y, float z);
+
+    const kmMat4* get_view_matrix() const ;
+    const kmMat4* get_proj_matrix() const ;
+
+    void set_aspect(float a);
+    void set_fov(float a);
+
+    void set_near_clip(float a);
+    void set_far_clip(float a);
+
+    void apply();
+
+    const kmVec3* get_eye() const { return &eye_; }
+}
 
 struct TextureLoader {
     static CubeMap* load_cube_map_png(const char* uri);
@@ -61,6 +83,7 @@ class Core {
     ModelManager* get_model_manager();
     SceneManager* get_scene_manager();
     void add_core_event_listener(CoreEventListener* l);
+    Camera* get_camera();
 };
 
 

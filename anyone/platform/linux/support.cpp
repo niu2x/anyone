@@ -126,7 +126,7 @@ bool PlatformLinux::poll_events()
                                                 ? KeyboardEventType::PRESS
                                                 : KeyboardEventType::RELEASE,
                                     .key_code = key_code,
-                                    .repeat = event.key.repeat };
+                                    .repeat = event.key.repeat != 0 };
                 GET_CORE()->notify_keyboard_event(e);
                 break;
             }
