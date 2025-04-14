@@ -28,7 +28,7 @@ Core::Core()
 , framebuffer_size_ { 1, 1 }
 , lua_(nullptr)
 , lua_main_loop_(nullptr)
-
+, lua_input_handler_(nullptr)
 {
     builtin_archive_ = nx::fs::create_zip_archive_from_memory(builtin,
                                                               builtin_length);
@@ -132,7 +132,9 @@ void Core::setup_after_render_api_ready()
 
 void Core::cleanup_before_render_api_gone()
 {
+    delete lua_input_handler_;
     delete lua_main_loop_;
+
     lua_close(lua_);
 
     Model::cleanup();
@@ -345,6 +347,10 @@ void Core::notify_keyboard_event(const KeyboardEvent& event)
             platform_support_->exit();
         }
     }
+    
+    if(lua_input_handler_) {
+
+    }
 }
 
 void Core::notify_mouse_move_event(const MouseMoveEvent& e)
@@ -369,10 +375,14 @@ void Core::notify_mouse_wheel_event(const MouseWheelEvent& e) { (void)e; }
 
 void Core::set_lua_main_loop(LuaFunction* func)
 {
-    if (lua_main_loop_) {
-        delete lua_main_loop_;
-    }
+    delete lua_main_loop_;
     lua_main_loop_ = func;
+}
+
+void Core::set_lua_input_handler(LuaFunction* func)
+{
+    delete lua_input_handler_;
+    lua_input_handler_ = func;
 }
 
 void Core::set_lua_input_handler(LUA_FUNCTION func) { }

@@ -7,7 +7,6 @@
 #include "archive.h"
 #include "camera.h"
 #include "tolua_support.h"
-// #include "rml_ui.h"
 
 namespace anyone {
 
