@@ -25,8 +25,8 @@ class Camera {
     void look_at(float x, float y, float z);
     void set_up(float x, float y, float z);
 
-    const kmMat4* get_view_matrix() const ;
-    const kmMat4* get_proj_matrix() const ;
+    const kmMat4* get_view_matrix() const;
+    const kmMat4* get_proj_matrix() const;
 
     void set_aspect(float a);
     void set_fov(float a);
@@ -36,7 +36,7 @@ class Camera {
 
     void apply();
 
-    const kmVec3* get_eye() const { return &eye_; }
+    const kmVec3* get_eye() const;
 }
 
 struct TextureLoader {
@@ -75,6 +75,7 @@ class PlatformSupport {
     void set_full_screen(bool);
     RenderAPI* get_render_api();
     void exit();
+    bool is_full_screen() const;
 };
 
 class Core {

@@ -1,6 +1,6 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Mon Apr 14 19:25:43 2025.
+** Generated automatically by tolua++-1.0.93 on Mon Apr 14 19:31:37 2025.
 */
 
 #include "stdlib.h"
@@ -1019,6 +1019,41 @@ static int tolua_anyone_anyone_PlatformSupport_exit00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* method: is_full_screen of class  anyone::PlatformSupport */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_PlatformSupport_is_full_screen00
+static int
+tolua_anyone_anyone_PlatformSupport_is_full_screen00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(
+            tolua_S, 1, "const anyone::PlatformSupport", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 2, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        const anyone::PlatformSupport* self = (const anyone::PlatformSupport*)
+            tolua_tousertype(tolua_S, 1, 0);
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'is_full_screen'", NULL);
+    #endif
+        {
+            bool tolua_ret = (bool)self->is_full_screen();
+            tolua_pushboolean(tolua_S, (bool)tolua_ret);
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'is_full_screen'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* method: get_singleton_ptr of class  anyone::Core */
 #ifndef TOLUA_DISABLE_tolua_anyone_anyone_Core_get_singleton_ptr00
 static int tolua_anyone_anyone_Core_get_singleton_ptr00(lua_State* tolua_S)
@@ -1769,6 +1804,9 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
                 "get_render_api",
                 tolua_anyone_anyone_PlatformSupport_get_render_api00);
  tolua_function(tolua_S, "exit", tolua_anyone_anyone_PlatformSupport_exit00);
+ tolua_function(tolua_S,
+                "is_full_screen",
+                tolua_anyone_anyone_PlatformSupport_is_full_screen00);
  tolua_endmodule(tolua_S);
  tolua_cclass(tolua_S, "Core", "anyone::Core", "", NULL);
  tolua_beginmodule(tolua_S, "Core");
