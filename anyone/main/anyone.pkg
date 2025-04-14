@@ -25,9 +25,9 @@ class CoreEventListener{
 };
 
 class LuaCoreEventListener: CoreEventListener {
-	LuaCoreEventListener();
-	~LuaCoreEventListener();
-	void set_proxy(LUA_TABLE table);
+    LuaCoreEventListener();
+    ~LuaCoreEventListener();
+    void set_proxy(LUA_TABLE table);
 };
 
 class RenderAPI {
@@ -50,16 +50,16 @@ class ModelManager {
 };
 
 class PlatformSupport {
-	void set_full_screen(bool);
-	RenderAPI* get_render_api();
-	void exit();
+    void set_full_screen(bool);
+    RenderAPI* get_render_api();
+    void exit();
 };
 
 class Core {
-	static Core* get_singleton_ptr();
-	PlatformSupport* get_platform_support();
-	ModelManager* get_model_manager();
-	SceneManager* get_scene_manager();
+    static Core* get_singleton_ptr();
+    PlatformSupport* get_platform_support();
+    ModelManager* get_model_manager();
+    SceneManager* get_scene_manager();
     void add_core_event_listener(CoreEventListener* l);
 };
 

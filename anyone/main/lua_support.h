@@ -42,11 +42,14 @@ private:
     template <class FirstT, class... T>
     void push_args(const FirstT& first_arg, const T&... args)
     {
-        push_args(first_arg);
+        push_arg(first_arg);
         push_args(args...);
     }
 
-    void push_args(int arg) { lua_pushinteger(L_, arg); }
+    void push_arg(int arg) { lua_pushinteger(L_, arg); }
+    void push_arg(MouseWheelDirection arg) { lua_pushinteger(L_, (int)arg); }
+    void push_arg(KeyboardEventType arg) { lua_pushinteger(L_, (int)arg); }
+    void push_arg(MouseButtonEventType arg) { lua_pushinteger(L_, (int)arg); }
 
     void push_args() { }
 };
@@ -74,6 +77,9 @@ private:
     LuaTable* proxy_;
     LuaFunction* frame_update_;
     LuaFunction* mouse_move_;
+    LuaFunction* mouse_wheel_;
+    LuaFunction* mouse_button_;
+    LuaFunction* keyboard_;
 };
 
 } // namespace anyone

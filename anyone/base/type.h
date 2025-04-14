@@ -18,6 +18,12 @@
         }                                                                      \
     }
 
+#define DELETE_AND_SET_NULL(ptr)                                               \
+    {                                                                          \
+        delete (ptr);                                                          \
+        (ptr) = nullptr;                                                       \
+    }
+
 namespace anyone {
 
 using namespace nx;

@@ -54,11 +54,11 @@ LuaFunction* LuaTable::get_function(const char* field)
 
 void LuaCoreEventListener::set_proxy(LuaTable* table)
 {
-    delete frame_update_;
-    frame_update_ = nullptr;
-
-    delete mouse_move_;
-    mouse_move_ = nullptr;
+    DELETE_AND_SET_NULL(frame_update_);
+    DELETE_AND_SET_NULL(mouse_move_);
+    DELETE_AND_SET_NULL(mouse_wheel_);
+    DELETE_AND_SET_NULL(mouse_button_);
+    DELETE_AND_SET_NULL(keyboard_);
 
     delete proxy_;
 
@@ -67,6 +67,9 @@ void LuaCoreEventListener::set_proxy(LuaTable* table)
     if (proxy_ && proxy_->is_valid()) {
         frame_update_ = proxy_->get_function("onFrameUpdate");
         mouse_move_ = proxy_->get_function("onMouseMove");
+        mouse_wheel_ = proxy_->get_function("onMouseWheel");
+        mouse_button_ = proxy_->get_function("onMouseButton");
+        keyboard_ = proxy_->get_function("onKeyboard");
     }
 }
 
@@ -74,6 +77,9 @@ LuaCoreEventListener::LuaCoreEventListener()
 : proxy_(nullptr)
 , frame_update_(nullptr)
 , mouse_move_(nullptr)
+, mouse_wheel_(nullptr)
+, mouse_button_(nullptr)
+, keyboard_(nullptr)
 {
 }
 
@@ -82,6 +88,9 @@ LuaCoreEventListener::~LuaCoreEventListener()
     delete proxy_;
     delete frame_update_;
     delete mouse_move_;
+    delete mouse_wheel_;
+    delete mouse_button_;
+    delete keyboard_;
 }
 
 void LuaCoreEventListener::on_mouse_move(const MouseMoveEvent& e)
@@ -92,11 +101,26 @@ void LuaCoreEventListener::on_mouse_move(const MouseMoveEvent& e)
     }
 }
 
-void LuaCoreEventListener::on_mouse_button(const MouseButtonEvent&) { }
+void LuaCoreEventListener::on_mouse_button(const MouseButtonEvent& e)
+{
+    if (mouse_button_ && mouse_button_->is_valid()) {
+        mouse_button_->protected_call(e.type, e.x, e.y, e.button);
+    }
+}
 
-void LuaCoreEventListener::on_mouse_wheel(const MouseWheelEvent&) { }
+void LuaCoreEventListener::on_mouse_wheel(const MouseWheelEvent& e)
+{
+    if (mouse_wheel_ && mouse_wheel_->is_valid()) {
+        mouse_wheel_->protected_call(e.direction, e.x, e.y);
+    }
+}
 
-void LuaCoreEventListener::on_keyboard(const KeyboardEvent&) { }
+void LuaCoreEventListener::on_keyboard(const KeyboardEvent& e)
+{
+    if (keyboard_ && keyboard_->is_valid()) {
+        keyboard_->protected_call(e.type, e.key_code);
+    }
+}
 
 void LuaCoreEventListener::on_frame_update()
 {

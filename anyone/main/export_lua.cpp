@@ -1,6 +1,6 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Mon Apr 14 17:42:26 2025.
+** Generated automatically by tolua++-1.0.93 on Mon Apr 14 19:11:08 2025.
 */
 
 #include "stdlib.h"
