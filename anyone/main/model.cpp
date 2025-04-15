@@ -495,7 +495,9 @@ float get_time()
     return nx::time_diff(init, nx::time_now());
 }
 
-void Model::draw(const Camera* camera, const kmMat4* transform)
+void Model::draw(const Camera* camera,
+                 const kmMat4* transform,
+                 CubeMap* sky_box)
 {
     GET_RENDER_API()->set_depth_test(true);
     program_->use();
@@ -516,6 +518,12 @@ void Model::draw(const Camera* camera, const kmMat4* transform)
 
     float time[] = { get_time(), 0, 0, 0 };
     program_->set_param_vec4("time", time);
+
+    program_->set_param_int("use_environment", sky_box != nullptr);
+    if (sky_box) {
+        sky_box->bind(1);
+        program_->set_param_texture("environment_tex", 1);
+    }
 
     // kmMat4 adjust_axis;
     // kmMat4RotationX(&adjust_axis, -PI / 2);

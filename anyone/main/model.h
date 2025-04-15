@@ -59,7 +59,9 @@ public:
     Model(const String& name);
     ~Model();
     bool load_from_file(const String& name);
-    void draw(const Camera* camera, const kmMat4* transform) override;
+    void draw(const Camera* camera,
+              const kmMat4* transform,
+              CubeMap* sky_box) override;
 
     static void setup();
     static void cleanup();

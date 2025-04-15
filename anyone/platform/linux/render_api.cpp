@@ -174,8 +174,6 @@ Program* OpenGL_API::create_model_program()
     uniform mat4 view;
     uniform mat4 proj;
 
-    uniform vec3 light_direction;
-
     layout(location = 0) in vec3 position;
     layout(location = 1) in vec3 normal;
     layout(location = 2) in vec2 uv;
@@ -212,6 +210,9 @@ Program* OpenGL_API::create_model_program()
 
     uniform sampler2D albedo_tex;
     uniform bool use_albedo_tex;
+
+    uniform samplerCube environment_tex;
+    uniform bool use_environment;
 
     uniform vec4 time;
 
@@ -324,12 +325,16 @@ Program* OpenGL_API::create_model_program()
         // 最终颜色（HDR -> sRGB）
         color.a = 1.0;
         color.rgb = ambient + Lo;
+
+        if(use_environment){
+            vec3 R = reflect(-V, N);
+            vec3 reflection = texture(environment_tex, R).rgb;
+            color.rgb += metallic * reflection;
+        }
+
         color.rgb = color.rgb / (color.rgb + vec3(1.0)); // Reinhard色调映射
         color.rgb = pow(color.rgb, vec3(1.0 / 2.2)); // Linear -> sRGB
-
     }
-
-
 
 
 )";
@@ -692,7 +697,7 @@ void GL_Program::set_param_int(const char* name, int arg)
     auto location = glGetUniformLocation(program_, name);
     // NX_ASSERT(location >= 0, "invalid uniform: %s", name);
     glUniform1i(location, arg);
-    // LOG("set vec2 %s:%d %f %f", name, location, args[0], args[1]);
+    // LOG("set_param_int %s:%d %d", name, location, arg);
 }
 
 void GL_Program::set_param_float(const char* name, float arg)

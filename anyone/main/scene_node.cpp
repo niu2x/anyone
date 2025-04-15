@@ -114,10 +114,10 @@ void SceneNode::apply_transform_recursive(const kmMat4* parent_transform,
     }
 }
 
-void SceneNode::render(const Camera* camera)
+void SceneNode::render(const Camera* camera, CubeMap* sky_box)
 {
     for (auto r : renderables_) {
-        r->draw(camera, &transform_);
+        r->draw(camera, &transform_, sky_box);
     }
 }
 

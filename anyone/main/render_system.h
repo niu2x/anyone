@@ -14,7 +14,7 @@ class RenderSystem {
 public:
     RenderSystem(RenderAPI* api);
     ~RenderSystem();
-    void draw_model(Model*, Camera* camera, const kmMat4*);
+    // void draw_model(Model*, Camera* camera, const kmMat4*);
 
 private:
     RenderAPI* api_;

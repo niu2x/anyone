@@ -7,6 +7,7 @@ namespace anyone {
 
 class Renderable;
 class Camera;
+class CubeMap;
 
 class SceneNode {
 public:
@@ -23,7 +24,7 @@ public:
     void remove_child(SceneNode*);
 
     const kmMat4* get_transform() const { return &transform_; }
-    void render(const Camera* camera);
+    void render(const Camera* camera, CubeMap* sky_box);
 
     void apply_transform_recursive(const kmMat4* parent_transform, bool force);
 

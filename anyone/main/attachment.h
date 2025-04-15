@@ -16,7 +16,10 @@ public:
 
 class Renderable : public Attachment {
 public:
-    virtual void draw(const Camera* camera, const kmMat4* transform) = 0;
+    virtual void draw(const Camera* camera,
+                      const kmMat4* transform,
+                      CubeMap* sky_box)
+        = 0;
 };
 
 } // namespace anyone

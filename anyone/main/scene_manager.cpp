@@ -209,7 +209,7 @@ void SceneManager::render(const Camera* camera)
 
     draw_sky_box(camera);
 
-    root_->render(camera);
+    root_->render(camera, sky_box_);
     draw_axis(camera);
 }
 
