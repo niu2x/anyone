@@ -510,7 +510,7 @@ void Model::draw(const Camera* camera,
     float light_direction[] = {1/3.0, 1/3.0, 1/3.0};
     program_->set_param_vec3("ambient_color", ambient);
     program_->set_param_vec3("light_position", 3, 0, 3);
-    program_->set_param_vec3("light_color", 1000, 1000, 1000);
+    program_->set_param_vec3("light_color", 10, 10, 10);
     auto eye_pos = camera->get_eye();
     program_->set_param_vec3("eye_pos", eye_pos->x, eye_pos->y, eye_pos->z);
     program_->set_param_mat4("view", view->mat);
