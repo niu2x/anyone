@@ -128,11 +128,18 @@ class RenderAPI {
     void destroy_program(Program* p);
 };
 
+class Material{
+    void set_metallic(float c);
+    float get_metallic() const;
+};
+
 class Attachment{};
 
 class Renderable: public Attachment {};
 
-class Model: public Renderable {}
+class Model: public Renderable {
+    Material *get_material(int i) const;
+}
 
 class ModelManager {
     Model* load_model(const char* name, const char* path);

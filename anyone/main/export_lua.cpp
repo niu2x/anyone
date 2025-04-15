@@ -1,6 +1,6 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Tue Apr 15 11:02:29 2025.
+** Generated automatically by tolua++-1.0.93 on Tue Apr 15 14:33:50 2025.
 */
 
 #ifndef __cplusplus
@@ -56,6 +56,7 @@ static void tolua_reg_types (lua_State* tolua_S)
     tolua_usertype(tolua_S, "anyone::RenderAPI");
     tolua_usertype(tolua_S, "anyone::TextureLoader");
     tolua_usertype(tolua_S, "anyone::MouseButtonEventType");
+    tolua_usertype(tolua_S, "anyone::Core");
     tolua_usertype(tolua_S, "anyone::MouseWheelDirection");
     tolua_usertype(tolua_S, "anyone::KeyboardEventType");
     tolua_usertype(tolua_S, "anyone::Program");
@@ -64,10 +65,10 @@ static void tolua_reg_types (lua_State* tolua_S)
     tolua_usertype(tolua_S, "anyone::IndiceBuffer");
     tolua_usertype(tolua_S, "anyone::CoreEventListener");
     tolua_usertype(tolua_S, "anyone::SceneManager");
-
     tolua_usertype(tolua_S, "anyone::PlatformSupport");
     tolua_usertype(tolua_S, "anyone::Model");
-    tolua_usertype(tolua_S, "anyone::Core");
+
+    tolua_usertype(tolua_S, "anyone::Material");
 }
 
 /* get function: x of class  kmVec3 */
@@ -891,6 +892,109 @@ static int tolua_anyone_anyone_RenderAPI_destroy_program00(lua_State* tolua_S)
  tolua_error(tolua_S,"#ferror in function 'destroy_program'.",&tolua_err);
  return 0;
 #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: set_metallic of class  anyone::Material */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Material_set_metallic00
+static int tolua_anyone_anyone_Material_set_metallic00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "anyone::Material", 0, &tolua_err)
+        || !tolua_isnumber(tolua_S, 2, 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        anyone::Material* self = (anyone::Material*)tolua_tousertype(
+            tolua_S, 1, 0);
+        float c = ((float)tolua_tonumber(tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'set_metallic'", NULL);
+    #endif
+        {
+            self->set_metallic(c);
+        }
+    }
+    return 0;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'set_metallic'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: get_metallic of class  anyone::Material */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Material_get_metallic00
+static int tolua_anyone_anyone_Material_get_metallic00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "const anyone::Material", 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 2, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        const anyone::Material* self = (const anyone::Material*)
+            tolua_tousertype(tolua_S, 1, 0);
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'get_metallic'", NULL);
+    #endif
+        {
+            float tolua_ret = (float)self->get_metallic();
+            tolua_pushnumber(tolua_S, (lua_Number)tolua_ret);
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'get_metallic'.", &tolua_err);
+    return 0;
+    #endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: get_material of class  anyone::Model */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Model_get_material00
+static int tolua_anyone_anyone_Model_get_material00(lua_State* tolua_S)
+{
+    #ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (!tolua_isusertype(tolua_S, 1, "const anyone::Model", 0, &tolua_err)
+        || !tolua_isnumber(tolua_S, 2, 0, &tolua_err)
+        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
+        goto tolua_lerror;
+    else
+    #endif
+    {
+        const anyone::Model* self = (const anyone::Model*)tolua_tousertype(
+            tolua_S, 1, 0);
+        int i = ((int)tolua_tonumber(tolua_S, 2, 0));
+    #ifndef TOLUA_RELEASE
+        if (!self)
+            tolua_error(
+                tolua_S, "invalid 'self' in function 'get_material'", NULL);
+    #endif
+        {
+            anyone::Material* tolua_ret = (anyone::Material*)self->get_material(
+                i);
+            tolua_pushusertype(tolua_S, (void*)tolua_ret, "anyone::Material");
+        }
+    }
+    return 1;
+    #ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'get_material'.", &tolua_err);
+    return 0;
+    #endif
 }
 #endif //#ifndef TOLUA_DISABLE
 
@@ -1868,6 +1972,13 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
                 "destroy_program",
                 tolua_anyone_anyone_RenderAPI_destroy_program00);
  tolua_endmodule(tolua_S);
+ tolua_cclass(tolua_S, "Material", "anyone::Material", "", NULL);
+ tolua_beginmodule(tolua_S, "Material");
+ tolua_function(
+     tolua_S, "set_metallic", tolua_anyone_anyone_Material_set_metallic00);
+ tolua_function(
+     tolua_S, "get_metallic", tolua_anyone_anyone_Material_get_metallic00);
+ tolua_endmodule(tolua_S);
  tolua_cclass(tolua_S, "Attachment", "anyone::Attachment", "", NULL);
  tolua_beginmodule(tolua_S, "Attachment");
  tolua_endmodule(tolua_S);
@@ -1877,6 +1988,8 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
  tolua_endmodule(tolua_S);
  tolua_cclass(tolua_S, "Model", "anyone::Model", "anyone::Renderable", NULL);
  tolua_beginmodule(tolua_S, "Model");
+ tolua_function(
+     tolua_S, "get_material", tolua_anyone_anyone_Model_get_material00);
  tolua_endmodule(tolua_S);
  tolua_cclass(tolua_S, "ModelManager", "anyone::ModelManager", "", NULL);
  tolua_beginmodule(tolua_S, "ModelManager");

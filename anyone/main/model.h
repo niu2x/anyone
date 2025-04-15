@@ -75,6 +75,8 @@ public:
 
     static Program* get_program() { return program_; }
 
+    Material* get_material(int i) const { return materials_[i].get(); }
+
 private:
     String name_;
     Vector<UniquePtr<Mesh>> meshes_;
