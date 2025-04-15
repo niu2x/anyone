@@ -28,6 +28,12 @@ public:
 
     const kmVec3* get_eye() const { return &eye_; }
 
+    // 新增函数
+    void translate(float x, float y, float z); // 平移相机
+    void rotate(float radians, float x, float y, float z); // 绕轴旋转相机
+    void zoom(float factor); // 缩放视场角
+    void orbit(float radians, float x, float y, float z); // 绕目标点旋转相机
+
 private:
     kmVec3 eye_;
     kmVec3 look_;

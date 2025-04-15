@@ -129,46 +129,46 @@ void SceneManager::init_sky_box()
         int i = 0;
 
         buf[i++] = 0;
-        buf[i++] = 1;
         buf[i++] = 2;
-        buf[i++] = 0;
-        buf[i++] = 2;
-        buf[i++] = 3;
-
-        buf[i++] = 5;
-        buf[i++] = 4;
-        buf[i++] = 6;
-        buf[i++] = 6;
-        buf[i++] = 4;
-        buf[i++] = 7;
-
         buf[i++] = 1;
-        buf[i++] = 5;
-        buf[i++] = 6;
-        buf[i++] = 1;
-        buf[i++] = 6;
-        buf[i++] = 2;
-
-        buf[i++] = 7;
-        buf[i++] = 4;
-        buf[i++] = 0;
-        buf[i++] = 7;
         buf[i++] = 0;
         buf[i++] = 3;
-
         buf[i++] = 2;
+
+        buf[i++] = 5;
+        buf[i++] = 6;
+        buf[i++] = 4;
         buf[i++] = 6;
         buf[i++] = 7;
-        buf[i++] = 2;
-        buf[i++] = 7;
-        buf[i++] = 3;
+        buf[i++] = 4;
 
         buf[i++] = 1;
-        buf[i++] = 4;
+        buf[i++] = 6;
         buf[i++] = 5;
         buf[i++] = 1;
+        buf[i++] = 2;
+        buf[i++] = 6;
+
+        buf[i++] = 7;
         buf[i++] = 0;
         buf[i++] = 4;
+        buf[i++] = 7;
+        buf[i++] = 3;
+        buf[i++] = 0;
+
+        buf[i++] = 2;
+        buf[i++] = 7;
+        buf[i++] = 6;
+        buf[i++] = 2;
+        buf[i++] = 3;
+        buf[i++] = 7;
+
+        buf[i++] = 1;
+        buf[i++] = 5;
+        buf[i++] = 4;
+        buf[i++] = 1;
+        buf[i++] = 4;
+        buf[i++] = 0;
     }
 
     sky_box_veo_->apply();

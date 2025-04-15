@@ -73,7 +73,7 @@ void PlatformLinux::init_window()
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_STENCIL_TEST);
     glDisable(GL_BLEND);
-    glDisable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_POINT_SMOOTH);

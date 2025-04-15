@@ -96,6 +96,13 @@ class Camera {
     void apply();
 
     const kmVec3* get_eye() const;
+    
+    // 新增函数
+    void translate(float x, float y, float z); // 平移相机
+    void rotate(float radians, float x, float y, float z); // 绕轴旋转相机
+    void zoom(float factor); // 缩放视场角
+    void orbit(float radians, float x, float y, float z); // 绕目标点旋转相机
+
 }
 
 struct TextureLoader {
