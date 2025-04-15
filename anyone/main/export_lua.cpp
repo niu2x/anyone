@@ -1,6 +1,6 @@
 /*
 ** Lua binding: anyone
-** Generated automatically by tolua++-1.0.93 on Tue Apr 15 10:46:36 2025.
+** Generated automatically by tolua++-1.0.93 on Tue Apr 15 11:02:29 2025.
 */
 
 #ifndef __cplusplus
@@ -536,17 +536,16 @@ tolua_lerror:
 }
 #endif //#ifndef TOLUA_DISABLE
 
-/* method: translate of class  anyone::Camera */
-#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Camera_translate00
-static int tolua_anyone_anyone_Camera_translate00(lua_State* tolua_S)
+/* method: pan of class  anyone::Camera */
+#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Camera_pan00
+static int tolua_anyone_anyone_Camera_pan00(lua_State* tolua_S)
 {
     #ifndef TOLUA_RELEASE
     tolua_Error tolua_err;
     if (!tolua_isusertype(tolua_S, 1, "anyone::Camera", 0, &tolua_err)
         || !tolua_isnumber(tolua_S, 2, 0, &tolua_err)
         || !tolua_isnumber(tolua_S, 3, 0, &tolua_err)
-        || !tolua_isnumber(tolua_S, 4, 0, &tolua_err)
-        || !tolua_isnoobj(tolua_S, 5, &tolua_err))
+        || !tolua_isnoobj(tolua_S, 4, &tolua_err))
         goto tolua_lerror;
     else
     #endif
@@ -554,128 +553,18 @@ static int tolua_anyone_anyone_Camera_translate00(lua_State* tolua_S)
         anyone::Camera* self = (anyone::Camera*)tolua_tousertype(tolua_S, 1, 0);
         float x = ((float)tolua_tonumber(tolua_S, 2, 0));
         float y = ((float)tolua_tonumber(tolua_S, 3, 0));
-        float z = ((float)tolua_tonumber(tolua_S, 4, 0));
     #ifndef TOLUA_RELEASE
         if (!self)
-            tolua_error(
-                tolua_S, "invalid 'self' in function 'translate'", NULL);
+            tolua_error(tolua_S, "invalid 'self' in function 'pan'", NULL);
     #endif
         {
-            self->translate(x, y, z);
+            self->pan(x, y);
         }
     }
     return 0;
     #ifndef TOLUA_RELEASE
 tolua_lerror:
-    tolua_error(tolua_S, "#ferror in function 'translate'.", &tolua_err);
-    return 0;
-    #endif
-}
-#endif //#ifndef TOLUA_DISABLE
-
-/* method: rotate of class  anyone::Camera */
-#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Camera_rotate00
-static int tolua_anyone_anyone_Camera_rotate00(lua_State* tolua_S)
-{
-    #ifndef TOLUA_RELEASE
-    tolua_Error tolua_err;
-    if (!tolua_isusertype(tolua_S, 1, "anyone::Camera", 0, &tolua_err)
-        || !tolua_isnumber(tolua_S, 2, 0, &tolua_err)
-        || !tolua_isnumber(tolua_S, 3, 0, &tolua_err)
-        || !tolua_isnumber(tolua_S, 4, 0, &tolua_err)
-        || !tolua_isnumber(tolua_S, 5, 0, &tolua_err)
-        || !tolua_isnoobj(tolua_S, 6, &tolua_err))
-        goto tolua_lerror;
-    else
-    #endif
-    {
-        anyone::Camera* self = (anyone::Camera*)tolua_tousertype(tolua_S, 1, 0);
-        float radians = ((float)tolua_tonumber(tolua_S, 2, 0));
-        float x = ((float)tolua_tonumber(tolua_S, 3, 0));
-        float y = ((float)tolua_tonumber(tolua_S, 4, 0));
-        float z = ((float)tolua_tonumber(tolua_S, 5, 0));
-    #ifndef TOLUA_RELEASE
-        if (!self)
-            tolua_error(tolua_S, "invalid 'self' in function 'rotate'", NULL);
-    #endif
-        {
-            self->rotate(radians, x, y, z);
-        }
-    }
-    return 0;
-    #ifndef TOLUA_RELEASE
-tolua_lerror:
-    tolua_error(tolua_S, "#ferror in function 'rotate'.", &tolua_err);
-    return 0;
-    #endif
-}
-#endif //#ifndef TOLUA_DISABLE
-
-/* method: zoom of class  anyone::Camera */
-#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Camera_zoom00
-static int tolua_anyone_anyone_Camera_zoom00(lua_State* tolua_S)
-{
-    #ifndef TOLUA_RELEASE
-    tolua_Error tolua_err;
-    if (!tolua_isusertype(tolua_S, 1, "anyone::Camera", 0, &tolua_err)
-        || !tolua_isnumber(tolua_S, 2, 0, &tolua_err)
-        || !tolua_isnoobj(tolua_S, 3, &tolua_err))
-        goto tolua_lerror;
-    else
-    #endif
-    {
-        anyone::Camera* self = (anyone::Camera*)tolua_tousertype(tolua_S, 1, 0);
-        float factor = ((float)tolua_tonumber(tolua_S, 2, 0));
-    #ifndef TOLUA_RELEASE
-        if (!self)
-            tolua_error(tolua_S, "invalid 'self' in function 'zoom'", NULL);
-    #endif
-        {
-            self->zoom(factor);
-        }
-    }
-    return 0;
-    #ifndef TOLUA_RELEASE
-tolua_lerror:
-    tolua_error(tolua_S, "#ferror in function 'zoom'.", &tolua_err);
-    return 0;
-    #endif
-}
-#endif //#ifndef TOLUA_DISABLE
-
-/* method: orbit of class  anyone::Camera */
-#ifndef TOLUA_DISABLE_tolua_anyone_anyone_Camera_orbit00
-static int tolua_anyone_anyone_Camera_orbit00(lua_State* tolua_S)
-{
-    #ifndef TOLUA_RELEASE
-    tolua_Error tolua_err;
-    if (!tolua_isusertype(tolua_S, 1, "anyone::Camera", 0, &tolua_err)
-        || !tolua_isnumber(tolua_S, 2, 0, &tolua_err)
-        || !tolua_isnumber(tolua_S, 3, 0, &tolua_err)
-        || !tolua_isnumber(tolua_S, 4, 0, &tolua_err)
-        || !tolua_isnumber(tolua_S, 5, 0, &tolua_err)
-        || !tolua_isnoobj(tolua_S, 6, &tolua_err))
-        goto tolua_lerror;
-    else
-    #endif
-    {
-        anyone::Camera* self = (anyone::Camera*)tolua_tousertype(tolua_S, 1, 0);
-        float radians = ((float)tolua_tonumber(tolua_S, 2, 0));
-        float x = ((float)tolua_tonumber(tolua_S, 3, 0));
-        float y = ((float)tolua_tonumber(tolua_S, 4, 0));
-        float z = ((float)tolua_tonumber(tolua_S, 5, 0));
-    #ifndef TOLUA_RELEASE
-        if (!self)
-            tolua_error(tolua_S, "invalid 'self' in function 'orbit'", NULL);
-    #endif
-        {
-            self->orbit(radians, x, y, z);
-        }
-    }
-    return 0;
-    #ifndef TOLUA_RELEASE
-tolua_lerror:
-    tolua_error(tolua_S, "#ferror in function 'orbit'.", &tolua_err);
+    tolua_error(tolua_S, "#ferror in function 'pan'.", &tolua_err);
     return 0;
     #endif
 }
@@ -1923,10 +1812,7 @@ TOLUA_API int tolua_anyone_open (lua_State* tolua_S)
      tolua_S, "set_far_clip", tolua_anyone_anyone_Camera_set_far_clip00);
  tolua_function(tolua_S, "apply", tolua_anyone_anyone_Camera_apply00);
  tolua_function(tolua_S, "get_eye", tolua_anyone_anyone_Camera_get_eye00);
- tolua_function(tolua_S, "translate", tolua_anyone_anyone_Camera_translate00);
- tolua_function(tolua_S, "rotate", tolua_anyone_anyone_Camera_rotate00);
- tolua_function(tolua_S, "zoom", tolua_anyone_anyone_Camera_zoom00);
- tolua_function(tolua_S, "orbit", tolua_anyone_anyone_Camera_orbit00);
+ tolua_function(tolua_S, "pan", tolua_anyone_anyone_Camera_pan00);
  tolua_endmodule(tolua_S);
  tolua_cclass(tolua_S, "TextureLoader", "anyone::TextureLoader", "", NULL);
  tolua_beginmodule(tolua_S, "TextureLoader");

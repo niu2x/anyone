@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "core.h"
 
 namespace anyone {
 
@@ -54,50 +55,70 @@ void Camera::translate(float x, float y, float z)
     kmVec3Add(&look_, &look_, &translation);
 }
 
-void Camera::rotate(float radians, float x, float y, float z)
+// void Camera::rotate(float radians, float x, float y, float z)
+// {
+//     kmVec3 axis { x, y, z };
+//     // 绕相机自身的轴旋转
+//     kmMat4 rotation;
+//     kmMat4RotationAxisAngle(&rotation, &axis, radians);
+
+//     // 旋转相机的朝向向量
+//     kmVec3 forward;
+//     kmVec3Subtract(&forward, &look_, &eye_);
+//     kmVec3Transform(&forward, &forward, &rotation);
+//     kmVec3Add(&look_, &eye_, &forward);
+
+//     // 旋转相机的上向量
+//     kmVec3Transform(&up_, &up_, &rotation);
+// }
+
+// void Camera::zoom(float factor)
+// {
+//     fov_ *= factor;
+//     if (fov_ < 1.0f)
+//         fov_ = 1.0f;
+//     if (fov_ > 179.0f)
+//         fov_ = 179.0f;
+// }
+
+// void Camera::orbit(float radians, float x, float y, float z)
+// {
+//     kmVec3 axis { x, y, z };
+//     kmMat4 rotation;
+//     kmMat4RotationAxisAngle(&rotation, &axis, radians);
+
+//     // 计算相机到目标点的向量
+//     kmVec3 offset;
+//     kmVec3Subtract(&offset, &eye_, &look_);
+
+//     // 旋转偏移向量
+//     kmVec3Transform(&offset, &offset, &rotation);
+
+//     // 更新相机位置
+//     kmVec3Add(&eye_, &look_, &offset);
+
+//     // 旋转相机的上向量
+//     kmVec3Transform(&up_, &up_, &rotation);
+// }
+
+void Camera::pan(float x, float y)
 {
-    kmVec3 axis { x, y, z };
-    // 绕相机自身的轴旋转
-    kmMat4 rotation;
-    kmMat4RotationAxisAngle(&rotation, &axis, radians);
+    kmMat4 inv_view;
+    kmMat4Inverse(&inv_view, &view_matrix_);
 
-    // 旋转相机的朝向向量
-    kmVec3 forward;
-    kmVec3Subtract(&forward, &look_, &eye_);
-    kmVec3Transform(&forward, &forward, &rotation);
-    kmVec3Add(&look_, &eye_, &forward);
+    kmVec3 x_axis { 1, 0, 0 };
+    kmVec3 y_axis { 0, 1, 0 };
 
-    // 旋转相机的上向量
-    kmVec3Transform(&up_, &up_, &rotation);
-}
+    kmVec3TransformNormal(&x_axis, &x_axis, &inv_view);
+    kmVec3TransformNormal(&y_axis, &y_axis, &inv_view);
 
-void Camera::zoom(float factor)
-{
-    fov_ *= factor;
-    if (fov_ < 1.0f)
-        fov_ = 1.0f;
-    if (fov_ > 179.0f)
-        fov_ = 179.0f;
-}
+    // LOG("x_axis %f %f %f", x_axis.x, x_axis.y, x_axis.z);
+    // LOG("y_axis %f %f %f", y_axis.x, y_axis.y, y_axis.z);
 
-void Camera::orbit(float radians, float x, float y, float z)
-{
-    kmVec3 axis { x, y, z };
-    kmMat4 rotation;
-    kmMat4RotationAxisAngle(&rotation, &axis, radians);
+    translate(x_axis.x * x, x_axis.y * x, x_axis.z * x);
+    translate(y_axis.x * y, y_axis.y * y, y_axis.z * y);
 
-    // 计算相机到目标点的向量
-    kmVec3 offset;
-    kmVec3Subtract(&offset, &eye_, &look_);
-
-    // 旋转偏移向量
-    kmVec3Transform(&offset, &offset, &rotation);
-
-    // 更新相机位置
-    kmVec3Add(&eye_, &look_, &offset);
-
-    // 旋转相机的上向量
-    kmVec3Transform(&up_, &up_, &rotation);
+    apply();
 }
 
 } // namespace anyone

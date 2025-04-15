@@ -8,18 +8,18 @@ class Camera {
 public:
     Camera();
 
-    void set_eye(float x, float y, float z);
-    void look_at(float x, float y, float z);
-    void set_up(float x, float y, float z);
-
     const kmMat4* get_view_matrix() const { return &view_matrix_; }
     const kmMat4* get_proj_matrix() const { return &proj_matrix_; }
 
+    // low level api, need call apply manually to take effect
+    void set_eye(float x, float y, float z);
+    void look_at(float x, float y, float z);
+    void set_up(float x, float y, float z);
     void set_aspect(float a);
     void set_fov(float a);
-
     void set_near_clip(float a);
     void set_far_clip(float a);
+    void translate(float x, float y, float z); // 平移相机
 
     void apply();
 
@@ -28,11 +28,12 @@ public:
 
     const kmVec3* get_eye() const { return &eye_; }
 
-    // 新增函数
-    void translate(float x, float y, float z); // 平移相机
-    void rotate(float radians, float x, float y, float z); // 绕轴旋转相机
-    void zoom(float factor); // 缩放视场角
-    void orbit(float radians, float x, float y, float z); // 绕目标点旋转相机
+    // void rotate(float radians, float x, float y, float z); // 绕轴旋转相机
+    // void zoom(float factor); // 缩放视场角
+    // void orbit(float radians, float x, float y, float z); // 绕目标点旋转相机
+
+    // high level operation, auto call apply
+    void pan(float x, float y);
 
 private:
     kmVec3 eye_;
