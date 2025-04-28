@@ -13,7 +13,6 @@ using namespace anyone;
 
 static void run(StartupConfig& config)
 {
-
     auto platform_support = config.platform_support;
     platform_support->init_window();
 
@@ -38,9 +37,11 @@ int main(int argc, char* argv[])
 
     auto result = options.parse(argc, argv);
     auto project_dir = result["project"].as<std::string>();
-    #if defined(ANYONE_TARGET_LINUX)
+
+#if defined(ANYONE_TARGET_LINUX)
     anyone::PlatformLinux platform_impl;
-    #endif
+#endif
+
 #if defined(ANYONE_TARGET_DARWIN)
     anyone::PlatformDarwin platform_impl;
 #endif
