@@ -131,6 +131,9 @@ class RenderAPI {
 class Material{
     void set_metallic(float c);
     float get_metallic() const;
+
+    void set_roughness(float c);
+    float get_roughness() const;
 };
 
 class Attachment{};

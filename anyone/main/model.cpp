@@ -520,6 +520,7 @@ void Model::draw(const Camera* camera,
     program_->set_param_vec4("time", time);
 
     program_->set_param_int("use_environment", sky_box != nullptr);
+    // program_->set_param_int("use_environment", false);
     if (sky_box) {
         sky_box->bind(1);
         program_->set_param_texture("environment_tex", 1);
